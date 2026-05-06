@@ -76,7 +76,7 @@ export function MainCarousel({ headlines }: { headlines: NewsArticle[] }) {
     <Carousel 
       setApi={setApi}
       className="w-full" 
-      opts={{ loop: true, speed: 5 }}
+      opts={{ loop: true }}
       plugins={[plugin.current]}
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}

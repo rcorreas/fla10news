@@ -22,8 +22,9 @@ const parseContent = (content: string): string[] => {
     return content.split(/<\/p>/i).map(p => p.trim()).filter(p => p.length > 0);
 };
 
-export default async function HistoryArticlePage({ params }: { params: { slug: string } }) {
-  const article = await getHistoryArticleBySlug(params.slug)
+export default async function HistoryArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const article = await getHistoryArticleBySlug(slug)
   const allArticles = await getHistoryArticles(4) // Fetch a few articles for "related" section
   
   if (!article) {

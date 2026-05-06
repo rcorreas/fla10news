@@ -49,8 +49,9 @@ function formatPublishedTime(publishedAt: Date): string {
     return "Agora mesmo";
 }
 
-export default async function CategoryPage({ params }: { params: { category: string } }) {
-    const categoryName = VALID_CATEGORIES[params.category];
+export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+    const { category } = await params;
+    const categoryName = VALID_CATEGORIES[category];
 
     if (!categoryName) {
         notFound();

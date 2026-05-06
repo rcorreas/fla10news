@@ -22,7 +22,7 @@ import { Loader2, FilePen, Trash2 } from "lucide-react";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-const initialState = {
+const initialState: any = {
   success: false,
   message: "",
   errors: null,

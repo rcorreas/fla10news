@@ -4,7 +4,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
-import { AdminSidebar } from './admin-sidebar';
+import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { Loader2 } from 'lucide-react';
 
 export function AdminClientLayout({ children }: { children: React.ReactNode }) {

@@ -40,9 +40,10 @@ function formatPublishedTime(publishedAt: Date): string {
     return "Agora mesmo";
 }
 
-export default async function AuthorPage({ params }: { params: { slug: string } }) {
-    const authorDetails = await getAuthorDetailsBySlug(params.slug);
-    const authorColumns = await getColumnsByAuthorSlug(params.slug);
+export default async function AuthorPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const authorDetails = await getAuthorDetailsBySlug(slug);
+    const authorColumns = await getColumnsByAuthorSlug(slug);
 
     if (!authorDetails) {
         notFound();

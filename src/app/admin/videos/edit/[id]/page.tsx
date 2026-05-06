@@ -16,7 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
-const initialState = {
+const initialState: any = {
   success: false,
   message: "",
   errors: null,

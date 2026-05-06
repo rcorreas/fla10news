@@ -56,8 +56,9 @@ function formatPublishedTime(publishedAt: Date): string {
     return "Agora mesmo";
 }
 
-export default async function ColumnPage({ params }: { params: { slug:string } }) {
-  const column = await getColumnBySlug(params.slug)
+export default async function ColumnPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const column = await getColumnBySlug(slug)
   const allColumns = await getColumns(3); 
   
   if (!column) {

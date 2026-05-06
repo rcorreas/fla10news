@@ -46,10 +46,11 @@ function formatPublishedTime(publishedAt: Date): string {
 }
 
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
-  const article = await getNewsBySlug(params.slug)
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const article = await getNewsBySlug(slug)
   const latestNews = await getNews(3);
-  const otherNews = latestNews.filter(n => n.slug !== params.slug).slice(0, 2);
+  const otherNews = latestNews.filter(n => n.slug !== slug).slice(0, 2);
 
   if (!article) {
     notFound()

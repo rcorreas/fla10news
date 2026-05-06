@@ -19,7 +19,7 @@ import Link from "next/link";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
-const initialState = {
+const initialState: any = {
   success: false,
   message: "",
   errors: null,

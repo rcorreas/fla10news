@@ -59,10 +59,11 @@ function formatPublishedTime(publishedAt: Date): string {
     return "Agora mesmo";
 }
 
-export default async function VideoPage({ params }: { params: { slug: string } }) {
-  const video = await getVideoBySlug(params.slug)
+export default async function VideoPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const video = await getVideoBySlug(slug)
   const allVideos = await getVideos(3);
-  const otherVideos = allVideos.filter(v => v.slug !== params.slug).slice(0, 2);
+  const otherVideos = allVideos.filter(v => v.slug !== slug).slice(0, 2);
 
   if (!video) {
     notFound()
