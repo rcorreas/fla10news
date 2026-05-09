@@ -89,7 +89,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (isSuperAdminByEmail) {
           finalProfile.role = 'superadmin';
           if (dbProfile.role !== 'superadmin') {
-            await updateDoc(userDocRef, { role: 'superadmin' });
+            try {
+              await updateDoc(userDocRef, { role: 'superadmin' });
+            } catch (err) {
+              console.warn("Could not update superadmin role in DB:", err);
+            }
           }
         }
         
@@ -106,7 +110,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           photoURL: null,
           dob: null,
         };
-        await setDoc(userDocRef, newSuperAdminProfile);
+        try {
+          await setDoc(userDocRef, newSuperAdminProfile);
+        } catch (err) {
+          console.warn("Could not create superadmin profile in DB:", err);
+        }
         finalProfile = { ...newSuperAdminProfile, id: user.uid, createdAt: new Date() };
       }
       
@@ -115,7 +123,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     }, (error) => {
       console.error("Error fetching user profile:", error);
-      setUserProfile(null);
+      
+      const isSuperAdminByEmail = !!user.email && SUPERADMIN_EMAILS.includes(user.email);
+      if (isSuperAdminByEmail) {
+         setUserProfile({
+          id: user.uid,
+          email: user.email,
+          role: 'superadmin',
+          firstName: user.email!.split('@')[0],
+          lastName: '',
+          username: user.email!.split('@')[0],
+          photoURL: null,
+          dob: null,
+          createdAt: new Date(),
+          isBlocked: false,
+         });
+      } else {
+         setUserProfile(null);
+      }
       setLoading(false);
     });
 

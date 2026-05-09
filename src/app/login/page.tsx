@@ -32,18 +32,27 @@ export default function LoginPage() {
 
             // Check if the user is blocked before allowing login
             const userDocRef = doc(db, 'users', user.uid);
-            const userDoc = await getDoc(userDocRef);
+            try {
+                const userDoc = await getDoc(userDocRef);
 
-            if (userDoc.exists() && userDoc.data().isBlocked) {
-                await auth.signOut(); // Sign out the user immediately
-                toast({
-                    title: "Acesso Bloqueado",
-                    description: "Sua conta foi bloqueada por um administrador. Entre em contato com o suporte.",
-                    variant: "destructive",
-                });
-            } else {
-                router.push('/');
+                if (userDoc.exists() && userDoc.data().isBlocked) {
+                    const isSuperAdmin = !!user.email && ['canalfladez@gmail.com', 'rcorreas@gmail.com'].includes(user.email);
+                    if (!isSuperAdmin) {
+                        await auth.signOut(); // Sign out the user immediately
+                        setLoading(false);
+                        toast({
+                            title: "Acesso Bloqueado",
+                            description: "Sua conta foi bloqueada por um administrador. Entre em contato com o suporte.",
+                            variant: "destructive",
+                        });
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn("Erro ao ler documento de usuário no login (pode ser permissão do Firestore):", err);
             }
+            
+            router.push('/');
             
         } catch (e: any) {
             console.error(e);
