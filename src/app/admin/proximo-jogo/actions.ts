@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { db } from '@/lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { nextGame as gameSchema } from '@/data/next-game';
+import { revalidatePath } from 'next/cache';
 
 type NextGameData = typeof gameSchema;
 
@@ -29,6 +30,9 @@ export async function updateNextGame(data: NextGameData) {
     try {
         const configDocRef = doc(db, 'siteConfig', 'nextGame');
         await setDoc(configDocRef, validatedFields.data, { merge: true });
+
+        // Revalida a página principal e o layout para atualizar o banner do próximo jogo
+        revalidatePath('/', 'layout');
 
         return {
             success: true,

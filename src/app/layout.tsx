@@ -3,6 +3,8 @@ import { NextGameBanner } from '@/components/next-game-banner';
 import { ClientLayout } from '@/components/layout/client-layout';
 import type { Metadata } from 'next';
 
+export const revalidate = 60; // Revalida o cache da página a cada 60 segundos
+
 export const metadata: Metadata = {
   title: 'FLA10 News',
   description: 'Seu portal diário de notícias sobre o Clube de Regatas do Flamengo.',
