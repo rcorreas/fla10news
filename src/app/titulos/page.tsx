@@ -66,8 +66,8 @@ export default function TitulosPage() {
             <CardContent className="p-6 divide-y">
                 <TrophyItem 
                     title="Campeonato Brasileiro – Série A"
-                    count={8}
-                    years="1980, 1982, 1983, 1987, 1992, 2009, 2019, 2020"
+                    count={9}
+                    years="1980, 1982, 1983, 1987, 1992, 2009, 2019, 2020, 2025"
                     details="*1987 (Copa União – Módulo Verde)"
                 />
                  <TrophyItem 
@@ -77,8 +77,8 @@ export default function TitulosPage() {
                 />
                  <TrophyItem 
                     title="Supercopa do Brasil"
-                    count={2}
-                    years="2020, 2021"
+                    count={3}
+                    years="2020, 2021, 2025"
                 />
                  <TrophyItem 
                     title="Torneio Rio-São Paulo"
@@ -108,8 +108,8 @@ export default function TitulosPage() {
             <CardContent className="p-6 divide-y">
                  <TrophyItem 
                     title="Copa Libertadores da América"
-                    count={3}
-                    years="1981, 2019, 2022 (invicto)"
+                    count={4}
+                    years="1981, 2019, 2022 (invicto), 2025"
                 />
                 <TrophyItem 
                     title="Mundial Interclubes"
@@ -150,8 +150,8 @@ export default function TitulosPage() {
             <CardContent className="p-6 divide-y">
                 <TrophyItem 
                     title="Campeonato Carioca"
-                    count={39}
-                    years="1914, 1915 (invicto), 1920 (invicto), 1921, 1925, 1927, 1939, 1942, 1943, 1944, 1953, 1954, 1955, 1963, 1965, 1972, 1974, 1978, 1979, 1979 (especial - invicto), 1981, 1986, 1991, 1996 (invicto), 1999, 2000, 2001, 2004, 2007, 2008, 2009, 2011 (invicto), 2014, 2017 (invicto), 2019, 2020, 2021, 2024 (invicto) e 2025."
+                    count={40}
+                    years="1914, 1915 (invicto), 1920 (invicto), 1921, 1925, 1927, 1939, 1942, 1943, 1944, 1953, 1954, 1955, 1963, 1965, 1972, 1974, 1978, 1979, 1979 (especial - invicto), 1981, 1986, 1991, 1996 (invicto), 1999, 2000, 2001, 2004, 2007, 2008, 2009, 2011 (invicto), 2014, 2017 (invicto), 2019, 2020, 2021, 2024 (invicto), 2025 e 2026."
                 />
                 <TrophyItem 
                     title="Taça Guanabara"
