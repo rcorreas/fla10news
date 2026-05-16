@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 
 // Icons
 import { Loader2, FilePen, Trash2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -52,6 +53,10 @@ export default function ColunasPage() {
   const [columnsList, setColumnsList] = useState<OpinionColumn[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // States for Column Name selection
+  const [selectedColumn, setSelectedColumn] = useState<string>("");
+  const [newColumn, setNewColumn] = useState<string>("");
+
   const fetchColumns = async () => {
     setIsLoading(true);
     const columns = await getColumns();
@@ -71,6 +76,8 @@ export default function ColunasPage() {
           description: state.message,
         });
         formRef.current?.reset();
+        setSelectedColumn("");
+        setNewColumn("");
         fetchColumns(); // Re-fetch columns to update the list
       } else {
         let description = state.message;
@@ -104,6 +111,11 @@ export default function ColunasPage() {
     }
   };
 
+  const uniqueColumns = Array.from(new Set(columnsList.map(c => c.columnName)));
+  const finalColumnName = newColumn.trim() !== "" ? newColumn : selectedColumn;
+  const isCreatingNewColumn = newColumn.trim() !== "";
+  const existingColumnData = columnsList.find(c => c.columnName === selectedColumn);
+
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       <Card>
@@ -115,30 +127,61 @@ export default function ColunasPage() {
         </CardHeader>
         <form ref={formRef} action={formAction}>
           <CardContent className="space-y-6">
+            <input type="hidden" name="columnName" value={finalColumnName} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="columnName">Nome da Coluna</Label>
-                    <Input id="columnName" name="columnName" placeholder="Ex: Voz da Torcida" required />
+                    <Label>Nome da Coluna (Existente)</Label>
+                    <Select onValueChange={setSelectedColumn} value={selectedColumn}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione uma coluna..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {uniqueColumns.map(col => (
+                          <SelectItem key={col} value={col}>{col}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                 </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="newColumnName">Ou Criar Nova Coluna</Label>
+                    <Input 
+                      id="newColumnName" 
+                      placeholder="Ex: Voz da Torcida" 
+                      value={newColumn}
+                      onChange={(e) => setNewColumn(e.target.value)}
+                    />
+                </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
                     <Label htmlFor="category">Categoria (Tag)</Label>
                     <Input id="category" name="category" placeholder="Ex: Opinião, Análise Tática" required />
                 </div>
             </div>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {isCreatingNewColumn ? (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid gap-2">
+                        <Label htmlFor="author">Autor</Label>
+                        <Input id="author" name="author" placeholder="Ex: Zico" required />
+                    </div>
+                     <div className="grid gap-2">
+                        <Label htmlFor="authorImage">Link da Foto do Autor</Label>
+                        <Input id="authorImage" name="authorImage" type="url" placeholder="https://exemplo.com/foto.png" required />
+                    </div>
+                </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="author">Autor</Label>
-                    <Input id="author" name="author" placeholder="Ex: Zico" required />
+                  <Label htmlFor="authorLink">Link do Autor (Opcional)</Label>
+                  <Input id="authorLink" name="authorLink" type="url" placeholder="https://twitter.com/autor" />
                 </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="authorImage">Link da Foto do Autor</Label>
-                    <Input id="authorImage" name="authorImage" type="url" placeholder="https://exemplo.com/foto.png" required />
-                </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="authorLink">Link do Autor (Opcional)</Label>
-              <Input id="authorLink" name="authorLink" type="url" placeholder="https://twitter.com/autor" />
-            </div>
+              </>
+            ) : (
+              <>
+                <input type="hidden" name="author" value={existingColumnData?.author || ""} />
+                <input type="hidden" name="authorImage" value={existingColumnData?.authorImage || ""} />
+                <input type="hidden" name="authorLink" value={existingColumnData?.authorLink || ""} />
+              </>
+            )}
             <div className="grid gap-2">
               <Label htmlFor="title">Título do Artigo</Label>
               <Input id="title" name="title" placeholder="Um título chamativo para a coluna de hoje" required />
