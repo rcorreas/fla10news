@@ -100,7 +100,12 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
                     />
                 </div>
             )}
-            <p className="font-sans text-6xl font-bold text-primary text-center">{column.columnName}</p>
+            {column.columnName === "Panorama do Canela" && (
+  <div className="absolute left-[-30px] h-40 w-40 flex-shrink-0">
+    <Image src="https://i.imgur.com/Ivq88KP.png" alt="Panorama do Canela" fill className="object-contain" />
+  </div>
+)}
+<p className="font-sans text-6xl font-bold text-primary text-center">{column.columnName}</p>
           </div>
           <Separator className="my-4" />
           <h1 className="font-headline text-3xl md:text-4xl font-bold leading-tight">{column.title}</h1>
