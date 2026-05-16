@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator'
 import { AdBanner } from '@/components/ad-banner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Clock } from 'lucide-react'
+import { slugify } from '@/lib/utils'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -105,7 +106,9 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
     <Image src="https://i.imgur.com/Ivq88KP.png" alt="Panorama do Canela" fill className="object-contain" />
   </div>
 )}
-<p className="font-sans text-6xl font-bold text-primary text-center">{column.columnName}</p>
+<Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline transition-all">
+    <p className="font-sans text-6xl font-bold text-primary text-center">{column.columnName}</p>
+</Link>
           </div>
           <Separator className="my-4" />
           <h1 className="font-headline text-3xl md:text-4xl font-bold leading-tight">{column.title}</h1>
@@ -164,7 +167,9 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
                                 <AvatarFallback>{col.author.slice(0, 2).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <p className="font-bold text-primary">{col.columnName}</p>
+                                <Link href={`/colunas/caderno/${slugify(col.columnName)}`} className="hover:underline">
+                                    <p className="font-bold text-primary">{col.columnName}</p>
+                                </Link>
                                 <p className="text-sm text-muted-foreground">Por {col.author}</p>
                             </div>
                         </div>

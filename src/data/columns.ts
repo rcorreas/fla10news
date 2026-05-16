@@ -75,6 +75,17 @@ export async function getColumnsByAuthorSlug(authorSlug: string): Promise<Opinio
     }
 }
 
+export async function getColumnsByCadernoSlug(cadernoSlug: string): Promise<OpinionColumn[]> {
+    try {
+        const allColumns = await getColumns();
+        const cadernoColumns = allColumns.filter(column => generateSlug(column.columnName) === cadernoSlug);
+        return cadernoColumns;
+    } catch (error) {
+        console.error(`Error fetching columns for caderno slug ${cadernoSlug}:`, error);
+        return [];
+    }
+}
+
 export async function getAuthorDetailsBySlug(authorSlug: string): Promise<{ author: string; authorImage: string } | null> {
     try {
         const allColumns = await getColumns();

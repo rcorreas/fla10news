@@ -17,6 +17,7 @@ import { ActiveReaders } from '@/components/home/active-readers'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { ShareButton } from '@/components/share-button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { slugify } from '@/lib/utils'
 
 function formatPublishedTime(publishedAt: Date): string {
   const now = new Date();
@@ -232,7 +233,9 @@ export default async function Home() {
                             <AvatarFallback>{column.author.slice(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <p className="font-bold text-primary">{column.columnName}</p>
+                            <Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline">
+                                <p className="font-bold text-primary">{column.columnName}</p>
+                            </Link>
                             <p className="text-sm text-muted-foreground">Por {column.author}</p>
                         </div>
                     </div>
