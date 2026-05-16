@@ -34,7 +34,7 @@ function formatPublishedTime(publishedAt: Date): string {
     return "Agora mesmo";
 }
 
-export default async function CadernoPage({ params }: { params: { slug: string } }) {
+export default async function CadernoPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const columns = await getColumnsByCadernoSlug(slug);
 
