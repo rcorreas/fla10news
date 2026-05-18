@@ -59,14 +59,42 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
 
   const parseContent = (content: string): string[] => {
-      // Splits content by </p> tags and filters out empty strings.
-      return content.split(/<\/p>/i).map(p => p.trim()).filter(p => p.length > 0);
+      // If content has </p> tags, split by them safely
+      if (content.toLowerCase().includes('</p>')) {
+          const parts = content.split(/(<\/p>)/i);
+          const result = [];
+          let current = '';
+          for (const part of parts) {
+              current += part;
+              if (part.toLowerCase() === '</p>') {
+                  result.push(current.trim());
+                  current = '';
+              }
+          }
+          if (current.trim().length > 0) {
+              result.push(current.trim());
+          }
+          return result;
+      }
+      
+      // If content is plain text with double newlines
+      if (content.includes('\n\n')) {
+          return content.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p.replace(/\n/g, '<br/>')}</p>`);
+      }
+
+      // If content has single newlines
+      if (content.includes('\n')) {
+          return content.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p}</p>`);
+      }
+
+      // Fallback
+      return [content];
   };
   
   const paragraphs = article.content ? parseContent(article.content) : [];
   const midPoint = Math.floor(paragraphs.length / 2);
-  const firstHalf = paragraphs.slice(0, midPoint).map(p => p.includes('<p') ? p : `<p>${p}`).join('</p>') + (paragraphs.length > 0 ? '</p>' : '');
-  const secondHalf = paragraphs.slice(midPoint).map(p => p.includes('<p') ? p : `<p>${p}`).join('</p>') + (paragraphs.length > midPoint ? '</p>' : '');
+  const firstHalf = paragraphs.slice(0, midPoint).join('\n');
+  const secondHalf = paragraphs.slice(midPoint).join('\n');
 
 
   return (
