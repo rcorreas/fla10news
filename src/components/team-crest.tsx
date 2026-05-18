@@ -25,6 +25,7 @@ const teamCrests: Record<string, string> = {
   "Atlético-GO": "https://i.imgur.com/wV1RWSn.png",
   "Santos": "https://i.postimg.cc/PrS7QGkR/Escudo-do-Santos-Futebol-Clube.png",
   "CAP": "https://i.imgur.com/9MHMoGv.png",
+  "Estudiantes": "https://i.imgur.com/ejaLTel.png",
 };
 
 
