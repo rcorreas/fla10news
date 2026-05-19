@@ -75,13 +75,13 @@ function formatViews(views: number): string {
 }
 
 export default async function Home() {
-  const allNews = await getNews(10);
+  const allNews = await getNews(12);
   const allColumns = await getColumns(3);
   const allVideos = await getVideos(3);
   const historicArticles = await getHistoryArticles(1);
 
-  const mainHeadlines = allNews.slice(0, 3);
-  const dailyNews = allNews.slice(3, 9); // Now shows 6 articles
+  const mainHeadlines = allNews.slice(0, 6);
+  const dailyNews = allNews.slice(6, 12); // Now shows 6 articles
   const homePageOpinionColumns = allColumns;
   const homePageVideos = allVideos;
   const latestNews = allNews.length > 0 ? allNews[0] : null;
