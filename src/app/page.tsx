@@ -77,7 +77,7 @@ function formatViews(views: number): string {
 export default async function Home() {
   const allNews = await getNews(12);
   const allColumns = await getColumns(3);
-  const allVideos = await getVideos(3);
+  const allVideos = await getVideos(7);
   const historicArticles = await getHistoryArticles(1);
 
   const mainHeadlines = allNews.slice(0, 6);
@@ -255,7 +255,7 @@ export default async function Home() {
 
         {featuredHistoricArticle && (
             <section>
-                <SectionHeader title="Flamengo na História" subtitle="Relembre os momentos que marcaram a trajetória do Mengão." href="/historia" icon={Trophy} />
+                <SectionHeader title="Flamengo na História" subtitle="Relembre os momentos que marcaram a trajetória do Mengão." href="/flahistoria" icon={Trophy} />
                 <div className="flex justify-center">
                     <Card className="w-full max-w-2xl group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                         <Link href={`/flahistoria/${featuredHistoricArticle.slug}`}>
