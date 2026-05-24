@@ -18,8 +18,59 @@ function getYouTubeId(url: string) {
 }
 
 const parseContent = (content: string): string[] => {
-    // Splits content by </p> tags and filters out empty strings.
-    return content.split(/<\/p>/i).map(p => p.trim()).filter(p => p.length > 0);
+    if (!content) return [];
+    
+    const trimmed = content.trim();
+    
+    // Detecta se o conteúdo possui marcação HTML de parágrafo ou título
+    const hasHtml = /<[a-z][\s\S]*>/i.test(trimmed);
+    
+    if (!hasHtml) {
+        // Trata como texto puro
+        // Divide por quebras de linha duplas
+        const paragraphs = trimmed
+            .split(/\n\s*\n/)
+            .map(p => p.trim())
+            .filter(p => p.length > 0);
+            
+        if (paragraphs.length <= 1 && trimmed.includes('\n')) {
+            // Se houver apenas uma linha contendo quebras de linha simples, divide por quebras de linha simples
+            const singleLines = trimmed
+                .split('\n')
+                .map(p => p.trim())
+                .filter(p => p.length > 0);
+            return singleLines.map(p => `<p>${p}</p>`);
+        }
+        
+        return paragraphs.map(p => `<p>${p}</p>`);
+    }
+    
+    // Possui marcação HTML. Vamos extrair os blocos completos de nível de bloco
+    const blocks: string[] = [];
+    const blockRegex = /<(p|h1|h2|h3|h4|h5|h6|div|section|blockquote|ul|ol|li)[^>]*>([\s\S]*?)<\/\1>/gi;
+    
+    let match;
+    let lastIndex = 0;
+    
+    while ((match = blockRegex.exec(trimmed)) !== null) {
+        const between = trimmed.substring(lastIndex, match.index).trim();
+        if (between) {
+            blocks.push(`<p>${between}</p>`);
+        }
+        blocks.push(match[0]);
+        lastIndex = blockRegex.lastIndex;
+    }
+    
+    const remaining = trimmed.substring(lastIndex).trim();
+    if (remaining) {
+        if (remaining.startsWith('<') && remaining.endsWith('>')) {
+            blocks.push(remaining);
+        } else {
+            blocks.push(`<p>${remaining}</p>`);
+        }
+    }
+    
+    return blocks.filter(b => b.trim().length > 0);
 };
 
 export default async function HistoryArticlePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -36,9 +87,10 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
   const videoId = article.videoUrl ? getYouTubeId(article.videoUrl) : null;
   
   const paragraphs = article.content ? parseContent(article.content) : [];
-  const midPoint = Math.floor(paragraphs.length / 2);
-  const firstHalf = paragraphs.slice(0, midPoint).map(p => p.includes('<p') ? p : `<p>${p}`).join('</p>') + (paragraphs.length > 0 ? '</p>' : '');
-  const secondHalf = paragraphs.slice(midPoint).map(p => p.includes('<p') ? p : `<p>${p}`).join('</p>') + (paragraphs.length > midPoint ? '</p>' : '');
+  const midPoint = Math.ceil(paragraphs.length / 2);
+  const firstHalf = paragraphs.slice(0, midPoint).join('');
+  const secondHalf = paragraphs.slice(midPoint).join('');
+
 
 
   return (
@@ -112,7 +164,7 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
                     </div>
                 )}
 
-                <div dangerouslySetInnerHTML={{ __html: secondHalf }} />
+                {secondHalf && <div dangerouslySetInnerHTML={{ __html: secondHalf }} />}
               </>
             )}
         </div>
