@@ -112,7 +112,7 @@ export function Footer() {
               <FooterSectionTitle>Categorias</FooterSectionTitle>
               <ul className="space-y-2">
                 {categoryLinks.map(link => (
-                    <FooterLink key={link.href} href={`/${link.label.toLowerCase().replace(' ','-')}`}>{link.label}</FooterLink>
+                    <FooterLink key={link.href} href={link.href}>{link.label}</FooterLink>
                 ))}
               </ul>
             </div>
@@ -131,9 +131,10 @@ export function Footer() {
             <div>
               <FooterSectionTitle>Institucional</FooterSectionTitle>
               <ul className="space-y-2">
+                <FooterLink href="/quem-somos">Quem Somos</FooterLink>
+                <FooterLink href="/contato">Contato</FooterLink>
                 <FooterLink href="/fale-conosco">Fale Conosco</FooterLink>
                 <FooterLink href="/trabalhe-conosco">Trabalhe Conosco</FooterLink>
-                <FooterLink href="/assessoria">Assessoria</FooterLink>
                 <FooterLink href="/responsabilidade">Responsabilidade</FooterLink>
               </ul>
             </div>
@@ -148,7 +149,7 @@ export function Footer() {
           <div className="flex gap-4">
             <Link href="/politica-de-privacidade" className="transition-colors text-muted-foreground hover:text-primary-foreground">Política de Privacidade</Link>
             <Link href="/termos-de-uso" className="transition-colors text-muted-foreground hover:text-primary-foreground">Termos de Uso</Link>
-            <Link href="/cookies" className="transition-colors text-muted-foreground hover:text-primary-foreground">Cookies</Link>
+            <Link href="/politica-de-cookies" className="transition-colors text-muted-foreground hover:text-primary-foreground">Política de Cookies</Link>
           </div>
         </div>
       </div>

@@ -10,18 +10,32 @@ export function AdminClientLayout({ children }: { children: React.ReactNode }) {
   const { user, userProfile, loading } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!loading) {
-      if (!user || !userProfile || (userProfile.role !== 'admin' && userProfile.role !== 'superadmin')) {
-        router.push('/login');
-      }
-    }
-  }, [user, userProfile, loading, router]);
+  // useEffect(() => {
+  //   if (!loading) {
+  //     if (!user || !userProfile || (userProfile.role !== 'admin' && userProfile.role !== 'superadmin')) {
+  //       router.push('/login');
+  //     }
+  //   }
+  // }, [user, userProfile, loading, router]);
 
-  if (loading || !user || !userProfile || (userProfile.role !== 'admin' && userProfile.role !== 'superadmin')) {
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen">Carregando painel administrativo...</div>;
+  }
+
+  if (!user || !userProfile || (userProfile.role !== 'admin' && userProfile.role !== 'superadmin')) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex items-center justify-center min-h-screen flex-col p-8 bg-zinc-900 text-white">
+        <h1 className="text-2xl font-bold text-red-500 mb-4">Erro de Acesso ao Painel</h1>
+        <p className="mb-4">Por favor, tire um print (foto) desta tela e me envie, ou copie o texto abaixo:</p>
+        <pre className="bg-black text-green-400 p-4 rounded w-full max-w-2xl overflow-auto text-xs">
+          {JSON.stringify({ 
+            userEmail: user?.email, 
+            userId: user?.uid,
+            profileExists: !!userProfile,
+            profileRole: userProfile?.role,
+            loadingState: loading 
+          }, null, 2)}
+        </pre>
       </div>
     );
   }
