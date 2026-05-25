@@ -44,10 +44,10 @@ const videoViewsConfig = {
   },
 } satisfies ChartConfig
 
-export function ContentViewsChart() {
+export function ContentViewsChart({ data }: { data: { category: string; views: number; fill: string }[] }) {
   return (
     <ChartContainer config={videoViewsConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={videoViewsData}>
+      <BarChart accessibilityLayer data={data}>
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="category"
@@ -101,10 +101,10 @@ const shareDestinationsConfig = {
   },
 } satisfies ChartConfig
 
-export function ShareDestinationsChart() {
+export function ShareDestinationsChart({ data }: { data: { platform: string; shares: number; fill: string }[] }) {
   return (
     <ChartContainer config={shareDestinationsConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={shareDestinationsData} layout="vertical">
+      <BarChart accessibilityLayer data={data} layout="vertical">
         <CartesianGrid horizontal={false} />
         <YAxis
           dataKey="platform"
