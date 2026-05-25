@@ -26,6 +26,7 @@ const teamCrests: Record<string, string> = {
   "Santos": "https://i.postimg.cc/PrS7QGkR/Escudo-do-Santos-Futebol-Clube.png",
   "CAP": "https://i.imgur.com/9MHMoGv.png",
   "Estudiantes": "https://i.imgur.com/ejaLTel.png",
+  "Cusco": "https://upload.wikimedia.org/wikipedia/en/thumb/9/91/Cusco_FC_logo.svg/300px-Cusco_FC_logo.svg.png",
 };
 
 
