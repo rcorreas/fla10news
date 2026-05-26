@@ -59,6 +59,9 @@ function formatPublishedTime(publishedAt: Date): string {
     return "Agora mesmo";
 }
 
+import { db } from '@/lib/firebase'
+import { doc, updateDoc, increment } from 'firebase/firestore'
+
 export default async function VideoPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const video = await getVideoBySlug(slug)
@@ -67,6 +70,18 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
 
   if (!video) {
     notFound()
+  }
+
+  // Increment dynamic view count in Firebase asynchronously (ignore static fallbacks)
+  if (video.id && !video.id.startsWith('static')) {
+    try {
+      const videoRef = doc(db, 'videos', video.id);
+      updateDoc(videoRef, {
+        views: increment(1)
+      }).catch(err => console.error("Error updating video views:", err));
+    } catch (err) {
+      console.error("Error incrementing video views:", err);
+    }
   }
 
   const videoId = video.videoUrl ? getYouTubeId(video.videoUrl) : null;

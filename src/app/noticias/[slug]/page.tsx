@@ -46,6 +46,9 @@ function formatPublishedTime(publishedAt: Date): string {
 }
 
 
+import { db } from '@/lib/firebase'
+import { doc, updateDoc, increment } from 'firebase/firestore'
+
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const article = await getNewsBySlug(slug)
@@ -54,6 +57,16 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   if (!article) {
     notFound()
+  }
+
+  // Increment dynamic view count in Firebase asynchronously
+  try {
+    const articleRef = doc(db, 'news', article.id);
+    updateDoc(articleRef, {
+      views: increment(1)
+    }).catch(err => console.error("Error updating news views:", err));
+  } catch (err) {
+    console.error("Error incrementing news views:", err);
   }
 
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });

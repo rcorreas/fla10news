@@ -57,6 +57,9 @@ function formatPublishedTime(publishedAt: Date): string {
     return "Agora mesmo";
 }
 
+import { db } from '@/lib/firebase'
+import { doc, updateDoc, increment } from 'firebase/firestore'
+
 export default async function ColumnPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const column = await getColumnBySlug(slug)
@@ -64,6 +67,16 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
   
   if (!column) {
     notFound()
+  }
+  
+  // Increment dynamic view count in Firebase asynchronously
+  try {
+    const columnRef = doc(db, 'columns', column.id);
+    updateDoc(columnRef, {
+      views: increment(1)
+    }).catch(err => console.error("Error updating column views:", err));
+  } catch (err) {
+    console.error("Error incrementing column views:", err);
   }
   
   const otherColumns = allColumns.filter(c => c.id !== column.id).slice(0, 2);

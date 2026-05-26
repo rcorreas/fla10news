@@ -67,9 +67,13 @@ export async function getNewsByCategory(category: string): Promise<NewsArticle[]
         if (!allNews.length) {
             return [];
         }
-        // Filter in JS to avoid case-sensitivity issues and ensure robust matching
+        
+        const normalizeStr = (str: string) => 
+            str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+        // Filter in JS to avoid case-sensitivity and accent issues, ensuring robust matching
         const filteredNews = allNews.filter(
-            (news) => news.mainCategory.toLowerCase() === category.toLowerCase()
+            (news) => normalizeStr(news.mainCategory) === normalizeStr(category)
         );
         return filteredNews;
     } catch (error) {
