@@ -9,6 +9,7 @@ import { format, differenceInMinutes, differenceInHours, differenceInDays } from
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AdBanner } from '@/components/ad-banner';
 import { slugify } from '@/lib/utils';
+import { ShareButton } from '@/components/share-button';
 
 function formatPublishedTime(publishedAt: Date): string {
     const now = new Date();
@@ -54,7 +55,8 @@ export default async function ColunasPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {allColumns.flatMap((column, index) => {
                     const card = (
-                        <Card key={column.slug} className="flex flex-col group transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
+                        <Card key={column.slug} className="relative flex flex-col group transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
+                            <ShareButton title={column.title} slug={column.slug} type="colunas" />
                             <CardHeader>
                                 <div className="flex items-center justify-between mb-4">
                                     <Badge variant="default">{column.category}</Badge>

@@ -8,6 +8,9 @@ import { ptBR } from 'date-fns/locale'
 import { AdBanner } from '@/components/ad-banner'
 import { Clock, PlayCircle, Trophy } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { ShareButton } from '@/components/share-button'
+import { ArticleShareButton } from '@/components/article-share-button'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -111,6 +114,10 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
 
       <article>
         <header className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <Badge variant="default">História</Badge>
+            <ArticleShareButton title={article.title} slug={article.slug} type="flahistoria" />
+          </div>
           <h1 className="font-headline text-4xl md:text-5xl font-bold leading-tight mb-2">{article.title}</h1>
           <p className="text-xl text-muted-foreground mb-4">{article.subtitle}</p>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
@@ -195,11 +202,12 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {otherArticles.map((item) => (
                     <Card key={item.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
-                        <Link href={`/flahistoria/${item.slug}`}>
-                            <CardHeader className="p-0 relative">
+                        <CardHeader className="p-0 relative">
+                            <Link href={`/flahistoria/${item.slug}`}>
                                 <Image src={item.image} alt={item.title} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.dataAiHint} />
-                            </CardHeader>
-                        </Link>
+                            </Link>
+                            <ShareButton title={item.title} slug={item.slug} type="flahistoria" />
+                        </CardHeader>
                         <CardContent className="flex-grow p-4 space-y-2">
                             <CardTitle className="text-lg font-bold font-body leading-tight">
                                 <Link href={`/flahistoria/${item.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">

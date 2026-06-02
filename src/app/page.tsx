@@ -218,7 +218,8 @@ export default async function Home() {
           <SectionHeader title="Colunas e Opinião" subtitle="Análises e comentários dos torcedores e dos melhores cronistas esportivos." href="/colunas" icon={Users} />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {homePageOpinionColumns.map((column) => (
-              <Card key={column.slug} className="flex flex-col group transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
+              <Card key={column.slug} className="relative flex flex-col group transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
+                <ShareButton title={column.title} slug={column.slug} type="colunas" />
                 <CardHeader>
                     <div className="flex items-center justify-between mb-4">
                         <Badge variant="default">{column.category}</Badge>
@@ -263,6 +264,7 @@ export default async function Home() {
                                 <Image src={featuredHistoricArticle.image} alt={featuredHistoricArticle.title} width={700} height={400} className="w-full object-cover aspect-video transition-transform duration-300 group-hover:scale-105" data-ai-hint={featuredHistoricArticle.dataAiHint} />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                                 <Badge variant="default" className="absolute top-3 left-3">Memória</Badge>
+                                <ShareButton title={featuredHistoricArticle.title} slug={featuredHistoricArticle.slug} type="flahistoria" />
                             </CardHeader>
                             <CardContent className="p-6">
                                 <CardTitle className="text-2xl font-bold font-body leading-tight mb-2 group-hover:text-[#FF073A] transition-colors duration-200">
@@ -297,6 +299,7 @@ export default async function Home() {
                     </div>
                   </Link>
                    <Badge className="absolute top-2 left-2">{video.category}</Badge>
+                   <ShareButton title={video.title} slug={video.slug} type="videos" />
                 </CardHeader>
                 <CardContent className="p-4 flex-grow">
                    <CardTitle className="text-lg font-bold font-body leading-tight">

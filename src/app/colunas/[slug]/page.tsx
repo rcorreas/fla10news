@@ -12,6 +12,8 @@ import { AdBanner } from '@/components/ad-banner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Clock } from 'lucide-react'
 import { slugify } from '@/lib/utils'
+import { ShareButton } from '@/components/share-button'
+import { ArticleShareButton } from '@/components/article-share-button'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -90,8 +92,9 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
       </div>
       <article>
         <header className="mb-8">
-          <div className="flex justify-end mb-2">
+          <div className="flex justify-between items-center mb-4">
             <Badge variant="default">{column.category}</Badge>
+            <ArticleShareButton title={column.title} slug={column.slug} type="colunas" />
           </div>
           <div className="relative flex items-center justify-center h-40">
             {column.columnName === "É Mengão na veia!!!" && (
@@ -165,7 +168,8 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
           <h2 className="text-3xl font-headline font-bold mb-6">Outras Colunas</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {otherColumns.map((col) => (
-                <Card key={col.slug} className="flex flex-col group transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
+                <Card key={col.slug} className="relative flex flex-col group transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
+                    <ShareButton title={col.title} slug={col.slug} type="colunas" />
                     <CardHeader>
                         <div className="flex items-center justify-between mb-4">
                             <Badge variant="default">{col.category}</Badge>

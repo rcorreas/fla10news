@@ -8,6 +8,8 @@ import { ptBR } from 'date-fns/locale'
 import { Clock, Eye, PlayCircle } from 'lucide-react'
 import { AdBanner } from '@/components/ad-banner'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { ShareButton } from '@/components/share-button'
+import { ArticleShareButton } from '@/components/article-share-button'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -91,7 +93,10 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
     <div className="container mx-auto max-w-4xl py-12">
       <article>
         <header className="mb-8">
-          <Badge variant="default">{video.category}</Badge>
+          <div className="flex justify-between items-center mb-4">
+            <Badge variant="default">{video.category}</Badge>
+            <ArticleShareButton title={video.title} slug={video.slug} type="videos" />
+          </div>
           <h1 className="font-headline text-4xl md:text-5xl font-bold leading-tight my-4">{video.title}</h1>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
              <div className="flex items-center gap-1.5">
@@ -155,6 +160,7 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
                         </div>
                     </Link>
                     <Badge className="absolute top-2 left-2">{video.category}</Badge>
+                    <ShareButton title={video.title} slug={video.slug} type="videos" />
                 </CardHeader>
                 <CardContent className="p-4 flex-grow">
                     <CardTitle className="text-lg font-bold font-body leading-tight">

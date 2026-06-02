@@ -5,6 +5,7 @@ import { getVideos } from '@/data/videos'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { ShareButton } from '@/components/share-button'
 
 function formatPublishedTime(publishedAt: Date): string {
     const now = new Date();
@@ -47,7 +48,7 @@ export default async function VideosPage() {
         <div className="container mx-auto py-12">
             <div className="mb-8">
                 <h1 className="text-4xl font-headline font-bold">Vídeos e Bastidores</h1>
-                <p className="text-lg text-muted-foreground mt-2">Veja os melhores momentos, entrevistas e o dia a dia do Mais Querido.</p>
+                <p className="text-lg text-muted-foreground mt-2">Veja os melhores momentos, interviews e o dia a dia do Mais Querido.</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -63,6 +64,7 @@ export default async function VideosPage() {
                                 </div>
                             </Link>
                             <Badge className="absolute top-2 left-2">{video.category}</Badge>
+                            <ShareButton title={video.title} slug={video.slug} type="videos" />
                         </CardHeader>
                         <CardContent className="p-4 flex-grow">
                             <CardTitle className="text-lg font-bold font-body leading-tight">

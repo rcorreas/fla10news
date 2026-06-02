@@ -6,6 +6,7 @@ import { getHistoryArticles } from '@/data/history';
 import { format } from 'date-fns';
 import { Clock, Trophy } from 'lucide-react';
 import { AdBanner } from '@/components/ad-banner';
+import { ShareButton } from '@/components/share-button';
 
 export const revalidate = 3600; // Revalida no máximo a cada 1 hora
 
@@ -36,8 +37,8 @@ export default async function FlaHistoriaPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {articles.map((article) => (
                         <Card key={article.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
-                            <Link href={`/flahistoria/${article.slug}`}>
-                                <CardHeader className="p-0 relative">
+                            <CardHeader className="p-0 relative">
+                                <Link href={`/flahistoria/${article.slug}`}>
                                     <Image 
                                         src={article.image} 
                                         alt={article.title} 
@@ -46,8 +47,9 @@ export default async function FlaHistoriaPage() {
                                         className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" 
                                         data-ai-hint={article.dataAiHint} 
                                     />
-                                </CardHeader>
-                            </Link>
+                                </Link>
+                                <ShareButton title={article.title} slug={article.slug} type="flahistoria" />
+                            </CardHeader>
                             <CardContent className="flex-grow p-4 space-y-2">
                                 <CardTitle className="text-lg font-bold font-body leading-tight">
                                     <Link href={`/flahistoria/${article.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">

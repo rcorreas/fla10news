@@ -6,17 +6,26 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "./ui/button"
 import { Facebook, Twitter, Linkedin, Link as LinkIcon, Share2, Instagram } from 'lucide-react'
 
-export function ShareButton({ title, slug }: { title: string, slug: string }) {
+export function ShareButton({ title, slug, type = 'noticias' }: { title: string, slug: string, type?: 'noticias' | 'colunas' | 'videos' | 'flahistoria' }) {
     const { toast } = useToast()
+    
+    const getTypeText = () => {
+        switch (type) {
+            case 'colunas': return 'da coluna';
+            case 'videos': return 'do vídeo';
+            case 'flahistoria': return 'da matéria';
+            default: return 'da notícia';
+        }
+    }
     
     const handleCopyLink = (e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
-        const url = `${window.location.origin}/noticias/${slug}`
+        const url = `${window.location.origin}/${type}/${slug}`
         navigator.clipboard.writeText(url).then(() => {
             toast({
                 title: "Link Copiado!",
-                description: "O link da notícia foi copiado para a sua área de transferência.",
+                description: `O link ${getTypeText()} foi copiado para a sua área de transferência.`,
             })
         }).catch(err => {
             console.error('Failed to copy: ', err)
@@ -31,7 +40,7 @@ export function ShareButton({ title, slug }: { title: string, slug: string }) {
     const handleShare = (e: React.MouseEvent, platform: 'twitter' | 'facebook' | 'linkedin' | 'instagram') => {
         e.preventDefault()
         e.stopPropagation()
-        const url = `${window.location.origin}/noticias/${slug}`
+        const url = `${window.location.origin}/${type}/${slug}`
         let shareUrl = ''
         switch(platform) {
             case 'twitter':
