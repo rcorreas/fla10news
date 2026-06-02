@@ -37,7 +37,7 @@ export default function TitulosPage() {
        <header className="text-center mb-16">
         <div className="relative mx-auto h-[36rem] w-[36rem] mb-4" style={{ transform: 'translateY(-200px)' }}>
             <Image
-                src="https://i.postimg.cc/HsqdTHLQ/image-removebg-preview-10.png"
+                src="https://i.imgur.com/boICXrb.png"
                 alt="Troféu"
                 fill
                 className="object-contain"

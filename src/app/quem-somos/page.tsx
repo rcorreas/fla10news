@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export default function QuemSomosPage() {
   const equipe = [
     {
-      nome: "Renato Correa",
+      nome: "Robson Corrêa",
       cargo: "Fundador e Diretor de Conteúdo",
       bio: "Criador do Canal Fla Dez no YouTube e idealizador do portal FLA10 News. Apaixonado pelo Flamengo, dedica-se a trazer análises precisas, opiniões sinceras e notícias de primeira mão para a Nação Rubro-Negra.",
       iniciais: "RC",
