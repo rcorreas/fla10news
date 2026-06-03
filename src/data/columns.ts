@@ -29,12 +29,19 @@ function generateSlug(name: string): string {
 
 const fromFirestore = (doc: any): OpinionColumn => {
     const data = doc.data();
+    let authorImage = data.authorImage || 'https://placehold.co/100x100.png';
+    const columnName = data.columnName || 'Coluna do Leitor';
+
+    if (columnName.trim() === 'Na Pena do Urubu') {
+        authorImage = 'https://i.imgur.com/5rNdCgG.png';
+    }
+
     return {
         id: doc.id,
-        columnName: data.columnName || 'Coluna do Leitor',
+        columnName: columnName,
         title: data.title || '',
         author: data.author || 'Anônimo',
-        authorImage: data.authorImage || 'https://placehold.co/100x100.png',
+        authorImage: authorImage,
         authorLink: data.authorLink,
         dataAiHint: data.dataAiHint || 'opinion piece',
         slug: data.slug || '',

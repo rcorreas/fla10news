@@ -51,12 +51,16 @@ export async function createColumn(prevState: any, formData: FormData) {
   try {
     const slug = generateSlug(validatedFields.data.title);
 
-    const dataToSave = {
+    let dataToSave = {
       ...validatedFields.data,
       slug: slug,
       publishedAt: serverTimestamp(),
       views: 0,
     };
+
+    if (dataToSave.columnName.trim() === 'Na Pena do Urubu') {
+      dataToSave.authorImage = 'https://i.imgur.com/5rNdCgG.png';
+    }
 
     await addDoc(collection(db, "columns"), dataToSave);
 
@@ -101,9 +105,13 @@ export async function updateColumn(id: string, slug: string, prevState: any, for
     const columnDocRef = doc(db, "columns", id);
     
     // Note: We don't update the slug on edit to avoid breaking links.
-    const dataToUpdate = {
+    let dataToUpdate = {
       ...validatedFields.data,
     };
+
+    if (dataToUpdate.columnName.trim() === 'Na Pena do Urubu') {
+      dataToUpdate.authorImage = 'https://i.imgur.com/5rNdCgG.png';
+    }
     
     await updateDoc(columnDocRef, dataToUpdate);
     

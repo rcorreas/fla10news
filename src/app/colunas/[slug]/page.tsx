@@ -122,6 +122,11 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
     <Image src="https://i.imgur.com/Ivq88KP.png" alt="Panorama do Canela" fill className="object-contain" />
   </div>
 )}
+            {column.columnName === "Na Pena do Urubu" && (
+  <div className="absolute left-[-30px] h-40 w-40 flex-shrink-0">
+    <Image src="https://i.imgur.com/ICtiAp0.png" alt="Ilustração da coluna Na Pena do Urubu" fill className="object-contain" />
+  </div>
+)}
 <Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline transition-all">
     <p className="font-sans text-6xl font-bold text-primary text-center">{column.columnName}</p>
 </Link>
