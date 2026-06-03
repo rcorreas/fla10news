@@ -110,6 +110,13 @@ export default async function Home() {
       }
   }
 
+  const allNewsTotal = await getNews();
+  const allColumnsTotal = await getColumns();
+  const allVideosTotal = await getVideos();
+  const totalViews = 
+    allNewsTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
+    allColumnsTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
+    allVideosTotal.reduce((sum, item) => sum + (item.views || 0), 0);
 
   return (
     <div>
@@ -136,7 +143,7 @@ export default async function Home() {
                             <Users className="h-6 w-6" />
                         </div>
                         <div>
-                            <ActiveReaders />
+                            <ActiveReaders totalViews={totalViews} />
                             <p className="text-sm text-muted-foreground">Leitores ativos</p>
                         </div>
                     </div>

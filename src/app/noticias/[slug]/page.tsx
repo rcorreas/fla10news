@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
-import { Clock } from 'lucide-react'
+import { Clock, Eye } from 'lucide-react'
 import { getNewsBySlug, getAllNewsSlugs, getNews } from '@/data/news'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -123,8 +123,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           </div>
 
           <h1 className="font-headline text-4xl md:text-5xl font-bold leading-tight mb-4">{article.title}</h1>
-          <div className="text-sm text-muted-foreground">
-            <span>Por {article.author}</span> &bull; <span>{articleDate}</span>
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <div>
+                <span>Por {article.author}</span> &bull; <span>{articleDate}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+                <Eye className="h-4 w-4" />
+                <span>{article.views || 0} acessos</span>
+            </div>
           </div>
         </header>
 

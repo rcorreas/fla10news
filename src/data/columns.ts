@@ -8,6 +8,7 @@ export type OpinionColumn = {
     author: string;
     authorImage: string;
     authorLink?: string; // Optional author link
+    columnImage?: string; // Optional column title image
     dataAiHint?: string;
     slug: string;
     excerpt: string;
@@ -43,6 +44,7 @@ const fromFirestore = (doc: any): OpinionColumn => {
         author: data.author || 'Anônimo',
         authorImage: authorImage,
         authorLink: data.authorLink,
+        columnImage: data.columnImage,
         dataAiHint: data.dataAiHint || 'opinion piece',
         slug: data.slug || '',
         excerpt: data.excerpt || '',

@@ -174,12 +174,17 @@ export default function ColunasPage() {
                   <Label htmlFor="authorLink">Link do Autor (Opcional)</Label>
                   <Input id="authorLink" name="authorLink" type="url" placeholder="https://twitter.com/autor" />
                 </div>
+                <div className="grid gap-2 mt-6">
+                  <Label htmlFor="columnImage">Link da Imagem da Coluna (Opcional)</Label>
+                  <Input id="columnImage" name="columnImage" type="url" placeholder="https://exemplo.com/icone-coluna.png" />
+                </div>
               </>
             ) : (
               <>
                 <input type="hidden" name="author" value={existingColumnData?.author || ""} />
                 <input type="hidden" name="authorImage" value={existingColumnData?.authorImage || ""} />
                 <input type="hidden" name="authorLink" value={existingColumnData?.authorLink || ""} />
+                <input type="hidden" name="columnImage" value={existingColumnData?.columnImage || ""} />
               </>
             )}
             <div className="grid gap-2">

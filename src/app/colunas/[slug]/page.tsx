@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { AdBanner } from '@/components/ad-banner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Clock } from 'lucide-react'
+import { Clock, Eye } from 'lucide-react'
 import { slugify } from '@/lib/utils'
 import { ShareButton } from '@/components/share-button'
 import { ArticleShareButton } from '@/components/article-share-button'
@@ -97,36 +97,44 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
             <ArticleShareButton title={column.title} slug={column.slug} type="colunas" />
           </div>
           <div className="relative flex items-center justify-center h-40">
-            {column.columnName === "É Mengão na veia!!!" && (
+            {column.columnImage ? (
                 <div className="absolute left-[-30px] h-40 w-40 flex-shrink-0">
-                    <Image
-                    src="https://i.postimg.cc/YCT3F8nY/Chat-GPT-Image-9-de-jul-de-2025-23-06-12-removebg-preview.png"
-                    alt="Ilustração da coluna É Mengão na veia!!!"
-                    fill
-                    className="object-contain"
-                    />
+                    <Image src={column.columnImage} alt={`Ilustração da coluna ${column.columnName}`} fill className="object-contain" />
                 </div>
+            ) : (
+                <>
+                    {column.columnName === "É Mengão na veia!!!" && (
+                        <div className="absolute left-[-30px] h-40 w-40 flex-shrink-0">
+                            <Image
+                            src="https://i.postimg.cc/YCT3F8nY/Chat-GPT-Image-9-de-jul-de-2025-23-06-12-removebg-preview.png"
+                            alt="Ilustração da coluna É Mengão na veia!!!"
+                            fill
+                            className="object-contain"
+                            />
+                        </div>
+                    )}
+                    {column.columnName === "Cesta de Três" && (
+                        <div className="absolute left-[-30px] h-52 w-52 flex-shrink-0">
+                            <Image
+                            src="https://i.postimg.cc/YCBZF1X4/Chat-GPT-Image-9-de-jul-de-2025-23-25-49-removebg-preview.png"
+                            alt="Ilustração da coluna Cesta de Três"
+                            fill
+                            className="object-contain"
+                            />
+                        </div>
+                    )}
+                    {column.columnName === "Panorama do Canela" && (
+                      <div className="absolute left-[-30px] h-40 w-40 flex-shrink-0">
+                        <Image src="https://i.imgur.com/Ivq88KP.png" alt="Panorama do Canela" fill className="object-contain" />
+                      </div>
+                    )}
+                    {column.columnName === "Na Pena do Urubu" && (
+                      <div className="absolute left-[-30px] h-40 w-40 flex-shrink-0">
+                        <Image src="https://i.imgur.com/ICtiAp0.png" alt="Ilustração da coluna Na Pena do Urubu" fill className="object-contain" />
+                      </div>
+                    )}
+                </>
             )}
-            {column.columnName === "Cesta de Três" && (
-                <div className="absolute left-[-30px] h-52 w-52 flex-shrink-0">
-                    <Image
-                    src="https://i.postimg.cc/YCBZF1X4/Chat-GPT-Image-9-de-jul-de-2025-23-25-49-removebg-preview.png"
-                    alt="Ilustração da coluna Cesta de Três"
-                    fill
-                    className="object-contain"
-                    />
-                </div>
-            )}
-            {column.columnName === "Panorama do Canela" && (
-  <div className="absolute left-[-30px] h-40 w-40 flex-shrink-0">
-    <Image src="https://i.imgur.com/Ivq88KP.png" alt="Panorama do Canela" fill className="object-contain" />
-  </div>
-)}
-            {column.columnName === "Na Pena do Urubu" && (
-  <div className="absolute left-[-30px] h-40 w-40 flex-shrink-0">
-    <Image src="https://i.imgur.com/ICtiAp0.png" alt="Ilustração da coluna Na Pena do Urubu" fill className="object-contain" />
-  </div>
-)}
 <Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline transition-all">
     <p className="font-sans text-6xl font-bold text-primary text-center">{column.columnName}</p>
 </Link>
@@ -151,7 +159,13 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
                         @{column.author.toLowerCase().replace(/\s+/g, '')}
                     </a>
                 )}
-              <p className="text-muted-foreground">{columnDate}</p>
+              <div className="flex items-center gap-4 text-muted-foreground mt-1">
+                <p>{columnDate}</p>
+                <div className="flex items-center gap-1.5">
+                    <Eye className="h-4 w-4" />
+                    <span>{column.views || 0} acessos</span>
+                </div>
+              </div>
             </div>
           </div>
         </header>
