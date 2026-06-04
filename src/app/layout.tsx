@@ -8,6 +8,7 @@ export const revalidate = 60; // Revalida o cache da página a cada 60 segundos
 export const metadata: Metadata = {
   title: 'FLA10 News',
   description: 'Seu portal diário de notícias sobre o Clube de Regatas do Flamengo.',
+  keywords: 'Notícias do Flamengo, Notícias do Flamengo hoje, Flamengo, Flamengo hoje, Nação rubro-negra',
 };
 
 export default function RootLayout({
