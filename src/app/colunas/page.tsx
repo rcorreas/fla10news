@@ -8,36 +8,24 @@ import { Clock } from "lucide-react";
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AdBanner } from '@/components/ad-banner';
-import { slugify } from '@/lib/utils';
+import { slugify, formatPublishedTime } from '@/lib/utils';
 import { ShareButton } from '@/components/share-button';
-
-function formatPublishedTime(publishedAt: Date): string {
-    const now = new Date();
-  
-    const diffDays = differenceInDays(now, publishedAt);
-    if (diffDays > 3) {
-      return format(publishedAt, 'dd/MM/yyyy');
-    }
-    if (diffDays >= 1) {
-      return `${diffDays} dia${diffDays > 1 ? 's' : ''} atrás`;
-    }
-  
-    const diffHours = differenceInHours(now, publishedAt);
-    if (diffHours >= 1) {
-      return `${diffHours} hora${diffHours > 1 ? 's' : ''} atrás`;
-    }
-  
-    const diffMinutes = differenceInMinutes(now, publishedAt);
-    if (diffMinutes >= 1) {
-      return `${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''} atrás`;
-    }
-  
-    return "Agora mesmo";
-}
+import { PaginationControls } from '@/components/pagination-controls';
 
 
-export default async function ColunasPage() {
-    const allColumns = await getColumns();
+
+
+export default async function ColunasPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+    const { page } = await searchParams;
+    const currentPage = parseInt(page || '1', 10);
+    const ITEMS_PER_PAGE = 10;
+
+    const allColumnsRaw = await getColumns();
+    const totalPages = Math.ceil(allColumnsRaw.length / ITEMS_PER_PAGE);
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const allColumns = allColumnsRaw.slice(startIndex, endIndex);
 
     return (
         <div className="container mx-auto py-12">
@@ -101,6 +89,12 @@ export default async function ColunasPage() {
                     return [card];
                 })}
             </div>
+
+            <PaginationControls 
+                currentPage={currentPage} 
+                totalPages={totalPages} 
+                basePath="/colunas" 
+            />
         </div>
     );
 }

@@ -7,11 +7,21 @@ import { format } from 'date-fns';
 import { Clock, Trophy } from 'lucide-react';
 import { AdBanner } from '@/components/ad-banner';
 import { ShareButton } from '@/components/share-button';
+import { PaginationControls } from '@/components/pagination-controls';
 
 export const revalidate = 3600; // Revalida no máximo a cada 1 hora
 
-export default async function FlaHistoriaPage() {
-    const articles = await getHistoryArticles();
+export default async function FlaHistoriaPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+    const { page } = await searchParams;
+    const currentPage = parseInt(page || '1', 10);
+    const ITEMS_PER_PAGE = 10;
+
+    const allArticlesRaw = await getHistoryArticles();
+    const totalPages = Math.ceil(allArticlesRaw.length / ITEMS_PER_PAGE);
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const articles = allArticlesRaw.slice(startIndex, endIndex);
 
     return (
         <div className="container mx-auto py-12 px-4 max-w-6xl">
@@ -69,6 +79,12 @@ export default async function FlaHistoriaPage() {
                     ))}
                 </div>
             )}
+
+            <PaginationControls 
+                currentPage={currentPage} 
+                totalPages={totalPages} 
+                basePath="/flahistoria" 
+            />
 
             <div className="mt-12">
                 <AdBanner width={728} height={90} />

@@ -1,3 +1,4 @@
+import { formatPublishedTime } from '@/lib/utils';
 
 import * as React from 'react'
 import Image from 'next/image'
@@ -9,39 +10,28 @@ import { format, differenceInMinutes, differenceInHours, differenceInDays } from
 import { Clock } from 'lucide-react'
 import { ShareButton } from '@/components/share-button'
 import { AdBanner } from '@/components/ad-banner'
+import { PaginationControls } from '@/components/pagination-controls'
 
-function formatPublishedTime(publishedAt: Date): string {
-    const now = new Date();
-  
-    const diffDays = differenceInDays(now, publishedAt);
-    if (diffDays > 3) {
-      return format(publishedAt, 'dd/MM/yyyy');
-    }
-    if (diffDays >= 1) {
-      return `${diffDays} dia${diffDays > 1 ? 's' : ''} atrás`;
-    }
-  
-    const diffHours = differenceInHours(now, publishedAt);
-    if (diffHours >= 1) {
-      return `${diffHours} hora${diffHours > 1 ? 's' : ''} atrás`;
-    }
-  
-    const diffMinutes = differenceInMinutes(now, publishedAt);
-    if (diffMinutes >= 1) {
-      return `${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''} atrás`;
-    }
-  
-    return "Agora mesmo";
-}
 
-export default async function NoticiasPage() {
+
+export default async function NoticiasPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+    const { page } = await searchParams;
+    const currentPage = parseInt(page || '1', 10);
+    const ITEMS_PER_PAGE = 10;
+    
     const allNews = await getNews();
+    const totalPages = Math.ceil(allNews.length / ITEMS_PER_PAGE);
+    
+    // Get items for the current page
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const currentNews = allNews.slice(startIndex, endIndex);
     
     const chunkSize = 2;
     const newsChunks = [];
-    if (allNews.length > 0) {
-        for (let i = 0; i < allNews.length; i += chunkSize) {
-            newsChunks.push(allNews.slice(i, i + chunkSize));
+    if (currentNews.length > 0) {
+        for (let i = 0; i < currentNews.length; i += chunkSize) {
+            newsChunks.push(currentNews.slice(i, i + chunkSize));
         }
     }
 
@@ -97,6 +87,12 @@ export default async function NoticiasPage() {
                       )}
                     </React.Fragment>
                   ))}
+                  
+                  <PaginationControls 
+                    currentPage={currentPage} 
+                    totalPages={totalPages} 
+                    basePath="/noticias" 
+                  />
                 </div>
             )}
         </div>

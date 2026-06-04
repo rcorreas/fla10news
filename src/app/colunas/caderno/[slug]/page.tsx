@@ -7,32 +7,10 @@ import { Clock } from "lucide-react";
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AdBanner } from '@/components/ad-banner';
-import { slugify } from '@/lib/utils';
+import { slugify, formatPublishedTime } from '@/lib/utils';
 import { notFound } from 'next/navigation';
 
-function formatPublishedTime(publishedAt: Date): string {
-    const now = new Date();
-  
-    const diffDays = differenceInDays(now, publishedAt);
-    if (diffDays > 3) {
-      return format(publishedAt, 'dd/MM/yyyy');
-    }
-    if (diffDays >= 1) {
-      return `${diffDays} dia${diffDays > 1 ? 's' : ''} atrás`;
-    }
-  
-    const diffHours = differenceInHours(now, publishedAt);
-    if (diffHours >= 1) {
-      return `${diffHours} hora${diffHours > 1 ? 's' : ''} atrás`;
-    }
-  
-    const diffMinutes = differenceInMinutes(now, publishedAt);
-    if (diffMinutes >= 1) {
-      return `${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''} atrás`;
-    }
-  
-    return "Agora mesmo";
-}
+
 
 export default async function CadernoPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

@@ -1,3 +1,4 @@
+import { formatPublishedTime } from '@/lib/utils';
 
 import * as React from 'react';
 import Link from "next/link";
@@ -16,29 +17,7 @@ export async function generateStaticParams() {
     return authors;
 }
 
-function formatPublishedTime(publishedAt: Date): string {
-    const now = new Date();
-  
-    const diffDays = differenceInDays(now, publishedAt);
-    if (diffDays > 3) {
-      return format(publishedAt, 'dd/MM/yyyy');
-    }
-    if (diffDays >= 1) {
-      return `${diffDays} dia${diffDays > 1 ? 's' : ''} atrás`;
-    }
-  
-    const diffHours = differenceInHours(now, publishedAt);
-    if (diffHours >= 1) {
-      return `${diffHours} hora${diffHours > 1 ? 's' : ''} atrás`;
-    }
-  
-    const diffMinutes = differenceInMinutes(now, publishedAt);
-    if (diffMinutes >= 1) {
-      return `${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''} atrás`;
-    }
-  
-    return "Agora mesmo";
-}
+
 
 export default async function AuthorPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

@@ -1,3 +1,4 @@
+import { formatPublishedTime } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -37,29 +38,7 @@ function getYouTubeId(url: string) {
     return (match && match[2].length === 11) ? match[2] : null;
 }
 
-function formatPublishedTime(publishedAt: Date): string {
-    const now = new Date();
-  
-    const diffDays = differenceInDays(now, publishedAt);
-    if (diffDays > 3) {
-      return format(publishedAt, 'dd/MM/yyyy');
-    }
-    if (diffDays >= 1) {
-      return `${diffDays} dia${diffDays > 1 ? 's' : ''} atrás`;
-    }
-  
-    const diffHours = differenceInHours(now, publishedAt);
-    if (diffHours >= 1) {
-      return `${diffHours} hora${diffHours > 1 ? 's' : ''} atrás`;
-    }
-  
-    const diffMinutes = differenceInMinutes(now, publishedAt);
-    if (diffMinutes >= 1) {
-      return `${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''} atrás`;
-    }
-  
-    return "Agora mesmo";
-}
+
 
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'

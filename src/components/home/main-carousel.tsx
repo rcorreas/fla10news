@@ -13,34 +13,12 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel"
 import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
+import {  cn , formatPublishedTime } from '@/lib/utils';
 import type { NewsArticle } from '@/data/news'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { Clock } from 'lucide-react'
 
-function formatPublishedTime(publishedAt: Date): string {
-  const now = new Date();
 
-  const diffDays = differenceInDays(now, publishedAt);
-  if (diffDays > 3) {
-    return format(publishedAt, 'dd/MM/yyyy');
-  }
-  if (diffDays >= 1) {
-    return `${diffDays > 1 ? 's' : ''} atrás`;
-  }
-
-  const diffHours = differenceInHours(now, publishedAt);
-  if (diffHours >= 1) {
-    return `${diffHours} hora${diffHours > 1 ? 's' : ''} atrás`;
-  }
-
-  const diffMinutes = differenceInMinutes(now, publishedAt);
-  if (diffMinutes >= 1) {
-    return `${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''} atrás`;
-  }
-
-  return "Agora mesmo";
-}
 
 export function MainCarousel({ headlines }: { headlines: NewsArticle[] }) {
   const plugin = React.useRef(

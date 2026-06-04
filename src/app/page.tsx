@@ -18,31 +18,9 @@ import { ActiveReaders } from '@/components/home/active-readers'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { ShareButton } from '@/components/share-button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { slugify } from '@/lib/utils'
+import { slugify, formatPublishedTime } from '@/lib/utils';
 
-function formatPublishedTime(publishedAt: Date): string {
-  const now = new Date();
 
-  const diffDays = differenceInDays(now, publishedAt);
-  if (diffDays > 3) {
-    return format(publishedAt, 'dd/MM/yyyy');
-  }
-  if (diffDays >= 1) {
-    return `${diffDays > 1 ? 's' : ''} atrás`;
-  }
-
-  const diffHours = differenceInHours(now, publishedAt);
-  if (diffHours >= 1) {
-    return `${diffHours} hora${diffHours > 1 ? 's' : ''} atrás`;
-  }
-
-  const diffMinutes = differenceInMinutes(now, publishedAt);
-  if (diffMinutes >= 1) {
-    return `${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''} atrás`;
-  }
-
-  return "Agora mesmo";
-}
 
 function SectionHeader({ title, subtitle, href, icon: Icon }: { title: string, subtitle?: string, href?: string, icon: React.ElementType }) {
   return (
@@ -88,8 +66,17 @@ export default async function Home() {
   const latestNews = allNews.length > 0 ? allNews[0] : null;
   const featuredHistoricArticle = historicArticles.length > 0 ? historicArticles[0] : null;
 
-  const today = new Date();
-  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  const parts = formatter.formatToParts(new Date());
+  const year = parts.find(p => p.type === 'year')?.value;
+  const month = parts.find(p => p.type === 'month')?.value;
+  const day = parts.find(p => p.type === 'day')?.value;
+  const startOfToday = new Date(`${year}-${month}-${day}T00:00:00-03:00`);
 
   const newsTodayCount = allNews.filter(news => {
       const newsDate = new Date(news.publishedAt);
