@@ -14,6 +14,7 @@ import { getColumns } from '@/data/columns'
 import { getVideos } from '@/data/videos'
 import { getHistoryArticles } from '@/data/history'
 import { MainCarousel } from '@/components/home/main-carousel'
+import { HistoryCoverflow } from '@/components/home/history-coverflow'
 import { ActiveReaders } from '@/components/home/active-readers'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { ShareButton } from '@/components/share-button'
@@ -57,7 +58,7 @@ export default async function Home() {
   const allNews = await getNews(12);
   const allColumns = await getColumns(3);
   const allVideos = await getVideos(7);
-  const historicArticles = await getHistoryArticles(1);
+  const historicArticles = await getHistoryArticles(3);
 
   const mainHeadlines = allNews.slice(0, 6);
   const dailyNews = allNews.slice(6, 12); // Now shows 6 articles
@@ -249,31 +250,10 @@ export default async function Home() {
           </div>
         </section>
 
-        {featuredHistoricArticle && (
+        {historicArticles && historicArticles.length > 0 && (
             <section>
                 <SectionHeader title="Flamengo na História" subtitle="Relembre os momentos que marcaram a trajetória do Mengão." href="/flahistoria" icon={Trophy} />
-                <div className="flex justify-center">
-                    <Card className="w-full max-w-2xl group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
-                        <Link href={`/flahistoria/${featuredHistoricArticle.slug}`}>
-                            <CardHeader className="p-0 relative">
-                                <Image src={featuredHistoricArticle.image} alt={featuredHistoricArticle.title} width={700} height={400} className="w-full object-cover aspect-video transition-transform duration-300 group-hover:scale-105" data-ai-hint={featuredHistoricArticle.dataAiHint} />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                                <Badge variant="default" className="absolute top-3 left-3">Memória</Badge>
-                                <ShareButton title={featuredHistoricArticle.title} slug={featuredHistoricArticle.slug} type="flahistoria" />
-                            </CardHeader>
-                            <CardContent className="p-6">
-                                <CardTitle className="text-2xl font-bold font-body leading-tight mb-2 group-hover:text-[#FF073A] transition-colors duration-200">
-                                    {featuredHistoricArticle.title}
-                                </CardTitle>
-                                <p className="text-base text-muted-foreground mb-4">{featuredHistoricArticle.subtitle}</p>
-                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                    <Clock className="h-3 w-3" />
-                                    <span>{format(new Date(featuredHistoricArticle.publishedAt), "dd 'de' MMMM 'de' yyyy")}</span>
-                                </div>
-                            </CardContent>
-                        </Link>
-                    </Card>
-                </div>
+                <HistoryCoverflow articles={historicArticles} />
             </section>
         )}
         
