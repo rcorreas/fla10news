@@ -61,7 +61,7 @@ export async function createColumn(prevState: any, formData: FormData) {
     };
 
     if (dataToSave.columnName.trim() === 'Na Pena do Urubu') {
-      dataToSave.authorImage = 'https://i.imgur.com/5rNdCgG.png';
+      dataToSave.columnImage = 'https://i.imgur.com/ICtiAp0.png';
     }
 
     await addDoc(collection(db, "columns"), dataToSave);
@@ -113,7 +113,7 @@ export async function updateColumn(id: string, slug: string, prevState: any, for
     };
 
     if (dataToUpdate.columnName.trim() === 'Na Pena do Urubu') {
-      dataToUpdate.authorImage = 'https://i.imgur.com/5rNdCgG.png';
+      dataToUpdate.columnImage = 'https://i.imgur.com/ICtiAp0.png';
     }
     
     await updateDoc(columnDocRef, dataToUpdate);
