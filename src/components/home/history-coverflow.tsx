@@ -6,13 +6,23 @@ import Link from 'next/link';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ShareButton } from '@/components/share-button';
-import { Clock } from 'lucide-react';
+import { Clock, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { HistoryArticle } from '@/data/history';
 
 interface HistoryCoverflowProps {
   articles: HistoryArticle[];
+}
+
+function formatViews(views: number): string {
+    if (views >= 1_000_000) {
+        return `${(views / 1_000_000).toFixed(1).replace('.', ',')}M`;
+    }
+    if (views >= 1_000) {
+        return `${Math.floor(views / 1_000)}K`;
+    }
+    return views ? views.toString() : '0';
 }
 
 export function HistoryCoverflow({ articles }: HistoryCoverflowProps) {
@@ -37,9 +47,15 @@ export function HistoryCoverflow({ articles }: HistoryCoverflowProps) {
                             {article.title}
                         </CardTitle>
                         <p className="text-base text-muted-foreground mb-4">{article.subtitle}</p>
-                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <Clock className="h-3 w-3" />
-                            <span>{format(new Date(article.publishedAt), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</span>
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground mt-4">
+                            <div className="flex items-center gap-1.5">
+                                <Eye className="h-3 w-3" />
+                                <span>{formatViews(article.views)}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <Clock className="h-3 w-3" />
+                                <span>{format(new Date(article.publishedAt), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</span>
+                            </div>
                         </div>
                     </CardContent>
                 </Link>
@@ -94,9 +110,15 @@ export function HistoryCoverflow({ articles }: HistoryCoverflowProps) {
                               {article.title}
                           </CardTitle>
                           <p className="text-sm md:text-base text-muted-foreground mb-4 line-clamp-2">{article.subtitle}</p>
-                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                              <Clock className="h-3 w-3" />
-                              <span>{format(new Date(article.publishedAt), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</span>
+                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                              <div className="flex items-center gap-1.5">
+                                  <Eye className="h-3 w-3" />
+                                  <span>{formatViews(article.views)}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                  <Clock className="h-3 w-3" />
+                                  <span>{format(new Date(article.publishedAt), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</span>
+                              </div>
                           </div>
                       </Link>
                   </CardContent>

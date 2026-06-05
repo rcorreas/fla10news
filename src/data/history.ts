@@ -16,6 +16,7 @@ export type HistoryArticle = {
     publishedAt: Date;
     content: string;
     dataAiHint?: string;
+    views: number;
 };
 
 // Helper to create a date in the past
@@ -41,6 +42,7 @@ export const defaultHistoryArticles: HistoryArticle[] = [
         publishedAt: new Date('1981-12-13T12:00:00Z'),
         content: "<p>Em 13 de dezembro de 1981, o Flamengo alcançou o topo do mundo. Com uma atuação de gala no Estádio Nacional de Tóquio, o time comandado por Zico, Júnior, Leandro e companhia não tomou conhecimento do poderoso Liverpool, campeão europeu da época.</p><h3>Domínio Absoluto</h3><p>Comandado pelo Maestro Júnior e com a genialidade de Zico, o Flamengo marcou três gols ainda no primeiro tempo. Nunes, o 'Artilheiro das Decisões', balançou as redes duas vezes, e Adílio completou o placar. O 3 a 0 foi um reflexo fiel do que foi o jogo: um monólogo rubro-negro, com toque de bola envolvente, técnica apurada e uma superioridade que encantou o mundo.</p><p>A vitória não apenas deu ao Flamengo o título de campeão mundial, mas também carimbou aquela geração como uma das maiores da história do futebol brasileiro. A conquista é, até hoje, um dos maiores orgulhos da Nação Rubro-Negra.</p>",
         videoUrl: "https://www.youtube.com/watch?v=kSe_x-Yk3sM",
+        views: 1981,
     },
 ];
 
@@ -60,6 +62,7 @@ const fromFirestore = (doc: any): HistoryArticle => {
         publishedAt: data.publishedAt instanceof Timestamp ? data.publishedAt.toDate() : new Date(),
         content: data.content || '',
         dataAiHint: data.dataAiHint || 'historic event',
+        views: data.views || 0,
     };
 };
 

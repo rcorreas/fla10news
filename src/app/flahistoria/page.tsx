@@ -4,10 +4,20 @@ import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { getHistoryArticles } from '@/data/history';
 import { format } from 'date-fns';
-import { Clock, Trophy } from 'lucide-react';
+import { Clock, Trophy, Eye } from 'lucide-react';
 import { AdBanner } from '@/components/ad-banner';
 import { ShareButton } from '@/components/share-button';
 import { PaginationControls } from '@/components/pagination-controls';
+
+function formatViews(views: number): string {
+    if (views >= 1_000_000) {
+        return `${(views / 1_000_000).toFixed(1).replace('.', ',')}M`;
+    }
+    if (views >= 1_000) {
+        return `${Math.floor(views / 1_000)}K`;
+    }
+    return views ? views.toString() : '0';
+}
 
 export const revalidate = 3600; // Revalida no máximo a cada 1 hora
 
@@ -69,6 +79,10 @@ export default async function FlaHistoriaPage({ searchParams }: { searchParams: 
                                 <p className="text-sm text-muted-foreground line-clamp-3">{article.subtitle}</p>
                             </CardContent>
                             <CardFooter className="p-4 pt-0 text-xs text-muted-foreground flex justify-between items-center">
+                                <div className="flex items-center gap-1.5">
+                                    <Eye className="h-3 w-3" />
+                                    <span>{formatViews(article.views)}</span>
+                                </div>
                                 <div className="flex items-center gap-1.5">
                                     <Clock className="h-3 w-3" />
                                     <span>{format(article.publishedAt, 'dd/MM/yyyy')}</span>

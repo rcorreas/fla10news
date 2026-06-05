@@ -101,10 +101,12 @@ export default async function Home() {
   const allNewsTotal = await getNews();
   const allColumnsTotal = await getColumns();
   const allVideosTotal = await getVideos();
+  const allHistoryTotal = await getHistoryArticles();
   const totalViews = 
     allNewsTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
     allColumnsTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
-    allVideosTotal.reduce((sum, item) => sum + (item.views || 0), 0);
+    allVideosTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
+    allHistoryTotal.reduce((sum, item) => sum + (item.views || 0), 0);
 
   return (
     <div>

@@ -2,6 +2,7 @@
 import { getNews } from "@/data/news";
 import { getColumns } from "@/data/columns";
 import { getVideos } from "@/data/videos";
+import { getHistoryArticles } from "@/data/history";
 import { getUserCount } from "@/data/users";
 import { StatCard } from "@/components/admin/stat-card";
 import { ContentViewsChart, ShareDestinationsChart, MostViewedContentChart } from "@/components/admin/charts";
@@ -17,17 +18,20 @@ export default async function AdminDashboard() {
     const news = await getNews();
     const columns = await getColumns();
     const videos = await getVideos();
+    const history = await getHistoryArticles();
     const userCount = await getUserCount();
 
-    const totalVideoViews = videos.reduce((acc, video) => acc + video.views, 0);
-    const totalNewsViews = news.reduce((acc, article) => acc + article.views, 0);
-    const totalColumnsViews = columns.reduce((acc, column) => acc + column.views, 0);
+    const totalVideoViews = videos.reduce((acc, video) => acc + (video.views || 0), 0);
+    const totalNewsViews = news.reduce((acc, article) => acc + (article.views || 0), 0);
+    const totalColumnsViews = columns.reduce((acc, column) => acc + (column.views || 0), 0);
+    const totalHistoryViews = history.reduce((acc, article) => acc + (article.views || 0), 0);
 
     // Calcula compartilhamentos dinamicamente com base nas visualizações
     const totalNewsShares = news.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.05), 0);
     const totalColumnsShares = columns.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.08), 0);
     const totalVideoShares = videos.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.04), 0);
-    const totalContentShares = totalNewsShares + totalColumnsShares + totalVideoShares;
+    const totalHistoryShares = history.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.05), 0);
+    const totalContentShares = totalNewsShares + totalColumnsShares + totalVideoShares + totalHistoryShares;
 
     // Destinos de Compartilhamento dinâmicos com base no total de compartilhamentos
     const shareDestinationsData = [
@@ -59,7 +63,7 @@ export default async function AdminDashboard() {
     }));
     const totalFutebolNews = news.filter(n => n.mainCategory === 'Futebol').length;
     
-    const recentContent = [...news, ...columns, ...videos]
+    const recentContent = [...news, ...columns, ...videos, ...history]
         .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
         .slice(0, 5)
         .map(item => {
@@ -84,6 +88,7 @@ export default async function AdminDashboard() {
         { type: "noticias", views: totalNewsViews, fill: "hsl(var(--chart-1))" },
         { type: "colunas", views: totalColumnsViews, fill: "hsl(var(--chart-2))" },
         { type: "videos", views: totalVideoViews, fill: "hsl(var(--chart-3))" },
+        { type: "historia", views: totalHistoryViews, fill: "hsl(var(--chart-4))" },
     ];
 
     return (
@@ -99,7 +104,7 @@ export default async function AdminDashboard() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-                 <StatCard title="Visualizações Totais" value={(totalVideoViews + totalNewsViews + totalColumnsViews).toLocaleString('pt-BR')} icon={Eye} description="Notícias, Colunas e Vídeos" />
+                 <StatCard title="Visualizações Totais" value={(totalVideoViews + totalNewsViews + totalColumnsViews + totalHistoryViews).toLocaleString('pt-BR')} icon={Eye} description="Notícias, Colunas, Vídeos e História" />
                  <StatCard title="Compartilhamentos" value={totalContentShares.toLocaleString('pt-BR')} icon={Share2} description="Total em todas as plataformas" />
             </div>
 

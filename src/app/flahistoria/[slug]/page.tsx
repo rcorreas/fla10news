@@ -6,11 +6,13 @@ import { getHistoryArticleBySlug, getHistoryArticles } from '@/data/history'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { AdBanner } from '@/components/ad-banner'
-import { Clock, PlayCircle, Trophy } from 'lucide-react'
+import { Clock, PlayCircle, Trophy, Eye } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ShareButton } from '@/components/share-button'
 import { ArticleShareButton } from '@/components/article-share-button'
+import { db } from '@/lib/firebase'
+import { doc, updateDoc, increment } from 'firebase/firestore'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -18,6 +20,16 @@ function getYouTubeId(url: string) {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function formatViews(views: number): string {
+    if (views >= 1_000_000) {
+        return `${(views / 1_000_000).toFixed(1).replace('.', ',')}M`;
+    }
+    if (views >= 1_000) {
+        return `${Math.floor(views / 1_000)}K`;
+    }
+    return views.toString();
 }
 
 const parseContent = (content: string): string[] => {
@@ -85,6 +97,18 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
     notFound()
   }
 
+  // Increment dynamic view count in Firebase asynchronously (ignore static fallbacks)
+  if (article.id && !article.id.startsWith('static')) {
+    try {
+      const articleRef = doc(db, 'history', article.id);
+      updateDoc(articleRef, {
+        views: increment(1)
+      }).catch(err => console.error("Error updating history article views:", err));
+    } catch (err) {
+      console.error("Error incrementing history article views:", err);
+    }
+  }
+
   const otherArticles = allArticles.filter(a => a.slug !== article.slug).slice(0, 3);
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const videoId = article.videoUrl ? getYouTubeId(article.videoUrl) : null;
@@ -125,6 +149,10 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
                 <Clock className="h-4 w-4" />
                 <span>Publicado em {articleDate}</span>
              </div>
+             <div className="flex items-center gap-1.5">
+                <Eye className="h-4 w-4" />
+                <span>{formatViews(article.views)} visualizações</span>
+            </div>
              <span>Por {article.author}</span>
           </div>
         </header>
@@ -216,6 +244,10 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
                             </CardTitle>
                         </CardContent>
                         <CardFooter className="p-4 pt-0 text-xs text-muted-foreground flex justify-between items-center">
+                            <div className="flex items-center gap-1.5">
+                                <Eye className="h-3 w-3" />
+                                <span>{formatViews(item.views)}</span>
+                            </div>
                             <div className="flex items-center gap-1.5">
                                 <Clock className="h-3 w-3" />
                                 <span>{format(item.publishedAt, 'dd/MM/yyyy')}</span>
