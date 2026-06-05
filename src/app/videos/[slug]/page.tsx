@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { getVideoBySlug, getAllVideoSlugs, getVideos } from '@/data/videos'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Clock, Eye, PlayCircle } from 'lucide-react'
@@ -20,6 +21,39 @@ export async function generateStaticParams() {
   return slugs.map((item) => ({
     slug: item.slug,
   }));
+}
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params;
+  const video = await getVideoBySlug(slug);
+
+  if (!video) {
+    return {
+      title: 'Vídeo não encontrado',
+    }
+  }
+
+  const desc = `Assista ao vídeo: ${video.title}`;
+
+  return {
+    title: video.title,
+    description: desc,
+    openGraph: {
+      title: video.title,
+      description: desc,
+      images: [video.image],
+      type: 'video.other',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: video.title,
+      description: desc,
+      images: [video.image],
+    },
+  }
 }
 
 function formatViews(views: number): string {

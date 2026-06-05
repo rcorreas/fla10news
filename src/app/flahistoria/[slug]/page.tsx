@@ -2,7 +2,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getHistoryArticleBySlug, getHistoryArticles } from '@/data/history'
+import { getHistoryArticleBySlug, getHistoryArticles, getAllHistorySlugs } from '@/data/history'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { AdBanner } from '@/components/ad-banner'
@@ -15,6 +16,46 @@ import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
 
 export const revalidate = 3600; // Revalidate at most every hour
+
+export async function generateStaticParams() {
+  const slugs = await getAllHistorySlugs();
+  return slugs.map((item) => ({
+    slug: item.slug,
+  }));
+}
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await getHistoryArticleBySlug(slug);
+
+  if (!article) {
+    return {
+      title: 'Momento Histórico não encontrado',
+    }
+  }
+
+  const desc = article.subtitle || article.content?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || '';
+
+  return {
+    title: article.title,
+    description: desc,
+    openGraph: {
+      title: article.title,
+      description: desc,
+      images: [article.image],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: desc,
+      images: [article.image],
+    },
+  }
+}
 
 function getYouTubeId(url: string) {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;

@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Clock, Eye } from 'lucide-react'
 import { getNewsBySlug, getAllNewsSlugs, getNews } from '@/data/news'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { AdBanner } from '@/components/ad-banner'
@@ -22,7 +23,38 @@ export async function generateStaticParams() {
   }));
 }
 
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await getNewsBySlug(slug);
 
+  if (!article) {
+    return {
+      title: 'Notícia não encontrada',
+    }
+  }
+
+  const desc = article.excerpt || article.content?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || '';
+
+  return {
+    title: article.title,
+    description: desc,
+    openGraph: {
+      title: article.title,
+      description: desc,
+      images: [article.image],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: desc,
+      images: [article.image],
+    },
+  }
+}
 
 
 import { db } from '@/lib/firebase'

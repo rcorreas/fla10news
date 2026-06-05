@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { getColumnBySlug, getAllColumnSlugs, getColumns } from '@/data/columns'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -33,6 +34,40 @@ export async function generateStaticParams() {
   return columns.map((column) => ({
     slug: column.slug,
   }));
+}
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params;
+  const column = await getColumnBySlug(slug);
+
+  if (!column) {
+    return {
+      title: 'Coluna não encontrada',
+    }
+  }
+
+  const desc = column.excerpt || column.content?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || '';
+  const imageUrl = column.columnImage || 'https://placehold.co/1200x675.png'; // default fallback if no image
+
+  return {
+    title: column.title,
+    description: desc,
+    openGraph: {
+      title: column.title,
+      description: desc,
+      images: [imageUrl],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: column.title,
+      description: desc,
+      images: [imageUrl],
+    },
+  }
 }
 
 
