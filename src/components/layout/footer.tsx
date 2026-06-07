@@ -9,6 +9,7 @@ import { TiktokIcon } from "../tiktok-icon"
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Separator } from "../ui/separator";
+import { useAuth } from "@/hooks/use-auth";
 
 const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -40,6 +41,14 @@ const categoryLinks = [
 
 export function Footer() {
   const pathname = usePathname();
+  const { user } = useAuth();
+
+  const handleRegisterClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (user) {
+      e.preventDefault();
+      alert("Você já está cadastrado!");
+    }
+  };
 
   return (
     <footer className="w-full">
@@ -50,7 +59,7 @@ export function Footer() {
           <p className="mb-6 text-base text-primary-foreground/90">Cadastre-se e seja o primeiro a saber de tudo sobre o Mengão</p>
           <div className="flex justify-center">
             <Button asChild variant="secondary" className="bg-card text-accent font-bold hover:bg-black hover:text-white transition-colors">
-              <Link href="/register">
+              <Link href="/register" onClick={handleRegisterClick}>
                 Cadastrar
               </Link>
             </Button>
