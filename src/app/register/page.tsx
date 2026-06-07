@@ -67,10 +67,16 @@ export default function RegisterPage() {
             });
             router.push('/');
         } catch (e: any) {
-            console.error(e);
+            console.error("Google Register Error:", e);
             let errorMessage = 'Ocorreu um erro ao cadastrar-se com o Google.';
             if (e.code === 'auth/popup-closed-by-user') {
                 errorMessage = 'O cadastro foi cancelado antes de ser concluído.';
+            } else if (e.code === 'auth/operation-not-allowed') {
+                errorMessage = 'O login com Google não está ativado no Firebase. Ative-o no console.';
+            } else if (e.code === 'auth/unauthorized-domain') {
+                errorMessage = 'Este domínio não está autorizado no Firebase para fazer login.';
+            } else if (e.message) {
+                errorMessage += ` (${e.code || e.message})`;
             }
             toast({
                 title: "Erro no Cadastro",

@@ -70,26 +70,32 @@ export function HistoryCoverflow({ articles }: HistoryCoverflowProps) {
     }
     
     let isLeft = false;
+    let isRight = false;
+    
     if (articles.length >= 3) {
-      isLeft = (activeIndex === 0 && index === articles.length - 1) || (index === activeIndex - 1);
+      isLeft = index === (activeIndex - 1 + articles.length) % articles.length;
+      isRight = index === (activeIndex + 1) % articles.length;
     } else if (articles.length === 2) {
       isLeft = index === 0 && activeIndex === 1;
+      isRight = index === 1 && activeIndex === 0;
     }
 
     if (isLeft) {
       return "left-0 md:left-[10%] -translate-x-1/4 md:-translate-x-1/2 scale-[0.85] md:scale-[0.8] z-10 opacity-70 cursor-pointer blur-[1px] hover:blur-none hover:opacity-100 hover:scale-[0.85]";
-    } else {
+    } else if (isRight) {
       return "left-full md:left-[90%] -translate-x-[75%] md:-translate-x-1/2 scale-[0.85] md:scale-[0.8] z-10 opacity-70 cursor-pointer blur-[1px] hover:blur-none hover:opacity-100 hover:scale-[0.85]";
+    } else {
+      // Hidden items
+      return "left-1/2 -translate-x-1/2 scale-[0.5] z-0 opacity-0 pointer-events-none";
     }
   };
 
   return (
     <div className="relative w-full h-[450px] md:h-[550px] flex items-center justify-center overflow-hidden py-8 perspective-[1000px]">
-      {articles.slice(0, 3).map((article, index) => (
+      {articles.map((article, index) => (
         <div 
           key={article.id}
           className={`absolute transition-all duration-500 ease-out w-[85%] sm:w-[70%] md:w-[600px] ${getPositionClasses(index)}`}
-          onMouseEnter={() => setActiveIndex(index)}
           onClick={() => setActiveIndex(index)}
         >
           <Card className={`w-full group overflow-hidden shadow-xl transition-shadow duration-300 ${index === activeIndex ? 'shadow-primary-lg' : ''}`}>
