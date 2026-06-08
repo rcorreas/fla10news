@@ -1,3 +1,8 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Flamengo | Últimas notícias, resultados , mercado e próximos jogos'
+}
 
 import * as React from 'react'
 import Image from 'next/image'
