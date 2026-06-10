@@ -23,6 +23,7 @@ export function SofascoreWidget() {
         id="365scores-widget" 
         src="https://widgets.365scores.com/main.js" 
         strategy="lazyOnload" 
+        crossOrigin="anonymous"
       />
     </div>
   );

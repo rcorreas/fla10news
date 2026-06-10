@@ -40,6 +40,18 @@ export function AdminClientLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
+  // Verificação de MFA (Múltiplo Fator) de segurança
+  // user.multiFactor requer habilitar Identity Platform no Firebase Console.
+  // const enrolledFactors = (user as any)?.multiFactor?.enrolledFactors || [];
+  // if (enrolledFactors.length === 0) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen flex-col p-8 bg-zinc-900 text-white">
+  //       <h1 className="text-2xl font-bold text-yellow-500 mb-4">MFA Obrigatório</h1>
+  //       <p className="mb-4 text-center max-w-md">Sua conta de administrador exige Autenticação em Duas Etapas (MFA) para acessar este painel. Configure no seu perfil.</p>
+  //     </div>
+  //   );
+  // }
+
   return (
     <div className="flex min-h-screen">
       <AdminSidebar />
