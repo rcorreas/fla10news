@@ -185,7 +185,7 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
         
         {column.content && (
           <div 
-            className="text-lg space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold"
+            className="text-lg space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold [&_a]:text-[#ff073a] [&_a]:font-bold [&_a]:hover:underline"
             dangerouslySetInnerHTML={{ __html: column.content }}
           />
         )}
