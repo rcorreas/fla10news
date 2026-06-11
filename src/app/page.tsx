@@ -4,6 +4,8 @@ export const metadata: Metadata = {
   title: 'Flamengo | Últimas notícias, resultados , mercado e próximos jogos'
 }
 
+export const revalidate = 0;
+
 import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
