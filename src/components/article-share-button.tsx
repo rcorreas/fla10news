@@ -4,7 +4,7 @@ import React from 'react'
 import { useToast } from "@/hooks/use-toast"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "./ui/button"
-import { Facebook, Twitter, Linkedin, Link as LinkIcon, Share2, Instagram, MessageCircle } from 'lucide-react'
+import { Facebook, Twitter, Linkedin, Link as LinkIcon, Share2, Instagram, MessageCircle, Send } from 'lucide-react'
 
 export function ArticleShareButton({ title, slug, type = 'noticias' }: { title: string, slug: string, type?: 'noticias' | 'colunas' | 'videos' | 'flahistoria' }) {
     const { toast } = useToast()
@@ -37,7 +37,7 @@ export function ArticleShareButton({ title, slug, type = 'noticias' }: { title: 
         })
     }
 
-    const handleShare = (e: React.MouseEvent, platform: 'twitter' | 'facebook' | 'linkedin' | 'instagram' | 'whatsapp') => {
+    const handleShare = (e: React.MouseEvent, platform: 'twitter' | 'facebook' | 'linkedin' | 'instagram' | 'whatsapp' | 'telegram') => {
         e.preventDefault()
         e.stopPropagation()
         const url = `${window.location.origin}/${type}/${slug}`
@@ -54,6 +54,9 @@ export function ArticleShareButton({ title, slug, type = 'noticias' }: { title: 
                 break
             case 'whatsapp':
                 shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(title + " - " + url)}`
+                break
+            case 'telegram':
+                shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`
                 break
             case 'instagram':
                 navigator.clipboard.writeText(url).then(() => {
@@ -98,6 +101,10 @@ export function ArticleShareButton({ title, slug, type = 'noticias' }: { title: 
                 <DropdownMenuItem onClick={(e) => handleShare(e, 'whatsapp')}>
                     <MessageCircle className="mr-2 h-4 w-4" />
                     <span>WhatsApp</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => handleShare(e, 'telegram')}>
+                    <Send className="mr-2 h-4 w-4" />
+                    <span>Telegram</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => handleShare(e, 'linkedin')}>
                     <Linkedin className="mr-2 h-4 w-4" />

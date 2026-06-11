@@ -64,7 +64,7 @@ function formatViews(views: number): string {
 export default async function Home() {
   const allNews = await getNews(12);
   const allColumns = await getColumns(3);
-  const allVideos = await getVideos(7);
+  const allVideos = await getVideos(6);
   const historicArticles = await getHistoryArticles(3);
 
   const mainHeadlines = allNews.slice(0, 6);
