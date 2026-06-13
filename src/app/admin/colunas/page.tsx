@@ -175,6 +175,10 @@ export default function ColunasPage() {
                   <Input id="authorLink" name="authorLink" type="url" placeholder="https://twitter.com/autor" />
                 </div>
                 <div className="grid gap-2 mt-6">
+                  <Label htmlFor="authorDescription">Descrição do Autor (Opcional)</Label>
+                  <Textarea id="authorDescription" name="authorDescription" placeholder="Uma breve biografia do autor." />
+                </div>
+                <div className="grid gap-2 mt-6">
                   <Label htmlFor="columnImage">Link da Imagem da Coluna (Opcional)</Label>
                   <Input id="columnImage" name="columnImage" type="url" placeholder="https://exemplo.com/icone-coluna.png" />
                 </div>
@@ -184,6 +188,7 @@ export default function ColunasPage() {
                 <input type="hidden" name="author" value={existingColumnData?.author || ""} />
                 <input type="hidden" name="authorImage" value={existingColumnData?.authorImage || ""} />
                 <input type="hidden" name="authorLink" value={existingColumnData?.authorLink || ""} />
+                <input type="hidden" name="authorDescription" value={existingColumnData?.authorDescription || ""} />
                 <input type="hidden" name="columnImage" value={existingColumnData?.columnImage || ""} />
               </>
             )}

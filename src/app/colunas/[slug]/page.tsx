@@ -190,6 +190,15 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
           />
         )}
 
+        {column.authorDescription && (
+          <div className="mt-12 p-6 bg-muted/30 rounded-lg border border-border">
+            <h3 className="text-lg font-bold font-headline mb-2 text-primary">Sobre {column.author}</h3>
+            <p className="text-muted-foreground leading-relaxed text-base">
+              {column.authorDescription}
+            </p>
+          </div>
+        )}
+
         <div className="mt-12 pt-8 border-t">
             <AdBanner width={728} height={90} />
         </div>

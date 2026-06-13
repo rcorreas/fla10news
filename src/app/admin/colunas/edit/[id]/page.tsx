@@ -139,6 +139,10 @@ export default function EditColunasPage() {
               <Input id="authorLink" name="authorLink" type="url" defaultValue={column.authorLink || ''} />
             </div>
             <div className="grid gap-2">
+              <Label htmlFor="authorDescription">Descrição do Autor (Opcional)</Label>
+              <Textarea id="authorDescription" name="authorDescription" defaultValue={column.authorDescription || ''} placeholder="Uma breve biografia do autor." />
+            </div>
+            <div className="grid gap-2">
               <Label htmlFor="columnImage">Link da Imagem da Coluna (Opcional)</Label>
               <Input id="columnImage" name="columnImage" type="url" defaultValue={column.columnImage || ''} placeholder="https://exemplo.com/icone-coluna.png" />
             </div>
