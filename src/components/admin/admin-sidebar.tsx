@@ -15,6 +15,7 @@ const navItems = [
   { href: "/admin/proximo-jogo", label: "Atualizar Próximo Jogo", icon: CalendarClock },
   { href: "/admin/materias", label: "Gerenciar Notícias", icon: Newspaper },
   { href: "/admin/colunas", label: "Gerenciar Colunas", icon: PenSquare },
+  { href: "/admin/autores", label: "Gerenciar Autores", icon: Users },
   { href: "/admin/videos", label: "Gerenciar Vídeos", icon: Video },
   { href: "/admin/historia", label: "Gerenciar História", icon: Trophy },
   { href: "/admin/inscritos", label: "Gerenciar Inscritos", icon: Users },
