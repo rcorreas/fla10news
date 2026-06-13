@@ -127,3 +127,53 @@ export async function getAllNewsSlugs(): Promise<{ slug: string }[]> {
         return [];
     }
 }
+
+// Helper function to generate slugs
+function generateSlug(name: string): string {
+    return name
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]+/g, '');
+}
+
+export async function getNewsByAuthorSlug(authorSlug: string): Promise<NewsArticle[]> {
+    try {
+        const allNews = await getNews();
+        return allNews.filter(news => news.author && generateSlug(news.author) === authorSlug);
+    } catch (error) {
+        console.error(`Error fetching news for author slug ${authorSlug}:`, error);
+        return [];
+    }
+}
+
+export async function getNewsAuthorDetailsBySlug(authorSlug: string): Promise<{ author: string } | null> {
+    try {
+        const allNews = await getNews();
+        const authorNews = allNews.find(news => news.author && generateSlug(news.author) === authorSlug);
+        if (authorNews && authorNews.author) {
+            return {
+                author: authorNews.author,
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error(`Error fetching news author details for slug ${authorSlug}:`, error);
+        return null;
+    }
+}
+
+export async function getAllNewsAuthorSlugs(): Promise<{ slug: string }[]> {
+    try {
+        const snapshot = await getDocs(collection(db, 'news'));
+        if (snapshot.empty) {
+            return [];
+        }
+        const authors = new Set(snapshot.docs.map(doc => doc.data().author as string).filter(Boolean));
+        return Array.from(authors).map(author => ({ slug: generateSlug(author) }));
+    } catch (error) {
+        console.error("Error fetching all news author slugs:", error);
+        return [];
+    }
+}

@@ -203,7 +203,7 @@ export default async function Home() {
                             <span>{formatPublishedTime(news.publishedAt)}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <span>Por {news.author || 'Redação NRN'}</span>
+                            <span>Por <Link href={`/autor/${slugify(news.author || 'Redacao NRN')}`} className="hover:underline hover:text-primary transition-colors">{news.author || 'Redação NRN'}</Link></span>
                         </div>
                     </div>
                   </CardFooter>

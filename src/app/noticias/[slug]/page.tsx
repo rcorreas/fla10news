@@ -1,4 +1,4 @@
-import { formatPublishedTime } from '@/lib/utils';
+import { formatPublishedTime, slugify } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -136,7 +136,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <h1 className="font-headline text-4xl md:text-5xl font-bold leading-tight mb-4">{article.title}</h1>
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div>
-                <span>Por {article.author}</span> &bull; <span>{articleDate}</span>
+                <span>Por <Link href={`/autor/${slugify(article.author || 'Redacao NRN')}`} className="hover:underline hover:text-[#FF073A] transition-colors">{article.author || 'Redação NRN'}</Link></span> &bull; <span>{articleDate}</span>
             </div>
             <div className="flex items-center gap-1.5">
                 <Eye className="h-4 w-4" />
@@ -244,7 +244,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             <span>{formatPublishedTime(news.publishedAt)}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <span>Por {news.author || 'Redação NRN'}</span>
+                            <span>Por <Link href={`/autor/${slugify(news.author || 'Redacao NRN')}`} className="hover:underline hover:text-primary transition-colors">{news.author || 'Redação NRN'}</Link></span>
                         </div>
                     </div>
                 </CardFooter>
