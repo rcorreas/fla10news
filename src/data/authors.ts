@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy, doc, getDoc, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, getDoc, Timestamp, where } from 'firebase/firestore';
 import { slugify } from '@/lib/utils';
 
 export type Author = {
@@ -54,6 +54,23 @@ export async function getAuthorById(id: string): Promise<Author | null> {
         }
     } catch (error) {
         console.error(`Error fetching author by id ${id}:`, error);
+        return null;
+    }
+}
+
+export async function getAuthorBySlug(slug: string): Promise<Author | null> {
+    try {
+        const authorsCollection = collection(db, 'authors');
+        const q = query(authorsCollection, where('slug', '==', slug));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            return null;
+        }
+
+        return fromFirestore(snapshot.docs[0]);
+    } catch (error) {
+        console.error(`Error fetching author by slug ${slug}:`, error);
         return null;
     }
 }

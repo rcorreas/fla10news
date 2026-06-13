@@ -4,9 +4,10 @@ import Link from "next/link";
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { getNewsByAuthorSlug, getNewsAuthorDetailsBySlug, getAllNewsAuthorSlugs } from "@/data/news";
+import { getAuthorBySlug } from "@/data/authors";
 import { Badge } from "@/components/ui/badge";
 import { Clock, User } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AdBanner } from '@/components/ad-banner';
 import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
@@ -20,6 +21,7 @@ export async function generateStaticParams() {
 export default async function NewsAuthorPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const authorDetails = await getNewsAuthorDetailsBySlug(slug);
+    const authorData = await getAuthorBySlug(slug);
     const authorNews = await getNewsByAuthorSlug(slug);
 
     if (!authorDetails) {
@@ -35,12 +37,20 @@ export default async function NewsAuthorPage({ params }: { params: Promise<{ slu
             <header className="mb-12">
                 <div className="flex flex-col items-center text-center gap-4">
                     <Avatar className="h-24 w-24 border-4 border-primary/30">
+                        {authorData?.image && (
+                            <AvatarImage src={authorData.image} alt={authorDetails.author} className="object-cover" />
+                        )}
                         <AvatarFallback>
                             <User className="h-12 w-12 text-muted-foreground" />
                         </AvatarFallback>
                     </Avatar>
                     <h1 className="text-4xl font-headline font-bold">{authorDetails.author}</h1>
                     <p className="text-lg text-muted-foreground">Autor(a) no FLA10 News</p>
+                    {authorData?.description && (
+                        <p className="text-base text-foreground/80 max-w-2xl mx-auto mt-2 text-justify">
+                            {authorData.description}
+                        </p>
+                    )}
                     <Separator className="bg-primary w-1/4 mx-auto my-6" />
                 </div>
             </header>

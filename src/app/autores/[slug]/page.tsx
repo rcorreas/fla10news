@@ -5,6 +5,7 @@ import Link from "next/link";
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getColumnsByAuthorSlug, getAuthorDetailsBySlug, getAllAuthorSlugs } from "@/data/columns";
+import { getAuthorBySlug } from "@/data/authors";
 import { Badge } from "@/components/ui/badge";
 import { Clock, User } from "lucide-react";
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns';
@@ -22,6 +23,7 @@ export async function generateStaticParams() {
 export default async function AuthorPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const authorDetails = await getAuthorDetailsBySlug(slug);
+    const authorData = await getAuthorBySlug(slug);
     const authorColumns = await getColumnsByAuthorSlug(slug);
 
     if (!authorDetails) {
@@ -37,7 +39,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
             <header className="mb-12">
                 <div className="flex flex-col items-center text-center gap-4">
                     <Avatar className="h-24 w-24 border-4 border-primary/30">
-                        <AvatarImage src={authorDetails.authorImage} alt={authorDetails.author} />
+                        <AvatarImage src={authorData?.image || authorDetails.authorImage} alt={authorDetails.author} className="object-cover" />
                         <AvatarFallback>
                             <User className="h-12 w-12 text-muted-foreground" />
                         </AvatarFallback>
@@ -45,7 +47,14 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
                     <h1 className="text-4xl font-headline font-bold">{authorDetails.author}</h1>
                     <p className="text-lg text-muted-foreground">Colunista no FLA10 News</p>
                     
-                    {authorDetails.author === 'Hélio Pacheco' && (
+                    {authorData?.description ? (
+                        <>
+                            <p className="text-base text-foreground/80 max-w-2xl mx-auto mt-2 text-justify">
+                                {authorData.description}
+                            </p>
+                            <Separator className="bg-primary w-1/4 mx-auto my-6" />
+                        </>
+                    ) : authorDetails.author === 'Hélio Pacheco' && (
                         <>
                             <div className="text-base text-foreground/80 max-w-2xl mt-2 space-y-2 text-justify">
                             <p>
