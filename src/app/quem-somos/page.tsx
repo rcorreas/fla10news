@@ -1,11 +1,13 @@
 import { AdBanner } from "@/components/ad-banner";
-import { Users, Shield, Target, BookOpen, MessageSquare, Award } from "lucide-react";
+import { Users, Shield, Target, BookOpen, MessageSquare, Award, PenTool } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { slugify } from "@/lib/utils";
+import { getAllAuthorSlugs, getAuthorDetailsBySlug } from "@/data/columns";
+import { getAuthorBySlug } from "@/data/authors";
 
-export default function QuemSomosPage() {
+export default async function QuemSomosPage() {
   const equipe = [
     {
       nome: "Robson Corrêa",
@@ -26,6 +28,22 @@ export default function QuemSomosPage() {
       iniciais: "MC",
     },
   ];
+
+  const columnSlugs = await getAllAuthorSlugs();
+  const colunistas = await Promise.all(
+      columnSlugs.map(async ({ slug }) => {
+          const authorDetails = await getAuthorDetailsBySlug(slug);
+          const authorData = await getAuthorBySlug(slug);
+          return {
+              slug,
+              nome: authorDetails?.author || 'Colunista',
+              cargo: 'Colunista',
+              bio: authorData?.description || 'Sem descrição.',
+              iniciais: (authorDetails?.author || 'C').substring(0, 2).toUpperCase(),
+              avatarUrl: authorData?.image || authorDetails?.authorImage,
+          };
+      })
+  );
 
   return (
     <div className="container mx-auto max-w-4xl py-12 px-4">
@@ -113,6 +131,35 @@ export default function QuemSomosPage() {
                   </h3>
                   <p className="text-sm text-primary font-semibold mb-2">{membro.cargo}</p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{membro.bio}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2><PenTool />Colunistas</h2>
+          <p>
+            Nossos colunistas trazem opiniões fortes, análises exclusivas e a voz da arquibancada em textos semanais imperdíveis.
+          </p>
+          
+          <div className="space-y-6 not-prose mt-8">
+            {colunistas.map((colunista) => (
+              <div key={colunista.nome} className="flex flex-col sm:flex-row gap-4 bg-muted/30 p-6 rounded-lg border border-border hover:border-primary/20 transition-colors">
+                <Avatar className="h-16 w-16 border-2 border-primary/20 flex-shrink-0">
+                  {colunista.avatarUrl && <AvatarImage src={colunista.avatarUrl} alt={colunista.nome} className="object-cover" />}
+                  <AvatarFallback className="bg-primary text-primary-foreground font-bold text-lg">
+                    {colunista.iniciais}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h3 className="text-lg font-bold text-foreground">
+                    <Link href={`/autores/${colunista.slug}`} className="hover:text-primary hover:underline transition-colors">
+                      {colunista.nome}
+                    </Link>
+                  </h3>
+                  <p className="text-sm text-primary font-semibold mb-2">{colunista.cargo}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{colunista.bio}</p>
                 </div>
               </div>
             ))}
