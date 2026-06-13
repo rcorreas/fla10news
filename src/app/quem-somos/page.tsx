@@ -2,6 +2,8 @@ import { AdBanner } from "@/components/ad-banner";
 import { Users, Shield, Target, BookOpen, MessageSquare, Award } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import { slugify } from "@/lib/utils";
 
 export default function QuemSomosPage() {
   const equipe = [
@@ -104,7 +106,11 @@ export default function QuemSomosPage() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h3 className="text-lg font-bold text-foreground">{membro.nome}</h3>
+                  <h3 className="text-lg font-bold text-foreground">
+                    <Link href={`/autor/${slugify(membro.nome)}`} className="hover:text-primary hover:underline transition-colors">
+                      {membro.nome}
+                    </Link>
+                  </h3>
                   <p className="text-sm text-primary font-semibold mb-2">{membro.cargo}</p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{membro.bio}</p>
                 </div>
