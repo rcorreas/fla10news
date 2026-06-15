@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "./ui/button"
 import { Facebook, Twitter, Linkedin, Link as LinkIcon, Share2, Instagram, MessageCircle, Send } from 'lucide-react'
 
-export function ShareButton({ title, slug, type = 'noticias' }: { title: string, slug: string, type?: 'noticias' | 'colunas' | 'videos' | 'flahistoria' }) {
+export function ShareButton({ title, slug, type = 'noticias' }: { title: string, slug: string, type?: 'noticias' | 'colunas' | 'videos' | 'flahistoria' | 'voz-torcedor' }) {
     const { toast } = useToast()
     
     const getTypeText = () => {
@@ -14,6 +14,7 @@ export function ShareButton({ title, slug, type = 'noticias' }: { title: string,
             case 'colunas': return 'da coluna';
             case 'videos': return 'do vídeo';
             case 'flahistoria': return 'da matéria';
+            case 'voz-torcedor': return 'da publicação';
             default: return 'da notícia';
         }
     }

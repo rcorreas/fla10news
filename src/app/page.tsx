@@ -261,9 +261,9 @@ export default async function Home() {
           </div>
         </section>
 
-        {vozTorcedores && vozTorcedores.length > 0 && (
-          <section>
-            <SectionHeader title="A Voz do Torcedor" subtitle="O espaço aberto para a Nação Rubro-Negra expressar sua paixão." href="/voz-torcedor" icon={MessageSquare} />
+        <section>
+          <SectionHeader title="A Voz do Torcedor" subtitle="O espaço aberto para a Nação Rubro-Negra expressar sua paixão." href="/voz-torcedor" icon={MessageSquare} />
+          {vozTorcedores && vozTorcedores.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {vozTorcedores.map((voz) => (
                 <Card key={voz.slug} className="relative flex flex-col group transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
@@ -296,8 +296,12 @@ export default async function Home() {
                 </Card>
               ))}
             </div>
-          </section>
-        )}
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              <p>Nenhuma publicação ainda. Seja o primeiro a compartilhar sua voz!</p>
+            </div>
+          )}
+        </section>
 
         {historicArticles && historicArticles.length > 0 && (
             <section>
