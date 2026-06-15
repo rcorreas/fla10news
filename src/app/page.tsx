@@ -11,7 +11,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, PlayCircle, Trophy } from 'lucide-react'
+import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, PlayCircle, Trophy, MessageSquare } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { AdBanner } from '@/components/ad-banner'
 import { SofascoreWidget } from '@/components/sofascore-widget'
@@ -19,6 +19,7 @@ import { LibertadoresWidget } from '@/components/libertadores-widget'
 import { getNews } from '@/data/news'
 import { getColumns } from '@/data/columns'
 import { getVideos } from '@/data/videos'
+import { getVozTorcedores } from '@/data/voz-torcedor'
 import { getHistoryArticles } from '@/data/history'
 import { MainCarousel } from '@/components/home/main-carousel'
 import { HistoryCoverflow } from '@/components/home/history-coverflow'
@@ -66,6 +67,7 @@ export default async function Home() {
   const allColumns = await getColumns(3);
   const allVideos = await getVideos(6);
   const historicArticles = await getHistoryArticles(3);
+  const vozTorcedores = await getVozTorcedores(3);
 
   const mainHeadlines = allNews.slice(0, 6);
   const dailyNews = allNews.slice(6, 12); // Now shows 6 articles
@@ -258,6 +260,44 @@ export default async function Home() {
             ))}
           </div>
         </section>
+
+        {vozTorcedores && vozTorcedores.length > 0 && (
+          <section>
+            <SectionHeader title="A Voz do Torcedor" subtitle="O espaço aberto para a Nação Rubro-Negra expressar sua paixão." href="/voz-torcedor" icon={MessageSquare} />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {vozTorcedores.map((voz) => (
+                <Card key={voz.slug} className="relative flex flex-col group transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
+                  <ShareButton title={voz.title} slug={voz.slug} type="voz-torcedor" />
+                  <CardHeader>
+                      <div className="flex items-center justify-between mb-4">
+                          <Badge variant="secondary">Torcedor</Badge>
+                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                              <Clock className="h-3 w-3" />
+                              <span>{formatPublishedTime(voz.publishedAt)}</span>
+                          </div>
+                      </div>
+                      <div className="flex items-start gap-4">
+                          <Avatar className="h-12 w-12 border-2 border-primary/20">
+                              <AvatarFallback>{voz.authorName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                              <p className="font-bold text-primary">{voz.authorName}</p>
+                          </div>
+                      </div>
+                  </CardHeader>
+                  <CardContent className="flex-grow space-y-2">
+                      <CardTitle className="text-xl font-bold font-body leading-tight">
+                          <Link href={`/voz-torcedor/${voz.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                          {voz.title}
+                          </Link>
+                      </CardTitle>
+                      <p className="text-muted-foreground text-sm line-clamp-3">"{voz.summary}"</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
+        )}
 
         {historicArticles && historicArticles.length > 0 && (
             <section>

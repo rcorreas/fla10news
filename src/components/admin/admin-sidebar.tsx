@@ -7,9 +7,8 @@ import { cn } from "@/lib/utils";
 import { Fla10Logo } from "../fla10-logo";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { LayoutDashboard, CalendarClock, Newspaper, PenSquare, Video, Menu, Home, Users, Trophy } from "lucide-react";
+import { LayoutDashboard, CalendarClock, Newspaper, PenSquare, Video, Menu, Home, Users, Trophy, MessageSquare } from "lucide-react";
 
-// Updated labels to match page titles for consistency
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/proximo-jogo", label: "Atualizar Próximo Jogo", icon: CalendarClock },
@@ -19,6 +18,7 @@ const navItems = [
   { href: "/admin/videos", label: "Gerenciar Vídeos", icon: Video },
   { href: "/admin/historia", label: "Gerenciar História", icon: Trophy },
   { href: "/admin/inscritos", label: "Gerenciar Inscritos", icon: Users },
+  { href: "/admin/voz-torcedor", label: "Gerenciar A Voz do Torcedor", icon: MessageSquare },
 ];
 
 function NavLink({ href, label, icon: Icon }: { href: string; label: string; icon: React.ElementType }) {

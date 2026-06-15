@@ -99,7 +99,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-            <div className="hidden md:flex">
+            <div className="flex">
               <AuthButton />
             </div>
             <div className="md:hidden">
