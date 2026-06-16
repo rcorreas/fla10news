@@ -5,7 +5,10 @@ import type { Metadata } from 'next';
 
 export const revalidate = 60; // Revalida o cache da página a cada 60 segundos
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://fla10news.com.br';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: 'FLA10 News',
   description: 'Seu portal diário de notícias sobre o Clube de Regatas do Flamengo.',
   keywords: 'Notícias do Flamengo, Notícias do Flamengo hoje, Flamengo, Flamengo hoje, Nação rubro-negra',
