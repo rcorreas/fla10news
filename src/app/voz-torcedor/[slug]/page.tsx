@@ -87,12 +87,15 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
             <Badge variant="default" className="flex items-center gap-2"><MessageSquare className="w-4 h-4"/> A Voz do Torcedor</Badge>
             <ArticleShareButton title={voz.title} slug={voz.slug} type="voz-torcedor" />
           </div>
-          
+          <div className="relative flex items-center justify-center h-40">
+            <p className="font-sans text-5xl md:text-6xl font-bold text-primary text-center">A Voz do Torcedor</p>
+            <div className="absolute right-[-10px] md:right-[-30px] h-32 w-32 md:h-40 md:w-40 flex-shrink-0">
+              <Image src="https://i.imgur.com/NErxN3w.png" alt="A Voz do Torcedor" fill className="object-contain" />
+            </div>
+          </div>
+          <Separator className="my-4" />
           <h1 className="font-headline text-3xl md:text-4xl font-bold leading-tight">{voz.title}</h1>
           <div className="flex items-center justify-start gap-4 mt-4">
-              <Avatar className="h-16 w-16 border border-primary">
-                <AvatarFallback className="bg-primary/20 text-primary">{voz.authorName.slice(0, 2).toUpperCase()}</AvatarFallback>
-              </Avatar>
             <div className="text-sm">
                 <p className="font-bold text-base text-foreground">
                     Por {voz.authorName}
@@ -153,14 +156,6 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
                             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                 <Clock className="h-3 w-3" />
                                 <span>{formatPublishedTime(vozItem.publishedAt)}</span>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-4">
-                            <Avatar className="h-12 w-12 border-2 border-primary/20">
-                                <AvatarFallback>{vozItem.authorName.slice(0, 2).toUpperCase()}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <p className="font-bold text-primary">{vozItem.authorName}</p>
                             </div>
                         </div>
                     </CardHeader>

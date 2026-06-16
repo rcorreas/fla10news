@@ -261,6 +261,8 @@ export default async function Home() {
           </div>
         </section>
 
+        <AdBanner width={468} height={60} />
+
         <section>
           <SectionHeader title="A Voz do Torcedor" subtitle="O espaço aberto para a Nação Rubro-Negra expressar sua paixão." href="/voz-torcedor" icon={MessageSquare} />
           {vozTorcedores && vozTorcedores.length > 0 ? (
@@ -274,14 +276,6 @@ export default async function Home() {
                           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                               <Clock className="h-3 w-3" />
                               <span>{formatPublishedTime(voz.publishedAt)}</span>
-                          </div>
-                      </div>
-                      <div className="flex items-start gap-4">
-                          <Avatar className="h-12 w-12 border-2 border-primary/20">
-                              <AvatarFallback>{voz.authorName.slice(0, 2).toUpperCase()}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                              <p className="font-bold text-primary">{voz.authorName}</p>
                           </div>
                       </div>
                   </CardHeader>
@@ -302,6 +296,8 @@ export default async function Home() {
             </div>
           )}
         </section>
+
+        <AdBanner width={468} height={60} />
 
         {historicArticles && historicArticles.length > 0 && (
             <section>
