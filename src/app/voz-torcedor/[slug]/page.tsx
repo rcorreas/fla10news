@@ -88,10 +88,10 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
             <ArticleShareButton title={voz.title} slug={voz.slug} type="voz-torcedor" />
           </div>
           <div className="relative flex items-center justify-center h-40">
-            <p className="font-sans text-5xl md:text-6xl font-bold text-primary text-center">A Voz do Torcedor</p>
-            <div className="absolute right-[-10px] md:right-[-30px] h-32 w-32 md:h-40 md:w-40 flex-shrink-0">
-              <Image src="https://i.imgur.com/NErxN3w.png" alt="A Voz do Torcedor" fill className="object-contain" />
+            <div className="absolute left-[-10px] md:left-[-30px] h-32 w-32 md:h-40 md:w-40 flex-shrink-0">
+              <Image src="https://i.imgur.com/ESMmQcc.png" alt="A Voz do Torcedor" fill className="object-contain" />
             </div>
+            <p className="font-sans text-5xl md:text-6xl font-bold text-primary text-center">A Voz do Torcedor</p>
           </div>
           <Separator className="my-4" />
           <h1 className="font-headline text-3xl md:text-4xl font-bold leading-tight">{voz.title}</h1>
