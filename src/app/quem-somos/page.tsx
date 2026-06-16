@@ -27,6 +27,12 @@ export default async function QuemSomosPage() {
       bio: "Jornalista apaixonada pela arquibancada. Realiza a cobertura presencial dos jogos no Maracanã, trazendo a energia da torcida e entrevistas pós-jogo direto das zonas mistas.",
       iniciais: "MC",
     },
+    {
+      nome: "Cadu Marques",
+      cargo: "Colaborador",
+      bio: "Colaborador e produtor de conteúdo esportivo focado em trazer informações precisas para a Nação Rubro-Negra.",
+      iniciais: "CM",
+    },
   ];
 
   const equipeWithData = await Promise.all(

@@ -134,7 +134,7 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
                 *As opiniões expressadas aqui são de inteiro conteúdo do autor e não refletem a opinião editorial deste portal.
             </p>
             <p className="text-sm text-foreground font-bold">
-                Se você quiser mandar seu recado para esta sessão, o envie para o e-mail: <a href="mailto:fladeznews@gmail.com" className="text-primary hover:underline">fladeznews@gmail.com</a>
+                Se você quiser mandar seu recado para esta seção, o envie para o e-mail: <a href="mailto:fladeznews@gmail.com" className="text-primary hover:underline">fladeznews@gmail.com</a>
             </p>
         </div>
 
