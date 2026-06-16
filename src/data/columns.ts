@@ -188,3 +188,17 @@ export async function getAllAuthorSlugs(): Promise<{ slug: string }[]> {
         return [];
     }
 }
+
+export async function getColunistasSlugs(): Promise<{ slug: string }[]> {
+    try {
+        const snapshot = await getDocs(collection(db, 'columns'));
+        if (snapshot.empty) {
+            return [];
+        }
+        const authors = new Set(snapshot.docs.map(doc => doc.data().author as string));
+        return Array.from(authors).map(author => ({ slug: generateSlug(author) }));
+    } catch (error) {
+        console.error("Error fetching colunistas slugs:", error);
+        return [];
+    }
+}

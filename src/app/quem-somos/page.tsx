@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { slugify } from "@/lib/utils";
-import { getAllAuthorSlugs, getAuthorDetailsBySlug } from "@/data/columns";
+import { getAllAuthorSlugs, getAuthorDetailsBySlug, getColunistasSlugs } from "@/data/columns";
 import { getAuthorBySlug } from "@/data/authors";
 
 export default async function QuemSomosPage() {
@@ -41,7 +41,7 @@ export default async function QuemSomosPage() {
     })
   );
 
-  const columnSlugs = await getAllAuthorSlugs();
+  const columnSlugs = await getColunistasSlugs();
   const colunistas = await Promise.all(
       columnSlugs.map(async ({ slug }) => {
           const authorDetails = await getAuthorDetailsBySlug(slug);
