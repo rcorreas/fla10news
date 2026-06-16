@@ -31,7 +31,7 @@ export async function generateMetadata(
   }
 
   const desc = voz.summary || voz.content?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || '';
-  const imageUrl = voz.image || 'https://placehold.co/1200x675.png'; // default fallback if no image
+  const imageUrl = 'https://i.imgur.com/ESMmQcc.png';
 
   return {
     title: voz.title,
