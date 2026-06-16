@@ -29,6 +29,18 @@ export default async function QuemSomosPage() {
     },
   ];
 
+  const equipeWithData = await Promise.all(
+    equipe.map(async (membro) => {
+      const slug = slugify(membro.nome);
+      const authorData = await getAuthorBySlug(slug);
+      return {
+        ...membro,
+        slug,
+        avatarUrl: authorData?.image,
+      };
+    })
+  );
+
   const columnSlugs = await getAllAuthorSlugs();
   const colunistas = await Promise.all(
       columnSlugs.map(async ({ slug }) => {
@@ -36,10 +48,10 @@ export default async function QuemSomosPage() {
           const authorData = await getAuthorBySlug(slug);
           return {
               slug,
-              nome: authorDetails?.author || 'Colunista',
+              nome: authorData?.name || authorDetails?.author || 'Colunista',
               cargo: 'Colunista',
               bio: authorData?.description || 'Sem descrição.',
-              iniciais: (authorDetails?.author || 'C').substring(0, 2).toUpperCase(),
+              iniciais: (authorData?.name || authorDetails?.author || 'C').substring(0, 2).toUpperCase(),
               avatarUrl: authorData?.image || authorDetails?.authorImage,
           };
       })
@@ -116,16 +128,17 @@ export default async function QuemSomosPage() {
           </p>
           
           <div className="space-y-6 not-prose mt-8">
-            {equipe.map((membro) => (
+            {equipeWithData.map((membro) => (
               <div key={membro.nome} className="flex flex-col sm:flex-row gap-4 bg-muted/30 p-6 rounded-lg border border-border hover:border-primary/20 transition-colors">
                 <Avatar className="h-16 w-16 border-2 border-primary/20 flex-shrink-0">
+                  {membro.avatarUrl && <AvatarImage src={membro.avatarUrl} alt={membro.nome} className="object-cover" />}
                   <AvatarFallback className="bg-primary text-primary-foreground font-bold text-lg">
                     {membro.iniciais}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <h3 className="text-lg font-bold text-foreground">
-                    <Link href={`/autor/${slugify(membro.nome)}`} className="hover:text-primary hover:underline transition-colors">
+                    <Link href={`/autores/${membro.slug}`} className="hover:text-primary hover:underline transition-colors">
                       {membro.nome}
                     </Link>
                   </h3>

@@ -162,12 +162,26 @@ export async function getAllColumnSlugs(): Promise<{ slug: string }[]> {
 
 export async function getAllAuthorSlugs(): Promise<{ slug: string }[]> {
     try {
-        const snapshot = await getDocs(collection(db, 'columns'));
-        if (snapshot.empty) {
-            return [];
+        const columnsSnapshot = await getDocs(collection(db, 'columns'));
+        const authorsSnapshot = await getDocs(collection(db, 'authors'));
+        
+        const slugs = new Set<string>();
+
+        if (!columnsSnapshot.empty) {
+            columnsSnapshot.docs.forEach(doc => {
+                const authorName = doc.data().author as string;
+                if (authorName) slugs.add(generateSlug(authorName));
+            });
         }
-        const authors = new Set(snapshot.docs.map(doc => doc.data().author as string));
-        return Array.from(authors).map(author => ({ slug: generateSlug(author) }));
+
+        if (!authorsSnapshot.empty) {
+            authorsSnapshot.docs.forEach(doc => {
+                const slug = doc.data().slug as string;
+                if (slug) slugs.add(slug);
+            });
+        }
+
+        return Array.from(slugs).map(slug => ({ slug }));
     } catch (error) {
         console.error("Error fetching all author slugs:", error);
         return [];
