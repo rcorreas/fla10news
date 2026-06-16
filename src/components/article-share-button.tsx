@@ -1,20 +1,26 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useToast } from "@/hooks/use-toast"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "./ui/button"
 import { Facebook, Twitter, Linkedin, Link as LinkIcon, Share2, Instagram, MessageCircle, Send } from 'lucide-react'
 
-export function ArticleShareButton({ title, slug, type = 'noticias' }: { title: string, slug: string, type?: 'noticias' | 'colunas' | 'videos' | 'flahistoria' }) {
+export function ArticleShareButton({ title, slug, type = 'noticias' }: { title: string, slug: string, type?: 'noticias' | 'colunas' | 'videos' | 'flahistoria' | 'voz-torcedor' }) {
     const { toast } = useToast()
-    
+    const [isMounted, setIsMounted] = useState(false)
+
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
+
     const getTypeText = () => {
         switch (type) {
-            case 'colunas': return 'da coluna';
-            case 'videos': return 'do vídeo';
-            case 'flahistoria': return 'da matéria';
-            default: return 'da notícia';
+            case 'colunas': return 'a coluna';
+            case 'videos': return 'o vídeo';
+            case 'flahistoria': return 'a matéria';
+            case 'voz-torcedor': return 'a publicação';
+            default: return 'a notícia';
         }
     }
     
