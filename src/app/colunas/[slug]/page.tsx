@@ -50,7 +50,19 @@ export async function generateMetadata(
   }
 
   const desc = column.excerpt || column.content?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || '';
-  const imageUrl = column.columnImage || 'https://placehold.co/1200x675.png'; // default fallback if no image
+  let imageUrl = column.columnImage || 'https://placehold.co/1200x675.png'; // default fallback if no image
+
+  if (!column.columnImage) {
+      if (column.columnName === "É Mengão na veia!!!") {
+          imageUrl = "https://i.postimg.cc/YCT3F8nY/Chat-GPT-Image-9-de-jul-de-2025-23-06-12-removebg-preview.png";
+      } else if (column.columnName === "Cesta de Três") {
+          imageUrl = "https://i.postimg.cc/YCBZF1X4/Chat-GPT-Image-9-de-jul-de-2025-23-25-49-removebg-preview.png";
+      } else if (column.columnName === "Panorama do Canela") {
+          imageUrl = "https://i.imgur.com/Ivq88KP.png";
+      } else if (column.columnName === "Na Pena do Urubu") {
+          imageUrl = "https://i.imgur.com/ICtiAp0.png";
+      }
+  }
 
   return {
     title: column.title,

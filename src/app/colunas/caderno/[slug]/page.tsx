@@ -12,6 +12,53 @@ import { notFound } from 'next/navigation';
 
 
 
+import type { Metadata, ResolvingMetadata } from 'next';
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params;
+  const columns = await getColumnsByCadernoSlug(slug);
+
+  if (columns.length === 0) {
+    return {
+      title: 'Caderno não encontrado',
+    }
+  }
+
+  const columnName = columns[0].columnName;
+  const desc = `Confira as colunas de ${columnName} no FLA10News.`;
+  
+  let imageUrl = 'https://placehold.co/1200x675.png'; // default fallback if no image
+  if (columnName === "É Mengão na veia!!!") {
+      imageUrl = "https://i.postimg.cc/YCT3F8nY/Chat-GPT-Image-9-de-jul-de-2025-23-06-12-removebg-preview.png";
+  } else if (columnName === "Cesta de Três") {
+      imageUrl = "https://i.postimg.cc/YCBZF1X4/Chat-GPT-Image-9-de-jul-de-2025-23-25-49-removebg-preview.png";
+  } else if (columnName === "Panorama do Canela") {
+      imageUrl = "https://i.imgur.com/Ivq88KP.png";
+  } else if (columnName === "Na Pena do Urubu") {
+      imageUrl = "https://i.imgur.com/ICtiAp0.png";
+  }
+
+  return {
+    title: columnName,
+    description: desc,
+    openGraph: {
+      title: columnName,
+      description: desc,
+      images: [imageUrl],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: columnName,
+      description: desc,
+      images: [imageUrl],
+    },
+  }
+}
+
 export default async function CadernoPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const columns = await getColumnsByCadernoSlug(slug);
