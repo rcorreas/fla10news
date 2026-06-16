@@ -97,7 +97,7 @@ export async function getColumnsByCadernoSlug(cadernoSlug: string): Promise<Opin
     }
 }
 
-export async function getAuthorDetailsBySlug(authorSlug: string): Promise<{ author: string; authorImage: string } | null> {
+export async function getAuthorDetailsBySlug(authorSlug: string): Promise<{ author: string; authorImage: string; authorDescription?: string } | null> {
     try {
         const allColumns = await getColumns();
         const authorColumn = allColumns.find(column => generateSlug(column.author) === authorSlug);
@@ -105,6 +105,7 @@ export async function getAuthorDetailsBySlug(authorSlug: string): Promise<{ auth
             return {
                 author: authorColumn.author,
                 authorImage: authorColumn.authorImage,
+                authorDescription: authorColumn.authorDescription,
             };
         }
         return null;

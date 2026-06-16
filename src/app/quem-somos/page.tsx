@@ -50,7 +50,7 @@ export default async function QuemSomosPage() {
               slug,
               nome: authorData?.name || authorDetails?.author || 'Colunista',
               cargo: 'Colunista',
-              bio: authorData?.description || 'Sem descrição.',
+              bio: authorData?.description || authorDetails?.authorDescription || 'Em breve! Descrição do colunista será adicionada em breve.',
               iniciais: (authorData?.name || authorDetails?.author || 'C').substring(0, 2).toUpperCase(),
               avatarUrl: authorData?.image || authorDetails?.authorImage,
           };
