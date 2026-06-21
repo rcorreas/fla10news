@@ -21,14 +21,14 @@ async function ArticleList() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {articles.map((article) => (
                     <Card key={article.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
-                        <Link href={`/flahistoria/${article.slug}`}>
+                        <Link href={`/flahistoria/${article.slug}`} target="_blank">
                             <CardHeader className="p-0 relative">
                                 <Image src={article.image} alt={article.title} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={article.dataAiHint} />
                             </CardHeader>
                         </Link>
                         <CardContent className="flex-grow p-4 space-y-2">
                             <CardTitle className="text-lg font-bold font-body leading-tight">
-                                <Link href={`/flahistoria/${article.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                                <Link href={`/flahistoria/${article.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                                     {article.title}
                                 </Link>
                             </CardTitle>

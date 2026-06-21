@@ -86,7 +86,7 @@ export default function ResponsabilidadePage() {
           <p>Para qualquer dúvida, correção, sugestão ou questão jurídica relacionada ao conteúdo, entre em contato conosco:</p>
            <div className="text-center bg-muted/50 p-6 rounded-lg">
                 <p className="text-2xl font-mono font-bold text-primary break-all">fladeznews@gmail.com</p>
-                <p className="text-muted-foreground mt-2">Ou através da nossa página de <Link href="/fale-conosco" className="text-primary hover:underline font-bold">Fale Conosco</Link>.</p>
+                <p className="text-muted-foreground mt-2">Ou através da nossa página de <Link href="/fale-conosco" className="text-primary hover:underline font-bold" target="_blank">Fale Conosco</Link>.</p>
             </div>
         </section>
         

@@ -134,7 +134,7 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
                 *As opiniões expressadas aqui são de inteiro conteúdo do autor e não refletem a opinião editorial deste portal.
             </p>
             <p className="text-sm text-foreground font-bold">
-                Se você quiser mandar seu recado para esta seção, o envie para o e-mail: <a href="mailto:fladeznews@gmail.com" className="text-primary hover:underline">fladeznews@gmail.com</a>
+                Se você quiser mandar seu recado para esta seção, o envie para o e-mail: <a href="mailto:fladeznews@gmail.com" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">fladeznews@gmail.com</a>
             </p>
         </div>
 
@@ -161,7 +161,7 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
                     </CardHeader>
                     <CardContent className="flex-grow space-y-2">
                         <CardTitle className="text-xl font-bold font-body leading-tight">
-                            <Link href={`/voz-torcedor/${vozItem.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                            <Link href={`/voz-torcedor/${vozItem.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                             {vozItem.title}
                             </Link>
                         </CardTitle>

@@ -174,7 +174,7 @@ export default function VozTorcedorPage() {
                     <TableCell>{format(item.publishedAt, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button asChild variant="ghost" size="icon">
-                        <Link href={`/admin/voz-torcedor/edit/${item.id}`}>
+                        <Link href={`/admin/voz-torcedor/edit/${item.id}`} target="_blank">
                           <FilePen className="h-4 w-4" />
                         </Link>
                       </Button>

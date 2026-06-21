@@ -181,7 +181,7 @@ export default function LoginPage() {
                                 <Link 
                                     href="/recuperar-senha" 
                                     className="text-xs text-muted-foreground underline hover:text-primary"
-                                >
+                                 target="_blank">
                                     Esqueceu sua senha?
                                 </Link>
                             </div>
@@ -229,7 +229,7 @@ export default function LoginPage() {
                         </Button>
                          <p className="text-xs text-center text-muted-foreground">
                             Não tem uma conta?{' '}
-                            <Link href="/register" className="underline hover:text-primary">
+                            <Link href="/register" className="underline hover:text-primary" target="_blank">
                                 Cadastre-se
                             </Link>
                         </p>

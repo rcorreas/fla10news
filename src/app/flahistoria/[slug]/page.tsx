@@ -272,14 +272,14 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
                 {otherArticles.map((item) => (
                     <Card key={item.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                         <CardHeader className="p-0 relative">
-                            <Link href={`/flahistoria/${item.slug}`}>
+                            <Link href={`/flahistoria/${item.slug}`} target="_blank">
                                 <Image src={item.image} alt={item.title} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.dataAiHint} />
                             </Link>
                             <ShareButton title={item.title} slug={item.slug} type="flahistoria" />
                         </CardHeader>
                         <CardContent className="flex-grow p-4 space-y-2">
                             <CardTitle className="text-lg font-bold font-body leading-tight">
-                                <Link href={`/flahistoria/${item.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                                <Link href={`/flahistoria/${item.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                                     {item.title}
                                 </Link>
                             </CardTitle>

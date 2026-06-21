@@ -59,7 +59,7 @@ export default async function ColunasPage({ searchParams }: { searchParams: Prom
                                         <AvatarFallback>{column.author.slice(0, 2).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                     <div>
-                                        <Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline">
+                                        <Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline" target="_blank">
                                             <p className="font-bold text-primary">{column.columnName}</p>
                                         </Link>
                                         <p className="text-sm text-muted-foreground">Por {column.author}</p>
@@ -68,7 +68,7 @@ export default async function ColunasPage({ searchParams }: { searchParams: Prom
                             </CardHeader>
                             <CardContent className="flex-grow space-y-2">
                                 <CardTitle className="text-xl font-bold font-body leading-tight">
-                                    <Link href={`/colunas/${column.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                                    <Link href={`/colunas/${column.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                                     {column.title}
                                     </Link>
                                 </CardTitle>

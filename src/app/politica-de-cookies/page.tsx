@@ -94,7 +94,7 @@ export default function PoliticaDeCookiesPage() {
         <section>
           <h2><Info />5. Dúvidas e Contato</h2>
           <p>
-            Se você tiver qualquer dúvida sobre nossa Política de Cookies ou sobre como protegemos seus dados pessoais de navegação, fique à vontade para entrar em contato conosco pelo e-mail: <strong>fladeznews@gmail.com</strong> ou por meio da nossa página dedicada de <a href="/contato" className="text-primary hover:underline font-bold">Contato</a>.
+            Se você tiver qualquer dúvida sobre nossa Política de Cookies ou sobre como protegemos seus dados pessoais de navegação, fique à vontade para entrar em contato conosco pelo e-mail: <strong>fladeznews@gmail.com</strong> ou por meio da nossa página dedicada de <a href="/contato" className="text-primary hover:underline font-bold" target="_blank" rel="noopener noreferrer">Contato</a>.
           </p>
         </section>
       </main>

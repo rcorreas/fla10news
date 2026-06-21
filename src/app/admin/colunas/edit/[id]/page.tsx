@@ -166,7 +166,7 @@ export default function EditColunasPage() {
           <CardFooter className="flex justify-between">
             <SubmitButton />
             <Button variant="outline" asChild>
-                <Link href="/admin/colunas">Cancelar</Link>
+                <Link href="/admin/colunas" target="_blank">Cancelar</Link>
             </Button>
           </CardFooter>
         </form>

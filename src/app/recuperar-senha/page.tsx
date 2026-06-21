@@ -79,7 +79,7 @@ export default function RecuperarSenhaPage() {
                                 <Mail className="mr-2 h-4 w-4" />
                                 Enviar novamente
                             </Button>
-                            <Link href="/login" className="text-xs text-center text-muted-foreground underline hover:text-primary">
+                            <Link href="/login" className="text-xs text-center text-muted-foreground underline hover:text-primary" target="_blank">
                                 <ArrowLeft className="inline mr-1 h-3 w-3" />
                                 Voltar para o Login
                             </Link>
@@ -111,7 +111,7 @@ export default function RecuperarSenhaPage() {
                             <Button className="w-full hover:bg-black" type="submit" disabled={loading}>
                                 {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Enviando...</> : 'Enviar Link de Recuperação'}
                             </Button>
-                            <Link href="/login" className="text-xs text-center text-muted-foreground underline hover:text-primary">
+                            <Link href="/login" className="text-xs text-center text-muted-foreground underline hover:text-primary" target="_blank">
                                 <ArrowLeft className="inline mr-1 h-3 w-3" />
                                 Voltar para o Login
                             </Link>

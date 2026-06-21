@@ -45,6 +45,11 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
                         </AvatarFallback>
                     </Avatar>
                     <h1 className="text-4xl font-headline font-bold">{authorData?.name || authorDetails?.author}</h1>
+                    {authorData?.link && (
+                        <Link href={authorData.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 transition-colors duration-200">
+                            {authorData.link}
+                        </Link>
+                    )}
                     <p className="text-lg text-muted-foreground">Colunista no FLA10 News</p>
                     
                     {authorData?.description ? (
@@ -94,7 +99,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
                         </CardHeader>
                         <CardContent className="flex-grow space-y-2">
                             <CardTitle className="text-xl font-bold font-body leading-tight">
-                                <Link href={`/colunas/${column.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                                <Link href={`/colunas/${column.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                                 {column.title}
                                 </Link>
                             </CardTitle>

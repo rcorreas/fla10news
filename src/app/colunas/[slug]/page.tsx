@@ -160,14 +160,14 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
                     )}
                 </>
             )}
-<Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline transition-all">
+<Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline transition-all" target="_blank">
     <p className="font-sans text-6xl font-bold text-primary text-center">{column.columnName}</p>
 </Link>
           </div>
           <Separator className="my-4" />
           <h1 className="font-headline text-3xl md:text-4xl font-bold leading-tight">{column.title}</h1>
           <div className="flex items-center justify-start gap-4 mt-4">
-            <Link href={`/autores/${authorSlug}`}>
+            <Link href={`/autores/${authorSlug}`} target="_blank">
               <Avatar className="h-16 w-16">
                 <AvatarImage src={column.authorImage} alt={column.author} />
                 <AvatarFallback>{column.author.slice(0, 2).toUpperCase()}</AvatarFallback>
@@ -175,7 +175,7 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
             </Link>
             <div className="text-sm">
                 <p className="font-bold text-base text-foreground">
-                    <Link href={`/autores/${authorSlug}`} className="hover:text-primary transition-colors">
+                    <Link href={`/autores/${authorSlug}`} className="hover:text-primary transition-colors" target="_blank">
                         Por {column.author}
                     </Link>
                 </p>
@@ -237,7 +237,7 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
                                 <AvatarFallback>{col.author.slice(0, 2).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <Link href={`/colunas/caderno/${slugify(col.columnName)}`} className="hover:underline">
+                                <Link href={`/colunas/caderno/${slugify(col.columnName)}`} className="hover:underline" target="_blank">
                                     <p className="font-bold text-primary">{col.columnName}</p>
                                 </Link>
                                 <p className="text-sm text-muted-foreground">Por {col.author}</p>
@@ -246,7 +246,7 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
                     </CardHeader>
                     <CardContent className="flex-grow space-y-2">
                         <CardTitle className="text-xl font-bold font-body leading-tight">
-                            <Link href={`/colunas/${col.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                            <Link href={`/colunas/${col.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                             {col.title}
                             </Link>
                         </CardTitle>

@@ -135,7 +135,7 @@ export default function EditAuthorPage() {
           <CardFooter className="flex justify-between">
             <SubmitButton />
             <Button variant="outline" asChild>
-                <Link href="/admin/autores">Cancelar</Link>
+                <Link href="/admin/autores" target="_blank">Cancelar</Link>
             </Button>
           </CardFooter>
         </form>

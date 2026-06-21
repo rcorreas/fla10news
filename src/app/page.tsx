@@ -44,7 +44,7 @@ function SectionHeader({ title, subtitle, href, icon: Icon }: { title: string, s
         </div>
         {href && (
           <Button variant="ghost" asChild className="font-sans font-bold text-primary hover:bg-primary hover:text-primary-foreground">
-            <Link href={href}>Ver todas <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            <Link href={href} target="_blank">Ver todas <ArrowRight className="ml-2 h-4 w-4" /></Link>
           </Button>
         )}
       </div>
@@ -168,7 +168,7 @@ export default async function Home() {
                             <p className="font-semibold text-sm md:text-base truncate hidden sm:block">{latestNews.title}</p>
                         </div>
                         <Button variant="link" asChild className="text-white hover:text-white/80 hover:no-underline text-sm font-bold whitespace-nowrap flex-shrink-0">
-                            <Link href={`/noticias/${latestNews.slug}`}>Leia mais</Link>
+                            <Link href={`/noticias/${latestNews.slug}`} target="_blank">Leia mais</Link>
                         </Button>
                     </div>
                     <p className="font-semibold text-sm text-center mt-3 sm:hidden">{latestNews.title}</p>
@@ -184,7 +184,7 @@ export default async function Home() {
               {dailyNews.map((news) => (
                 <Card key={news.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                   <CardHeader className="p-0 relative">
-                    <Link href={`/noticias/${news.slug}`}>
+                    <Link href={`/noticias/${news.slug}`} target="_blank">
                       <Image src={news.image} alt={news.title} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={news.dataAiHint} />
                     </Link>
                     <Badge className="absolute top-2 left-2">{news.category}</Badge>
@@ -192,7 +192,7 @@ export default async function Home() {
                   </CardHeader>
                   <CardContent className="flex-grow p-4 space-y-2">
                     <CardTitle className="text-lg font-bold font-body leading-tight">
-                        <Link href={`/noticias/${news.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                        <Link href={`/noticias/${news.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                            {news.title}
                         </Link>
                     </CardTitle>
@@ -205,7 +205,7 @@ export default async function Home() {
                             <span>{formatPublishedTime(news.publishedAt)}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <span>Por <Link href={`/autor/${slugify(news.author || 'Redacao NRN')}`} className="hover:underline hover:text-primary transition-colors">{news.author || 'Redação NRN'}</Link></span>
+                            <span>Por <Link href={`/autor/${slugify(news.author || 'Redacao NRN')}`} className="hover:underline hover:text-primary transition-colors" target="_blank">{news.author || 'Redação NRN'}</Link></span>
                         </div>
                     </div>
                   </CardFooter>
@@ -241,7 +241,7 @@ export default async function Home() {
                             <AvatarFallback>{column.author.slice(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline">
+                            <Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline" target="_blank">
                                 <p className="font-bold text-primary">{column.columnName}</p>
                             </Link>
                             <p className="text-sm text-muted-foreground">Por {column.author}</p>
@@ -250,7 +250,7 @@ export default async function Home() {
                 </CardHeader>
                 <CardContent className="flex-grow space-y-2">
                     <CardTitle className="text-xl font-bold font-body leading-tight">
-                        <Link href={`/colunas/${column.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                        <Link href={`/colunas/${column.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                         {column.title}
                         </Link>
                     </CardTitle>
@@ -281,7 +281,7 @@ export default async function Home() {
                   </CardHeader>
                   <CardContent className="flex-grow space-y-2">
                       <CardTitle className="text-xl font-bold font-body leading-tight">
-                          <Link href={`/voz-torcedor/${voz.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                          <Link href={`/voz-torcedor/${voz.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                           {voz.title}
                           </Link>
                       </CardTitle>
@@ -314,7 +314,7 @@ export default async function Home() {
             {homePageVideos.map((video) => (
               <Card key={video.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                 <CardHeader className="p-0 relative">
-                  <Link href={`/videos/${video.slug}`}>
+                  <Link href={`/videos/${video.slug}`} target="_blank">
                     <Image src={video.image} alt={video.title} width={600} height={400} className="w-full object-cover aspect-[16/9] transition-transform duration-300 group-hover:scale-105" data-ai-hint={video.dataAiHint} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     <div className="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">{video.duration}</div>
@@ -327,7 +327,7 @@ export default async function Home() {
                 </CardHeader>
                 <CardContent className="p-4 flex-grow">
                    <CardTitle className="text-lg font-bold font-body leading-tight">
-                    <Link href={`/videos/${video.slug}`} className="group-hover:text-[#FF073A] transition-colors duration-200">
+                    <Link href={`/videos/${video.slug}`} className="group-hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                       {video.title}
                     </Link>
                   </CardTitle>

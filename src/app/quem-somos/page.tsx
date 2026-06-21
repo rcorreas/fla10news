@@ -144,7 +144,7 @@ export default async function QuemSomosPage() {
                 </Avatar>
                 <div>
                   <h3 className="text-lg font-bold text-foreground">
-                    <Link href={`/autores/${membro.slug}`} className="hover:text-primary hover:underline transition-colors">
+                    <Link href={`/autores/${membro.slug}`} className="hover:text-primary hover:underline transition-colors" target="_blank">
                       {membro.nome}
                     </Link>
                   </h3>
@@ -173,7 +173,7 @@ export default async function QuemSomosPage() {
                 </Avatar>
                 <div>
                   <h3 className="text-lg font-bold text-foreground">
-                    <Link href={`/autores/${colunista.slug}`} className="hover:text-primary hover:underline transition-colors">
+                    <Link href={`/autores/${colunista.slug}`} className="hover:text-primary hover:underline transition-colors" target="_blank">
                       {colunista.nome}
                     </Link>
                   </h3>

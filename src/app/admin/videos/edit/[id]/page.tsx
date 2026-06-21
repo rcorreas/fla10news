@@ -143,7 +143,7 @@ export default function EditVideoPage() {
           <CardFooter className="flex justify-between">
             <SubmitButton />
             <Button variant="outline" asChild>
-                <Link href="/admin/videos">Cancelar</Link>
+                <Link href="/admin/videos" target="_blank">Cancelar</Link>
             </Button>
           </CardFooter>
         </form>

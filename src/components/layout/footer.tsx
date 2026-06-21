@@ -20,7 +20,7 @@ const FooterLink = ({ href, children }: { href: string; children: React.ReactNod
       <Link href={href} className={cn(
         "text-sm transition-colors",
         isActive ? "text-primary-foreground font-semibold" : "text-muted-foreground hover:text-primary-foreground"
-      )}>
+      )} target="_blank">
         {children}
       </Link>
     </li>
@@ -59,7 +59,7 @@ export function Footer() {
           <p className="mb-6 text-base text-primary-foreground/90">Cadastre-se e seja o primeiro a saber de tudo sobre o Mengão</p>
           <div className="flex justify-center">
             <Button asChild variant="secondary" className="bg-card text-accent font-bold hover:bg-black hover:text-white transition-colors">
-              <Link href="/register" onClick={handleRegisterClick}>
+              <Link href="/register" onClick={handleRegisterClick} target="_blank">
                 Cadastrar
               </Link>
             </Button>
@@ -156,9 +156,9 @@ export function Footer() {
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between py-4 px-4 text-xs">
           <p className="text-muted-foreground mb-4 md:mb-0 text-center md:text-left">© {new Date().getFullYear()} FLA10 News - Canal Fla Dez. Todos os direitos reservados.</p>
           <div className="flex gap-4">
-            <Link href="/politica-de-privacidade" className="transition-colors text-muted-foreground hover:text-primary-foreground">Política de Privacidade</Link>
-            <Link href="/termos-de-uso" className="transition-colors text-muted-foreground hover:text-primary-foreground">Termos de Uso</Link>
-            <Link href="/politica-de-cookies" className="transition-colors text-muted-foreground hover:text-primary-foreground">Política de Cookies</Link>
+            <Link href="/politica-de-privacidade" className="transition-colors text-muted-foreground hover:text-primary-foreground" target="_blank">Política de Privacidade</Link>
+            <Link href="/termos-de-uso" className="transition-colors text-muted-foreground hover:text-primary-foreground" target="_blank">Termos de Uso</Link>
+            <Link href="/politica-de-cookies" className="transition-colors text-muted-foreground hover:text-primary-foreground" target="_blank">Política de Cookies</Link>
           </div>
         </div>
       </div>

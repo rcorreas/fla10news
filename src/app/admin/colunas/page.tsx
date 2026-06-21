@@ -247,7 +247,7 @@ export default function ColunasPage() {
                     <TableCell>{format(column.publishedAt, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button asChild variant="ghost" size="icon">
-                        <Link href={`/admin/colunas/edit/${column.id}`}>
+                        <Link href={`/admin/colunas/edit/${column.id}`} target="_blank">
                           <FilePen className="h-4 w-4" />
                         </Link>
                       </Button>

@@ -199,7 +199,7 @@ export default function EditMateriasPage() {
           <CardFooter className="flex justify-between">
             <SubmitButton />
             <Button variant="outline" asChild>
-                <Link href="/admin/materias">Cancelar</Link>
+                <Link href="/admin/materias" target="_blank">Cancelar</Link>
             </Button>
           </CardFooter>
         </form>

@@ -164,7 +164,7 @@ export default function EditHistoriaPage() {
           <CardFooter className="flex justify-between">
             <SubmitButton />
             <Button variant="outline" asChild>
-                <Link href="/admin/historia">Cancelar</Link>
+                <Link href="/admin/historia" target="_blank">Cancelar</Link>
             </Button>
           </CardFooter>
         </form>

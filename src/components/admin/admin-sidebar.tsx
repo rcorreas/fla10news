@@ -34,7 +34,7 @@ function NavLink({ href, label, icon: Icon }: { href: string; label: string; ico
         "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-white hover:bg-gray-700",
         isActive && "bg-gray-700 text-white"
       )}
-    >
+     target="_blank">
       <Icon className="h-4 w-4" />
       {label}
     </Link>
@@ -46,7 +46,7 @@ function SidebarNavContent() {
     return (
         <div className="flex h-full flex-col">
             <div className="flex h-14 shrink-0 items-center border-b border-gray-700 px-4 lg:h-[60px] lg:px-6">
-                <Link href="/" className="flex items-center gap-2 font-semibold text-white">
+                <Link href="/" className="flex items-center gap-2 font-semibold text-white" target="_blank">
                     <Fla10Logo />
                     <span>FLA10 Admin</span>
                 </Link>
@@ -59,7 +59,7 @@ function SidebarNavContent() {
                 </nav>
             </div>
             <div className="mt-auto border-t border-gray-700 p-4">
-                 <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-white hover:bg-gray-700">
+                 <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-white hover:bg-gray-700" target="_blank">
                     <Home className="h-4 w-4" />
                     Voltar ao Site
                 </Link>
@@ -90,7 +90,7 @@ export function AdminSidebar() {
             </SheetContent>
           </Sheet>
            <div className="flex-1 text-center">
-            <Link href="/" className="flex items-center justify-center gap-2 font-semibold text-white">
+            <Link href="/" className="flex items-center justify-center gap-2 font-semibold text-white" target="_blank">
                     <Fla10Logo />
                     <span className="">FLA10 Admin</span>
                 </Link>

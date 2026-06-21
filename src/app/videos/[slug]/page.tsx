@@ -164,7 +164,7 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
             {otherVideos.map((video) => (
                 <Card key={video.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                 <CardHeader className="p-0 relative">
-                    <Link href={`/videos/${video.slug}`}>
+                    <Link href={`/videos/${video.slug}`} target="_blank">
                         <Image src={video.image} alt={video.title} width={600} height={400} className="w-full object-cover aspect-[16/9] transition-transform duration-300 group-hover:scale-105" data-ai-hint={video.dataAiHint} />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         <div className="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">{video.duration}</div>
@@ -177,7 +177,7 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
                 </CardHeader>
                 <CardContent className="p-4 flex-grow">
                     <CardTitle className="text-lg font-bold font-body leading-tight">
-                        <Link href={`/videos/${video.slug}`} className="group-hover:text-[#FF073A] transition-colors duration-200">
+                        <Link href={`/videos/${video.slug}`} className="group-hover:text-[#FF073A] transition-colors duration-200" target="_blank">
                             {video.title}
                         </Link>
                     </CardTitle>
