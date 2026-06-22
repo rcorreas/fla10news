@@ -47,7 +47,7 @@ export default async function NewsAuthorPage({ params }: { params: Promise<{ slu
                     <h1 className="text-4xl font-headline font-bold">{authorDetails.author}</h1>
                     {authorData?.link && (
                         <Link href={authorData.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 transition-colors duration-200">
-                            {authorData.link}
+                            @{authorDetails.author}
                         </Link>
                     )}
                     <p className="text-lg text-muted-foreground">Autor(a) no FLA10 News</p>
