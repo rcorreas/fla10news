@@ -4,8 +4,9 @@ import { getColumns } from "@/data/columns";
 import { getVideos } from "@/data/videos";
 import { getHistoryArticles } from "@/data/history";
 import { getUserCount } from "@/data/users";
+import { getDailyViews } from "@/data/analytics";
 import { StatCard } from "@/components/admin/stat-card";
-import { ContentViewsChart, ShareDestinationsChart, MostViewedContentChart } from "@/components/admin/charts";
+import { ContentViewsChart, ShareDestinationsChart, MostViewedContentChart, DailyViewsChart } from "@/components/admin/charts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +21,7 @@ export default async function AdminDashboard() {
     const videos = await getVideos();
     const history = await getHistoryArticles();
     const userCount = await getUserCount();
+    const dailyViews = await getDailyViews(15);
 
     const totalVideoViews = videos.reduce((acc, video) => acc + (video.views || 0), 0);
     const totalNewsViews = news.reduce((acc, article) => acc + (article.views || 0), 0);
@@ -91,11 +93,16 @@ export default async function AdminDashboard() {
         { type: "historia", views: totalHistoryViews, fill: "hsl(var(--chart-4))" },
     ];
 
+    const todayString = new Date(new Date().getTime() - 3 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const todayViewsObj = dailyViews.find(d => d.date === todayString);
+    const todayViews = todayViewsObj ? todayViewsObj.views : 0;
+
     return (
         <div className="flex flex-col gap-8">
             <h1 className="text-3xl font-bold">Dashboard</h1>
             
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <StatCard title="Visualizações Hoje" value={todayViews.toLocaleString('pt-BR')} icon={Eye} description="Acessos no site desde as 00:00" />
                 <StatCard title="Total de Notícias" value={news.length} icon={Newspaper} />
                 <StatCard title="Notícias de Futebol" value={totalFutebolNews} icon={Goal} />
                 <StatCard title="Total de Colunas" value={columns.length} icon={PenSquare} />
@@ -135,6 +142,29 @@ export default async function AdminDashboard() {
                     </CardHeader>
                     <CardContent>
                        <MostViewedContentChart data={mostViewedData} />
+                    </CardContent>
+                </Card>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-1">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <TrendingUp className="h-5 w-5" />
+                            Acessos Diários
+                        </CardTitle>
+                        <CardDescription>
+                            Visualizações diárias registradas em todo o site (últimos 15 dias).
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pl-2">
+                        {dailyViews.length > 0 ? (
+                            <DailyViewsChart data={dailyViews} />
+                        ) : (
+                            <div className="flex h-[250px] items-center justify-center text-muted-foreground">
+                                Sem dados de acessos ainda.
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
             </div>

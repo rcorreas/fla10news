@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Pie, PieChart, Cell } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Pie, PieChart, Cell, Line, LineChart, Tooltip, ResponsiveContainer } from "recharts"
 import {
   ChartConfig,
   ChartContainer,
@@ -173,3 +173,53 @@ export function MostViewedContentChart({ data }: { data: any[] }) {
     </ChartContainer>
   )
 }
+
+const dailyViewsConfig = {
+  views: {
+    label: "Acessos",
+    color: "hsl(var(--chart-1))",
+  },
+} satisfies ChartConfig
+
+export function DailyViewsChart({ data }: { data: { date: string; views: number }[] }) {
+  // Format date from YYYY-MM-DD to DD/MM
+  const formattedData = data.map(item => {
+    const parts = item.date.split('-');
+    return {
+      ...item,
+      formattedDate: parts.length === 3 ? `${parts[2]}/${parts[1]}` : item.date
+    };
+  });
+
+  return (
+    <ChartContainer config={dailyViewsConfig} className="min-h-[250px] w-full">
+      <LineChart accessibilityLayer data={formattedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+        <CartesianGrid vertical={false} />
+        <XAxis
+          dataKey="formattedDate"
+          tickLine={false}
+          tickMargin={10}
+          axisLine={false}
+        />
+        <YAxis 
+          tickLine={false}
+          axisLine={false}
+          tickMargin={10}
+        />
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent />}
+        />
+        <Line 
+          type="monotone" 
+          dataKey="views" 
+          stroke="var(--color-views)" 
+          strokeWidth={3} 
+          dot={{ r: 4, fill: "var(--color-views)" }} 
+          activeDot={{ r: 6 }} 
+        />
+      </LineChart>
+    </ChartContainer>
+  )
+}
+

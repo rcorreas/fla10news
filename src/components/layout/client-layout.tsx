@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { TiktokIcon } from '@/components/tiktok-icon';
 import { AuthProvider } from '@/context/auth-context';
 import { Toaster } from '../ui/toaster';
+import { ViewTracker } from '@/components/view-tracker';
 
 function SocialBar() {
   return (
@@ -48,6 +49,7 @@ export function ClientLayout({
 
   return (
     <AuthProvider>
+      <ViewTracker />
       {isAdminPage ? (
         <div className="bg-muted/40">{children}</div>
       ) : (
