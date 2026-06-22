@@ -162,6 +162,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         )}
         </div>
 
+        {article.excerpt && (
+            <div className="mb-8 border-l-4 border-[#ff073a] pl-4 py-2 bg-muted/30 rounded-r-lg">
+                <h2 className="text-xl md:text-2xl font-headline font-semibold text-muted-foreground leading-snug">
+                    {article.excerpt}
+                </h2>
+            </div>
+        )}
+
         <div 
           className="text-lg space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold [&_a]:text-[#ff073a] [&_a]:font-bold [&_a]:hover:underline"
         >
