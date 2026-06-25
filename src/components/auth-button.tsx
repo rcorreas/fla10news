@@ -37,10 +37,10 @@ export function AuthButton() {
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                         <Avatar className="h-8 w-8">
-                            {userProfile?.photoURL ? (
-                                <AvatarImage src={userProfile.photoURL} alt={userProfile.username || ''} />
+                            {userProfile?.photoURL || user?.photoURL ? (
+                                <AvatarImage src={userProfile?.photoURL || user?.photoURL || undefined} alt={userProfile?.username || ''} />
                              ) : null}
-                            <AvatarFallback>{userProfile?.firstName?.[0] || user.email?.[0].toUpperCase()}</AvatarFallback>
+                            <AvatarFallback>{userProfile?.firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}</AvatarFallback>
                         </Avatar>
                     </Button>
                 </DropdownMenuTrigger>

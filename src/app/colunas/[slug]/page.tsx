@@ -163,7 +163,7 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
           <div className="relative flex items-center justify-center h-40">
             {column.columnImage ? (
                 <div className="absolute left-[-30px] h-40 w-40 flex-shrink-0">
-                    <Image src={column.columnImage} alt={`Ilustração da coluna ${column.columnName}`} fill className="object-contain" />
+                    <Image src={column.columnImage} alt={`Ilustração da coluna ${column.columnName}`} fill className="object-contain" unoptimized />
                 </div>
             ) : (
                 <>
