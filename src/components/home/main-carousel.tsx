@@ -62,7 +62,7 @@ export function MainCarousel({ headlines }: { headlines: NewsArticle[] }) {
       <CarouselContent>
         {headlines.map((item: NewsArticle, index: number) => (
           <CarouselItem key={index}>
-            <Link href={`/noticias/${item.slug}`} target="_blank">
+            <Link href={`/noticias/${item.slug}`}>
               <div className="relative aspect-video">
                 <Image
                   src={item.image}

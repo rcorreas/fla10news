@@ -15,6 +15,8 @@ import { Clock, Eye } from 'lucide-react'
 import { slugify, formatPublishedTime } from '@/lib/utils';
 import { ShareButton } from '@/components/share-button'
 import { ArticleShareButton } from '@/components/article-share-button'
+import { JsonLd } from '@/components/json-ld'
+import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -49,7 +51,8 @@ export async function generateMetadata(
     }
   }
 
-  const desc = column.excerpt || column.content?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || '';
+  const desc = truncateDescription(column.excerpt || column.content || '');
+  const url = absoluteUrl(`/colunas/${column.slug}`);
   let imageUrl = column.columnImage || 'https://placehold.co/1200x675.png'; // default fallback if no image
 
   if (!column.columnImage) {
@@ -67,11 +70,17 @@ export async function generateMetadata(
   return {
     title: column.title,
     description: desc,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: column.title,
       description: desc,
+      url,
       images: [imageUrl],
       type: 'article',
+      publishedTime: column.publishedAt.toISOString(),
+      authors: [column.author],
     },
     twitter: {
       card: 'summary_large_image',
@@ -109,9 +118,39 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
   const otherColumns = allColumns.filter(c => c.id !== column.id).slice(0, 2);
   const columnDate = format(column.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const authorSlug = generateSlug(column.author);
+  const columnUrl = absoluteUrl(`/colunas/${column.slug}`);
+  const columnDescription = truncateDescription(column.excerpt || column.content || '');
 
   return (
     <div className="container mx-auto max-w-4xl py-12">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: column.title,
+          description: columnDescription,
+          image: [column.columnImage || column.authorImage],
+          datePublished: column.publishedAt.toISOString(),
+          dateModified: column.publishedAt.toISOString(),
+          author: {
+            '@type': 'Person',
+            name: column.author,
+            url: absoluteUrl(`/autores/${authorSlug}`),
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: siteName,
+            logo: {
+              '@type': 'ImageObject',
+              url: absoluteUrl('/icon.png'),
+            },
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': columnUrl,
+          },
+        }}
+      />
       <div className="mb-8">
         <AdBanner width={728} height={90} />
       </div>
@@ -160,14 +199,14 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
                     )}
                 </>
             )}
-<Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline transition-all" target="_blank">
+<Link href={`/colunas/caderno/${slugify(column.columnName)}`} className="hover:underline transition-all">
     <p className="font-sans text-6xl font-bold text-primary text-center">{column.columnName}</p>
 </Link>
           </div>
           <Separator className="my-4" />
           <h1 className="font-headline text-3xl md:text-4xl font-bold leading-tight">{column.title}</h1>
           <div className="flex items-center justify-start gap-4 mt-4">
-            <Link href={`/autores/${authorSlug}`} target="_blank">
+            <Link href={`/autores/${authorSlug}`}>
               <Avatar className="h-16 w-16">
                 <AvatarImage src={column.authorImage} alt={column.author} />
                 <AvatarFallback>{column.author.slice(0, 2).toUpperCase()}</AvatarFallback>
@@ -175,7 +214,7 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
             </Link>
             <div className="text-sm">
                 <p className="font-bold text-base text-foreground">
-                    <Link href={`/autores/${authorSlug}`} className="hover:text-primary transition-colors" target="_blank">
+                    <Link href={`/autores/${authorSlug}`} className="hover:text-primary transition-colors">
                         Por {column.author}
                     </Link>
                 </p>
@@ -237,7 +276,7 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
                                 <AvatarFallback>{col.author.slice(0, 2).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <Link href={`/colunas/caderno/${slugify(col.columnName)}`} className="hover:underline" target="_blank">
+                                <Link href={`/colunas/caderno/${slugify(col.columnName)}`} className="hover:underline">
                                     <p className="font-bold text-primary">{col.columnName}</p>
                                 </Link>
                                 <p className="text-sm text-muted-foreground">Por {col.author}</p>
@@ -246,7 +285,7 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
                     </CardHeader>
                     <CardContent className="flex-grow space-y-2">
                         <CardTitle className="text-xl font-bold font-body leading-tight">
-                            <Link href={`/colunas/${col.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
+                            <Link href={`/colunas/${col.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
                             {col.title}
                             </Link>
                         </CardTitle>

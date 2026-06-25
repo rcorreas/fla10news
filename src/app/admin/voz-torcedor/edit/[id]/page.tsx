@@ -140,7 +140,7 @@ export default function EditVozTorcedorPage() {
           <CardFooter className="flex justify-between">
             <SubmitButton />
             <Button variant="outline" asChild>
-                <Link href="/admin/voz-torcedor" target="_blank">Cancelar</Link>
+                <Link href="/admin/voz-torcedor">Cancelar</Link>
             </Button>
           </CardFooter>
         </form>

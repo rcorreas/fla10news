@@ -180,8 +180,7 @@ export default function LoginPage() {
                                 <Label htmlFor="password">Senha</Label>
                                 <Link 
                                     href="/recuperar-senha" 
-                                    className="text-xs text-muted-foreground underline hover:text-primary"
-                                 target="_blank">
+                                    className="text-xs text-muted-foreground underline hover:text-primary">
                                     Esqueceu sua senha?
                                 </Link>
                             </div>
@@ -229,7 +228,7 @@ export default function LoginPage() {
                         </Button>
                          <p className="text-xs text-center text-muted-foreground">
                             Não tem uma conta?{' '}
-                            <Link href="/register" className="underline hover:text-primary" target="_blank">
+                            <Link href="/register" className="underline hover:text-primary">
                                 Cadastre-se
                             </Link>
                         </p>

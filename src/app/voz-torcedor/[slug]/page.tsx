@@ -14,6 +14,8 @@ import { Clock, Eye, MessageSquare } from 'lucide-react'
 import { slugify, formatPublishedTime } from '@/lib/utils';
 import { ShareButton } from '@/components/share-button'
 import { ArticleShareButton } from '@/components/article-share-button'
+import { JsonLd } from '@/components/json-ld'
+import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -30,17 +32,24 @@ export async function generateMetadata(
     }
   }
 
-  const desc = voz.summary || voz.content?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || '';
+  const desc = truncateDescription(voz.summary || voz.content || '');
   const imageUrl = 'https://i.imgur.com/ESMmQcc.png';
+  const url = absoluteUrl(`/voz-torcedor/${voz.slug}`);
 
   return {
     title: voz.title,
     description: desc,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: voz.title,
       description: desc,
+      url,
       images: [imageUrl],
       type: 'article',
+      publishedTime: voz.publishedAt.toISOString(),
+      authors: [voz.authorName],
     },
     twitter: {
       card: 'summary_large_image',
@@ -75,9 +84,38 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
   
   const otherVoz = allVoz.filter(v => v.id !== voz.id).slice(0, 2);
   const dataPublicacao = format(voz.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+  const vozUrl = absoluteUrl(`/voz-torcedor/${voz.slug}`);
+  const vozDescription = truncateDescription(voz.summary || voz.content || '');
 
   return (
     <div className="container mx-auto max-w-4xl py-12">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: voz.title,
+          description: vozDescription,
+          image: [voz.image || 'https://i.imgur.com/ESMmQcc.png'],
+          datePublished: voz.publishedAt.toISOString(),
+          dateModified: voz.publishedAt.toISOString(),
+          author: {
+            '@type': 'Person',
+            name: voz.authorName,
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: siteName,
+            logo: {
+              '@type': 'ImageObject',
+              url: absoluteUrl('/icon.png'),
+            },
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': vozUrl,
+          },
+        }}
+      />
       <div className="mb-8">
         <AdBanner width={728} height={90} />
       </div>
@@ -161,7 +199,7 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
                     </CardHeader>
                     <CardContent className="flex-grow space-y-2">
                         <CardTitle className="text-xl font-bold font-body leading-tight">
-                            <Link href={`/voz-torcedor/${vozItem.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
+                            <Link href={`/voz-torcedor/${vozItem.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
                             {vozItem.title}
                             </Link>
                         </CardTitle>

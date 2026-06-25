@@ -20,7 +20,7 @@ export function PaginationControls({ currentPage, totalPages, basePath }: Pagina
         disabled={currentPage <= 1}
         className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
       >
-        <Link href={`${basePath}?page=${currentPage - 1}`} target="_blank">
+        <Link href={`${basePath}?page=${currentPage - 1}`}>
           <ChevronLeft className="h-4 w-4" />
         </Link>
       </Button>
@@ -36,7 +36,7 @@ export function PaginationControls({ currentPage, totalPages, basePath }: Pagina
         disabled={currentPage >= totalPages}
         className={currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}
       >
-        <Link href={`${basePath}?page=${currentPage + 1}`} target="_blank">
+        <Link href={`${basePath}?page=${currentPage + 1}`}>
           <ChevronRight className="h-4 w-4" />
         </Link>
       </Button>

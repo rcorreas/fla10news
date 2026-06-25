@@ -99,7 +99,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
                         </CardHeader>
                         <CardContent className="flex-grow space-y-2">
                             <CardTitle className="text-xl font-bold font-body leading-tight">
-                                <Link href={`/colunas/${column.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
+                                <Link href={`/colunas/${column.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
                                 {column.title}
                                 </Link>
                             </CardTitle>

@@ -49,8 +49,7 @@ export function Header() {
         pathname.startsWith(href)
           ? "text-primary-foreground"
           : "text-primary-foreground/70 hover:text-primary-foreground"
-      )}
-     target="_blank">
+      )}>
       <Icon className="h-4 w-4" />
       {label}
     </Link>
@@ -73,7 +72,7 @@ export function Header() {
             <DropdownMenuContent className="w-56 bg-black/80 backdrop-blur border-white/20 text-primary-foreground">
                 {links.map((link) => (
                     <DropdownMenuItem key={link.label} asChild>
-                        <Link href={link.href} className="cursor-pointer" target="_blank">{link.label}</Link>
+                        <Link href={link.href} className="cursor-pointer">{link.label}</Link>
                     </DropdownMenuItem>
                 ))}
             </DropdownMenuContent>
@@ -85,7 +84,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-white/20 bg-black/80 backdrop-blur supports-[backdrop-filter]:bg-black/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center space-x-2" target="_blank">
+          <Link href="/" className="flex items-center space-x-2">
             <Fla10Logo />
             <span className="font-bold text-primary-foreground">
               <span className="font-exo">FLA10</span><span className="font-headline"> News</span>
@@ -113,7 +112,7 @@ export function Header() {
                 <SheetContent side="left" className="flex flex-col p-0">
                   <div className="flex h-16 items-center border-b px-6">
                     <SheetClose asChild>
-                      <Link href="/" className="flex items-center gap-2 font-semibold" target="_blank">
+                      <Link href="/" className="flex items-center gap-2 font-semibold">
                           <Fla10Logo />
                           <span className="font-bold">
                               <span className="font-exo">FLA10</span><span className="font-headline"> News</span>
@@ -129,8 +128,7 @@ export function Header() {
                                 className={cn(
                                 "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                                 pathname === '/' ? 'bg-muted text-primary' : 'text-muted-foreground'
-                                )}
-                             target="_blank">
+                                )}>
                                 <ArrowLeft className="h-4 w-4" />
                                 Início
                             </Link>
@@ -142,8 +140,7 @@ export function Header() {
                                   className={cn(
                                   "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                                   pathname.startsWith(link.href) ? 'bg-muted text-primary' : 'text-muted-foreground'
-                                  )}
-                               target="_blank">
+                                  )}>
                                   <link.icon className="h-4 w-4" />
                                   {link.label}
                               </Link>
@@ -153,7 +150,7 @@ export function Header() {
                             <h4 className="px-3 py-2 text-xs font-semibold uppercase text-muted-foreground">Categorias</h4>
                             {categoryLinks.map(link => (
                                 <SheetClose asChild key={link.label}>
-                                    <Link href={link.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary" target="_blank">
+                                    <Link href={link.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                                         {link.label}
                                     </Link>
                                 </SheetClose>
@@ -163,7 +160,7 @@ export function Header() {
                             <h4 className="px-3 py-2 text-xs font-semibold uppercase text-muted-foreground">Clube</h4>
                             {clubeLinks.map(link => (
                                 <SheetClose asChild key={link.label}>
-                                    <Link href={link.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary" target="_blank">
+                                    <Link href={link.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                                         {link.label}
                                     </Link>
                                 </SheetClose>

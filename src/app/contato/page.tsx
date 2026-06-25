@@ -158,7 +158,7 @@ export default function ContatoPage() {
             Se você for assessor de imprensa, atleta, patrocinador ou representante comercial e deseja tratar de pautas comerciais específicas, coberturas no local ou credenciamento de imprensa, recomendamos o envio de mensagem direta para o e-mail comercial do portal: <strong>fladeznews@gmail.com</strong>.
           </p>
           <p className="text-justify leading-relaxed">
-            Para reclamações de direitos autorais ou solicitação de correções de fatos apurados, por favor consulte as diretrizes expostas na nossa página de <a href="/responsabilidade" className="text-primary hover:underline font-bold" target="_blank" rel="noopener noreferrer">Responsabilidade</a>, e envie todas as comprovações anexadas por e-mail para que possamos atuar em tempo hábil.
+            Para reclamações de direitos autorais ou solicitação de correções de fatos apurados, por favor consulte as diretrizes expostas na nossa página de <a href="/responsabilidade" className="text-primary hover:underline font-bold">Responsabilidade</a>, e envie todas as comprovações anexadas por e-mail para que possamos atuar em tempo hábil.
           </p>
         </section>
       </main>

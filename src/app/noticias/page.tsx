@@ -54,7 +54,7 @@ export default async function NoticiasPage({ searchParams }: { searchParams: Pro
                         {chunk.map((news) => (
                           <Card key={news.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                             <CardHeader className="p-0 relative">
-                                <Link href={`/noticias/${news.slug}`} target="_blank">
+                                <Link href={`/noticias/${news.slug}`}>
                                     <Image src={news.image} alt={news.title} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={news.dataAiHint} />
                                 </Link>
                               <Badge className="absolute top-2 left-2">{news.category}</Badge>
@@ -62,7 +62,7 @@ export default async function NoticiasPage({ searchParams }: { searchParams: Pro
                             </CardHeader>
                             <CardContent className="flex-grow p-4 space-y-2">
                               <CardTitle className="text-lg font-bold font-body leading-tight">
-                                <Link href={`/noticias/${news.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
+                                <Link href={`/noticias/${news.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
                                    {news.title}
                                 </Link>
                               </CardTitle>

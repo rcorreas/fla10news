@@ -12,6 +12,8 @@ import { AdBanner } from '@/components/ad-banner'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ShareButton } from '@/components/share-button'
 import { ArticleShareButton } from '@/components/article-share-button'
+import { JsonLd } from '@/components/json-ld'
+import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -36,16 +38,23 @@ export async function generateMetadata(
     }
   }
 
-  const desc = article.excerpt || article.content?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || '';
+  const desc = truncateDescription(article.excerpt || article.content || '');
+  const url = absoluteUrl(`/noticias/${article.slug}`);
 
   return {
     title: article.title,
     description: desc,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: article.title,
       description: desc,
+      url,
       images: [article.image],
       type: 'article',
+      publishedTime: article.publishedAt.toISOString(),
+      authors: article.author ? [article.author] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
@@ -81,6 +90,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   }
 
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+  const articleUrl = absoluteUrl(`/noticias/${article.slug}`);
+  const articleDescription = truncateDescription(article.excerpt || article.content || '');
 
   const parseContent = (content: string): string[] => {
       // If content has </p> tags, split by them safely
@@ -123,6 +134,34 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="container mx-auto max-w-4xl py-12">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'NewsArticle',
+          headline: article.title,
+          description: articleDescription,
+          image: [article.image],
+          datePublished: article.publishedAt.toISOString(),
+          dateModified: article.publishedAt.toISOString(),
+          author: {
+            '@type': 'Person',
+            name: article.author || 'Redação Fla10',
+            url: absoluteUrl(`/autor/${slugify(article.author || 'Redacao Fla10')}`),
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: siteName,
+            logo: {
+              '@type': 'ImageObject',
+              url: absoluteUrl('/icon.png'),
+            },
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': articleUrl,
+          },
+        }}
+      />
       <div className="mb-8">
         <AdBanner width={728} height={90} />
       </div>
@@ -136,7 +175,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <h1 className="font-headline text-4xl md:text-5xl font-bold leading-tight mb-4">{article.title}</h1>
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div>
-                <span>Por <Link href={`/autor/${slugify(article.author || 'Redacao NRN')}`} className="hover:underline hover:text-[#FF073A] transition-colors" target="_blank">{article.author || 'Redação NRN'}</Link></span> &bull; <span>{articleDate}</span>
+                <span>Por <Link href={`/autor/${slugify(article.author || 'Redacao NRN')}`} className="hover:underline hover:text-[#FF073A] transition-colors">{article.author || 'Redação NRN'}</Link></span> &bull; <span>{articleDate}</span>
             </div>
             <div className="flex items-center gap-1.5">
                 <Eye className="h-4 w-4" />
@@ -231,7 +270,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             {otherNews.map((news) => (
               <Card key={news.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                 <CardHeader className="p-0 relative">
-                    <Link href={`/noticias/${news.slug}`} target="_blank">
+                    <Link href={`/noticias/${news.slug}`}>
                         <Image src={news.image} alt={news.title} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={news.dataAiHint} />
                     </Link>
                   <Badge className="absolute top-2 left-2">{news.category}</Badge>
@@ -239,7 +278,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 </CardHeader>
                 <CardContent className="flex-grow p-4 space-y-2">
                   <CardTitle className="text-lg font-bold font-body leading-tight">
-                    <Link href={`/noticias/${news.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
+                    <Link href={`/noticias/${news.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
                        {news.title}
                     </Link>
                   </CardTitle>
@@ -252,7 +291,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             <span>{formatPublishedTime(news.publishedAt)}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <span>Por <Link href={`/autor/${slugify(news.author || 'Redacao NRN')}`} className="hover:underline hover:text-primary transition-colors" target="_blank">{news.author || 'Redação NRN'}</Link></span>
+                            <span>Por <Link href={`/autor/${slugify(news.author || 'Redacao NRN')}`} className="hover:underline hover:text-primary transition-colors">{news.author || 'Redação NRN'}</Link></span>
                         </div>
                     </div>
                 </CardFooter>

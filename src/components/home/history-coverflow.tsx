@@ -35,7 +35,7 @@ export function HistoryCoverflow({ articles }: HistoryCoverflowProps) {
       return (
          <div className="flex justify-center">
             <Card className="w-full max-w-2xl group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
-                <Link href={`/flahistoria/${article.slug}`} target="_blank">
+                <Link href={`/flahistoria/${article.slug}`}>
                     <CardHeader className="p-0 relative">
                         <Image src={article.image} alt={article.title} width={700} height={400} className="w-full object-cover aspect-video transition-transform duration-300 group-hover:scale-105" data-ai-hint={article.dataAiHint} />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
@@ -101,7 +101,7 @@ export function HistoryCoverflow({ articles }: HistoryCoverflowProps) {
           <Card className={`w-full group overflow-hidden shadow-xl transition-shadow duration-300 ${index === activeIndex ? 'shadow-primary-lg' : ''}`}>
               <div className="block">
                   <CardHeader className="p-0 relative">
-                      <Link href={`/flahistoria/${article.slug}`} target="_blank">
+                      <Link href={`/flahistoria/${article.slug}`}>
                           <Image src={article.image} alt={article.title} width={700} height={400} className="w-full object-cover aspect-video" data-ai-hint={article.dataAiHint} />
                       </Link>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
@@ -111,7 +111,7 @@ export function HistoryCoverflow({ articles }: HistoryCoverflowProps) {
                       </div>
                   </CardHeader>
                   <CardContent className="p-4 md:p-6 bg-card relative z-10">
-                      <Link href={`/flahistoria/${article.slug}`} target="_blank">
+                      <Link href={`/flahistoria/${article.slug}`}>
                           <CardTitle className={`text-lg md:text-2xl font-bold font-body leading-tight mb-2 transition-colors duration-200 line-clamp-2 ${index === activeIndex ? 'group-hover:text-[#FF073A]' : ''}`}>
                               {article.title}
                           </CardTitle>

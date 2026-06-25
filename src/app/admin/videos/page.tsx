@@ -183,7 +183,7 @@ export default function VideosPage() {
                     <TableCell>{format(video.publishedAt, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button asChild variant="ghost" size="icon">
-                        <Link href={`/admin/videos/edit/${video.id}`} target="_blank">
+                        <Link href={`/admin/videos/edit/${video.id}`}>
                           <FilePen className="h-4 w-4" />
                         </Link>
                       </Button>

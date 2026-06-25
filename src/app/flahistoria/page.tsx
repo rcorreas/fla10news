@@ -58,7 +58,7 @@ export default async function FlaHistoriaPage({ searchParams }: { searchParams: 
                     {articles.map((article) => (
                         <Card key={article.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                             <CardHeader className="p-0 relative">
-                                <Link href={`/flahistoria/${article.slug}`} target="_blank">
+                                <Link href={`/flahistoria/${article.slug}`}>
                                     <Image 
                                         src={article.image} 
                                         alt={article.title} 
@@ -72,7 +72,7 @@ export default async function FlaHistoriaPage({ searchParams }: { searchParams: 
                             </CardHeader>
                             <CardContent className="flex-grow p-4 space-y-2">
                                 <CardTitle className="text-lg font-bold font-body leading-tight">
-                                    <Link href={`/flahistoria/${article.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
+                                    <Link href={`/flahistoria/${article.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
                                         {article.title}
                                     </Link>
                                 </CardTitle>

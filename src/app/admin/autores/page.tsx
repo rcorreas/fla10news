@@ -170,7 +170,7 @@ export default function AutoresPage() {
                     <TableCell>{author.createdAt ? format(author.createdAt, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : '-'}</TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button asChild variant="ghost" size="icon">
-                        <Link href={`/admin/autores/edit/${author.id}`} target="_blank">
+                        <Link href={`/admin/autores/edit/${author.id}`}>
                           <FilePen className="h-4 w-4" />
                         </Link>
                       </Button>

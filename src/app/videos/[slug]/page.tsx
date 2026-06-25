@@ -12,6 +12,8 @@ import { AdBanner } from '@/components/ad-banner'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ShareButton } from '@/components/share-button'
 import { ArticleShareButton } from '@/components/article-share-button'
+import { JsonLd } from '@/components/json-ld'
+import { absoluteUrl, truncateDescription } from '@/lib/site'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -37,13 +39,18 @@ export async function generateMetadata(
   }
 
   const desc = `Assista ao vídeo: ${video.title}`;
+  const url = absoluteUrl(`/videos/${video.slug}`);
 
   return {
     title: video.title,
     description: desc,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: video.title,
       description: desc,
+      url,
       images: [video.image],
       type: 'video.other',
     },
@@ -101,9 +108,28 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
 
   const videoId = video.videoUrl ? getYouTubeId(video.videoUrl) : null;
   const videoDate = format(video.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+  const videoUrl = absoluteUrl(`/videos/${video.slug}`);
+  const videoDescription = truncateDescription(`Assista ao vídeo: ${video.title}`);
 
   return (
     <div className="container mx-auto max-w-4xl py-12">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'VideoObject',
+          name: video.title,
+          description: videoDescription,
+          thumbnailUrl: [video.image],
+          uploadDate: video.publishedAt.toISOString(),
+          duration: video.duration,
+          embedUrl: videoId ? `https://www.youtube.com/embed/${videoId}` : undefined,
+          contentUrl: video.videoUrl || undefined,
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': videoUrl,
+          },
+        }}
+      />
       <article>
         <header className="mb-8">
           <div className="flex justify-between items-center mb-4">
@@ -164,7 +190,7 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
             {otherVideos.map((video) => (
                 <Card key={video.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                 <CardHeader className="p-0 relative">
-                    <Link href={`/videos/${video.slug}`} target="_blank">
+                    <Link href={`/videos/${video.slug}`}>
                         <Image src={video.image} alt={video.title} width={600} height={400} className="w-full object-cover aspect-[16/9] transition-transform duration-300 group-hover:scale-105" data-ai-hint={video.dataAiHint} />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         <div className="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">{video.duration}</div>
@@ -177,7 +203,7 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
                 </CardHeader>
                 <CardContent className="p-4 flex-grow">
                     <CardTitle className="text-lg font-bold font-body leading-tight">
-                        <Link href={`/videos/${video.slug}`} className="group-hover:text-[#FF073A] transition-colors duration-200" target="_blank">
+                        <Link href={`/videos/${video.slug}`} className="group-hover:text-[#FF073A] transition-colors duration-200">
                             {video.title}
                         </Link>
                     </CardTitle>

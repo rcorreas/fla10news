@@ -88,3 +88,16 @@ export async function getVozTorcedorBySlug(slug: string): Promise<VozTorcedor | 
         return null;
     }
 }
+
+export async function getAllVozTorcedorSlugs(): Promise<{ slug: string }[]> {
+    try {
+        const snapshot = await getDocs(collection(db, 'voz_torcedor'));
+        if (snapshot.empty) {
+            return [];
+        }
+        return snapshot.docs.map(doc => ({ slug: doc.data().slug as string })).filter(item => item.slug);
+    } catch (error) {
+        console.error("Error fetching all Voz do Torcedor slugs:", error);
+        return [];
+    }
+}

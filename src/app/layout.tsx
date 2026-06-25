@@ -2,16 +2,30 @@ import './globals.css';
 import { NextGameBanner } from '@/components/next-game-banner';
 import { ClientLayout } from '@/components/layout/client-layout';
 import type { Metadata } from 'next';
+import { JsonLd } from '@/components/json-ld';
+import { absoluteUrl, siteName, siteUrl } from '@/lib/site';
 
 export const revalidate = 60; // Revalida o cache da página a cada 60 segundos
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://fla10news.com.br';
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: 'FLA10 News',
+  title: {
+    default: siteName,
+    template: `%s | ${siteName}`,
+  },
   description: 'Seu portal diário de notícias sobre o Clube de Regatas do Flamengo.',
   keywords: 'Notícias do Flamengo, Notícias do Flamengo hoje, Flamengo, Flamengo hoje, Nação rubro-negra',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: siteName,
+    description: 'Seu portal diário de notícias sobre o Clube de Regatas do Flamengo.',
+    url: siteUrl,
+    siteName,
+    locale: 'pt_BR',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
@@ -33,6 +47,30 @@ export default function RootLayout({
         ></script>
       </head>
       <body className="min-h-screen bg-background font-body antialiased flex flex-col">
+        <JsonLd
+          data={[
+            {
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: siteName,
+              url: siteUrl,
+              logo: absoluteUrl('/icon.png'),
+              sameAs: [
+                'https://www.facebook.com/profile.php?id=100075993313125',
+                'https://www.instagram.com/canalfla10/',
+                'https://x.com/canalfla10',
+                'https://www.youtube.com/@fladez',
+                'https://www.tiktok.com/@canalfla10',
+              ],
+            },
+            {
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: siteName,
+              url: siteUrl,
+            },
+          ]}
+        />
         <ClientLayout nextGameBanner={<NextGameBanner />}>
           {children}
         </ClientLayout>

@@ -198,7 +198,7 @@ export default function HistoriaPage() {
                     <TableCell>{format(article.publishedAt, "dd/MM/yyyy", { locale: ptBR })}</TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button asChild variant="ghost" size="icon">
-                        <Link href={`/admin/historia/edit/${article.id}`} target="_blank">
+                        <Link href={`/admin/historia/edit/${article.id}`}>
                           <FilePen className="h-4 w-4" />
                         </Link>
                       </Button>

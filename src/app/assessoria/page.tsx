@@ -66,7 +66,7 @@ export default function AssessoriaPage() {
                 <p className="text-muted-foreground mt-2">Atendimento de segunda a sexta-feira, das 9h às 18h.</p>
             </div>
             <p className="mt-4 text-sm text-center">
-                Em casos urgentes ou com prazos editoriais apertados, utilize o campo <Link href="/fale-conosco" className="text-primary hover:underline font-bold" target="_blank">Fale Conosco</Link> para agilizar o primeiro contato.
+                Em casos urgentes ou com prazos editoriais apertados, utilize o campo <Link href="/fale-conosco" className="text-primary hover:underline font-bold">Fale Conosco</Link> para agilizar o primeiro contato.
             </p>
         </section>
         

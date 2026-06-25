@@ -14,6 +14,8 @@ import { ShareButton } from '@/components/share-button'
 import { ArticleShareButton } from '@/components/article-share-button'
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
+import { JsonLd } from '@/components/json-ld'
+import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -37,16 +39,23 @@ export async function generateMetadata(
     }
   }
 
-  const desc = article.subtitle || article.content?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || '';
+  const desc = truncateDescription(article.subtitle || article.content || '');
+  const url = absoluteUrl(`/flahistoria/${article.slug}`);
 
   return {
     title: article.title,
     description: desc,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: article.title,
       description: desc,
+      url,
       images: [article.image],
       type: 'article',
+      publishedTime: article.publishedAt.toISOString(),
+      authors: [article.author],
     },
     twitter: {
       card: 'summary_large_image',
@@ -153,6 +162,8 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
   const otherArticles = allArticles.filter(a => a.slug !== article.slug).slice(0, 3);
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const videoId = article.videoUrl ? getYouTubeId(article.videoUrl) : null;
+  const articleUrl = absoluteUrl(`/flahistoria/${article.slug}`);
+  const articleDescription = truncateDescription(article.subtitle || article.content || '');
   
   const paragraphs = article.content ? parseContent(article.content) : [];
   const midPoint = Math.ceil(paragraphs.length / 2);
@@ -163,6 +174,33 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
 
   return (
     <div className="container mx-auto max-w-4xl py-12">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: article.title,
+          description: articleDescription,
+          image: [article.image],
+          datePublished: article.publishedAt.toISOString(),
+          dateModified: article.publishedAt.toISOString(),
+          author: {
+            '@type': 'Person',
+            name: article.author,
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: siteName,
+            logo: {
+              '@type': 'ImageObject',
+              url: absoluteUrl('/icon.png'),
+            },
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': articleUrl,
+          },
+        }}
+      />
       <div className="mb-8">
         <AdBanner width={728} height={90} />
       </div>
@@ -272,14 +310,14 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
                 {otherArticles.map((item) => (
                     <Card key={item.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                         <CardHeader className="p-0 relative">
-                            <Link href={`/flahistoria/${item.slug}`} target="_blank">
+                            <Link href={`/flahistoria/${item.slug}`}>
                                 <Image src={item.image} alt={item.title} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={item.dataAiHint} />
                             </Link>
                             <ShareButton title={item.title} slug={item.slug} type="flahistoria" />
                         </CardHeader>
                         <CardContent className="flex-grow p-4 space-y-2">
                             <CardTitle className="text-lg font-bold font-body leading-tight">
-                                <Link href={`/flahistoria/${item.slug}`} className="hover:text-[#FF073A] transition-colors duration-200" target="_blank">
+                                <Link href={`/flahistoria/${item.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
                                     {item.title}
                                 </Link>
                             </CardTitle>
