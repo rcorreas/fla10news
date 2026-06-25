@@ -154,7 +154,9 @@ export async function getAllColumnSlugs(): Promise<{ slug: string }[]> {
         if (snapshot.empty) {
             return [];
         }
-        return snapshot.docs.map(doc => ({ slug: doc.data().slug as string })).filter(item => item.slug);
+        return snapshot.docs
+            .map(doc => ({ slug: doc.data().slug as string }))
+            .filter(item => item.slug && item.slug.length < 200);
     } catch (error) {
         console.error("Error fetching all column slugs:", error);
         return [];

@@ -40,7 +40,7 @@ export function AuthButton() {
                             {userProfile?.photoURL || user?.photoURL ? (
                                 <AvatarImage src={userProfile?.photoURL || user?.photoURL || undefined} alt={userProfile?.username || ''} />
                              ) : null}
-                            <AvatarFallback>{userProfile?.firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}</AvatarFallback>
+                            <AvatarFallback>{userProfile?.firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
                         </Avatar>
                     </Button>
                 </DropdownMenuTrigger>

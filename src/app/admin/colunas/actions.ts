@@ -26,7 +26,8 @@ function generateSlug(title: string): string {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/ /g, '-')
-    .replace(/[^\w-]+/g, '');
+    .replace(/[^\w-]+/g, '')
+    .slice(0, 150);
 }
 
 export async function createColumn(prevState: any, formData: FormData) {
