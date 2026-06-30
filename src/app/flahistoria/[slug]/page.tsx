@@ -41,6 +41,7 @@ export async function generateMetadata(
 
   const desc = truncateDescription(article.subtitle || article.content || '');
   const url = absoluteUrl(`/flahistoria/${article.slug}`);
+  const proxyImageUrl = absoluteUrl(`/api/proxy-image?url=${encodeURIComponent(article.image)}`);
 
   return {
     title: article.title,
@@ -52,7 +53,7 @@ export async function generateMetadata(
       title: article.title,
       description: desc,
       url,
-      images: [article.image],
+      images: [proxyImageUrl],
       type: 'article',
       publishedTime: article.publishedAt.toISOString(),
       authors: [article.author],
@@ -61,7 +62,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: article.title,
       description: desc,
-      images: [article.image],
+      images: [proxyImageUrl],
     },
   }
 }

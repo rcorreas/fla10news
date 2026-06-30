@@ -67,6 +67,8 @@ export async function generateMetadata(
       }
   }
 
+  const proxyImageUrl = absoluteUrl(`/api/proxy-image?url=${encodeURIComponent(imageUrl)}`);
+
   return {
     title: column.title,
     description: desc,
@@ -77,7 +79,7 @@ export async function generateMetadata(
       title: column.title,
       description: desc,
       url,
-      images: [imageUrl],
+      images: [proxyImageUrl],
       type: 'article',
       publishedTime: column.publishedAt.toISOString(),
       authors: [column.author],
@@ -86,7 +88,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: column.title,
       description: desc,
-      images: [imageUrl],
+      images: [proxyImageUrl],
     },
   }
 }
