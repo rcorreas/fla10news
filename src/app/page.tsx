@@ -249,7 +249,7 @@ export default async function Home() {
         <div className="flex justify-center my-8">
           <a href="http://www.youtube.com/@fladez" target="_blank" rel="noopener noreferrer" className="block w-full max-w-[1200px] hover:opacity-90 transition-opacity overflow-hidden rounded-lg shadow-md border border-border">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://i.postimg.cc/Sx7gv1dz/banner-fladez.png" alt="Canal FlaDez no YouTube" className="w-full h-auto object-cover" />
+            <img src="/fla10-youtube-promo.png" alt="Canal FlaDez no YouTube" className="w-full h-auto object-cover" />
           </a>
         </div>
 
