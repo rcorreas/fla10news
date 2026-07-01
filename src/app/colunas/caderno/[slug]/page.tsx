@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AdBanner } from '@/components/ad-banner';
 import { slugify, formatPublishedTime } from '@/lib/utils';
 import { notFound } from 'next/navigation';
+import { absoluteUrl } from '@/lib/site';
 
 
 
