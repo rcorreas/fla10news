@@ -45,6 +45,9 @@ export default function RootLayout({
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1816855957581879"
           crossOrigin="anonymous"
         ></script>
+        {/* AdsKeeper Loader */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src="https://jsc.adskeeper.com/site/1101178.js" async></script>
       </head>
       <body className="min-h-screen bg-background font-body antialiased flex flex-col">
         <JsonLd

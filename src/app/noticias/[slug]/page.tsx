@@ -9,8 +9,10 @@ import type { Metadata, ResolvingMetadata } from 'next'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { AdBanner } from '@/components/ad-banner'
+import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ShareButton } from '@/components/share-button'
+
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
@@ -237,8 +239,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           )}
 
           {!article.image2 && midPoint > 0 && (
-            <div className="my-8 flex justify-center">
+            <div className="my-8 flex flex-col items-center gap-6">
               <AdBanner width={300} height={250} />
+              <AdsKeeperWidget widgetId="2046582" />
             </div>
           )}
 
@@ -259,8 +262,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </div>
         )}
         
-        <div className="mt-12 pt-8 border-t">
+        <div className="mt-12 pt-8 border-t flex flex-col items-center gap-6">
             <AdBanner width={728} height={90} />
+            <AdsKeeperWidget widgetId="2046585" />
         </div>
       </article>
 

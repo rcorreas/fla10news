@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Clock, Eye } from 'lucide-react'
 import { slugify, formatPublishedTime } from '@/lib/utils';
 import { ShareButton } from '@/components/share-button'
+import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
@@ -243,6 +244,8 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
           />
         )}
 
+        <AdsKeeperWidget widgetId="2046582" />
+
         {column.authorDescription && (
           <div className="mt-12 p-6 bg-muted/30 rounded-lg border border-border">
             <h3 className="text-lg font-bold font-headline mb-2 text-primary">Sobre {column.author}</h3>
@@ -252,8 +255,9 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
           </div>
         )}
 
-        <div className="mt-12 pt-8 border-t">
+        <div className="mt-12 pt-8 border-t flex flex-col items-center gap-6">
             <AdBanner width={728} height={90} />
+            <AdsKeeperWidget widgetId="2046585" />
         </div>
       </article>
 
