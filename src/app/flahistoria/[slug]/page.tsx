@@ -84,59 +84,36 @@ function formatViews(views: number): string {
 }
 
 const parseContent = (content: string): string[] => {
-    if (!content) return [];
-    
-    const trimmed = content.trim();
-    
-    // Detecta se o conteúdo possui marcação HTML de parágrafo ou título
-    const hasHtml = /<[a-z][\s\S]*>/i.test(trimmed);
-    
-    if (!hasHtml) {
-        // Trata como texto puro
-        // Divide por quebras de linha duplas
-        const paragraphs = trimmed
-            .split(/\n\s*\n/)
-            .map(p => p.trim())
-            .filter(p => p.length > 0);
-            
-        if (paragraphs.length <= 1 && trimmed.includes('\n')) {
-            // Se houver apenas uma linha contendo quebras de linha simples, divide por quebras de linha simples
-            const singleLines = trimmed
-                .split('\n')
-                .map(p => p.trim())
-                .filter(p => p.length > 0);
-            return singleLines.map(p => `<p>${p}</p>`);
+    // If content has </p> tags, split by them safely
+    if (content.toLowerCase().includes('</p>')) {
+        const parts = content.split(/(<\/p>)/i);
+        const result = [];
+        let current = '';
+        for (const part of parts) {
+            current += part;
+            if (part.toLowerCase() === '</p>') {
+                result.push(current.trim());
+                current = '';
+            }
         }
-        
-        return paragraphs.map(p => `<p>${p}</p>`);
+        if (current.trim().length > 0) {
+            result.push(current.trim());
+        }
+        return result;
     }
     
-    // Possui marcação HTML. Vamos extrair os blocos completos de nível de bloco
-    const blocks: string[] = [];
-    const blockRegex = /<(p|h1|h2|h3|h4|h5|h6|div|section|blockquote|ul|ol|li)[^>]*>([\s\S]*?)<\/\1>/gi;
-    
-    let match;
-    let lastIndex = 0;
-    
-    while ((match = blockRegex.exec(trimmed)) !== null) {
-        const between = trimmed.substring(lastIndex, match.index).trim();
-        if (between) {
-            blocks.push(`<p>${between}</p>`);
-        }
-        blocks.push(match[0]);
-        lastIndex = blockRegex.lastIndex;
+    // If content is plain text with double newlines
+    if (content.includes('\n\n')) {
+        return content.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p.replace(/\n/g, '<br/>')}</p>`);
     }
-    
-    const remaining = trimmed.substring(lastIndex).trim();
-    if (remaining) {
-        if (remaining.startsWith('<') && remaining.endsWith('>')) {
-            blocks.push(remaining);
-        } else {
-            blocks.push(`<p>${remaining}</p>`);
-        }
+
+    // If content has single newlines
+    if (content.includes('\n')) {
+        return content.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p}</p>`);
     }
-    
-    return blocks.filter(b => b.trim().length > 0);
+
+    // Fallback
+    return [content];
 };
 
 export default async function HistoryArticlePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -167,9 +144,9 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
   const articleDescription = truncateDescription(article.subtitle || article.content || '');
   
   const paragraphs = article.content ? parseContent(article.content) : [];
-  const midPoint = Math.ceil(paragraphs.length / 2);
-  const firstHalf = paragraphs.slice(0, midPoint).join('');
-  const secondHalf = paragraphs.slice(midPoint).join('');
+  const midPoint = Math.floor(paragraphs.length / 2);
+  const firstHalf = paragraphs.slice(0, midPoint).join('\n');
+  const secondHalf = paragraphs.slice(midPoint).join('\n');
 
 
 
