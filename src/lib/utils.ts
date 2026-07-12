@@ -47,3 +47,14 @@ export function formatPublishedTime(publishedAt: Date): string {
   
     return "Agora mesmo";
 }
+
+export function formatDurationISO(duration: string): string {
+  if (!duration) return "";
+  const parts = duration.split(':');
+  if (parts.length === 2) {
+    return `PT${parts[0]}M${parts[1]}S`;
+  } else if (parts.length === 3) {
+    return `PT${parts[0]}H${parts[1]}M${parts[2]}S`;
+  }
+  return `PT${duration}S`;
+}

@@ -1,4 +1,4 @@
-import { formatPublishedTime } from '@/lib/utils';
+import { formatPublishedTime, formatDurationISO } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -122,7 +122,7 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
           description: videoDescription,
           thumbnailUrl: [video.image],
           uploadDate: video.publishedAt.toISOString(),
-          duration: video.duration,
+          duration: video.duration ? formatDurationISO(video.duration) : undefined,
           embedUrl: videoId ? `https://www.youtube.com/embed/${videoId}` : undefined,
           contentUrl: video.videoUrl || undefined,
           mainEntityOfPage: {
