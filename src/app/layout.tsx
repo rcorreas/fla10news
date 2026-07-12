@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  robots: {
+    index: true,
+    follow: true,
+    'max-image-preview': 'large',
+  },
   openGraph: {
     title: siteName,
     description: 'Seu portal diário de notícias sobre o Clube de Regatas do Flamengo.',
