@@ -250,8 +250,10 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
                                 </span>
                             )}
                         </div>
-                         <div className="mt-4">
-                            <AdBanner width={300} height={250} />
+                         <div className="mt-4 flex justify-center px-4">
+                            <a href="https://amzn.to/4pm8HFl" target="_blank" rel="noopener noreferrer" className="block w-full max-w-[728px] hover:opacity-90 transition-opacity">
+                                <Image src="https://i.imgur.com/xZYv2gr.png" alt="Publicidade" width={728} height={90} className="w-full h-auto rounded-lg shadow-md border border-border" />
+                            </a>
                         </div>
                     </div>
                 )}

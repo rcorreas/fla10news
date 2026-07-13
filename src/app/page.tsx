@@ -332,7 +332,11 @@ export default async function Home() {
           )}
         </section>
 
-        <AdBanner width={468} height={60} />
+        <div className="flex justify-center my-8 px-4">
+          <a href="https://amzn.to/4pm8HFl" target="_blank" rel="noopener noreferrer" className="block w-full max-w-[728px] hover:opacity-90 transition-opacity">
+            <Image src="https://i.imgur.com/xZYv2gr.png" alt="Publicidade" width={728} height={90} className="w-full h-auto rounded-lg shadow-md border border-border" />
+          </a>
+        </div>
 
         {historicArticles && historicArticles.length > 0 && (
             <section>
