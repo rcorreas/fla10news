@@ -165,8 +165,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           },
         }}
       />
-      <div className="mb-8">
-        <AdBanner width={728} height={90} />
+      <div className="mb-8 flex justify-center px-4">
+        <a href="https://meli.la/1yUshX3" target="_blank" rel="noopener noreferrer" className="block w-full max-w-[728px] hover:opacity-90 transition-opacity">
+          <Image src="https://i.imgur.com/JzHwtHD.jpeg" alt="Publicidade" width={728} height={90} className="w-full h-auto rounded-lg shadow-md border border-border" />
+        </a>
       </div>
       <article>
         <header className="mb-8">
