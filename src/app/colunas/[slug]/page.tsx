@@ -244,16 +244,16 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
           />
         )}
 
-        <AdsKeeperWidget widgetId="2046582" />
-
         {column.authorDescription && (
-          <div className="mt-12 p-6 bg-muted/30 rounded-lg border border-border">
+          <div className="mt-12 mb-8 p-6 bg-muted/30 rounded-lg border border-border">
             <h3 className="text-lg font-bold font-headline mb-2 text-primary">Sobre {column.author}</h3>
             <p className="text-muted-foreground leading-relaxed text-base">
               {column.authorDescription}
             </p>
           </div>
         )}
+
+        <AdsKeeperWidget widgetId="2046582" />
 
         <div className="mt-12 pt-8 border-t flex flex-col items-center gap-6">
             <AdBanner width={728} height={90} />
