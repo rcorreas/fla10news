@@ -24,7 +24,7 @@ const initialState: any = {
   errors: null,
 };
 
-function SubmitButton() {
+function o fi == SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" disabled={pending}>
@@ -49,7 +49,7 @@ export default function EditColunasPage() {
 
   const updateActionWithId = column ? updateColumn.bind(null, id, column.slug) : null;
   const [state, formAction] = useActionState(updateActionWithId || (async () => initialState), initialState);
-  
+
   useEffect(() => {
     const fetchColumn = async () => {
       setLoading(true);
@@ -68,10 +68,10 @@ export default function EditColunasPage() {
     };
 
     if (id) {
-        fetchColumn();
+      fetchColumn();
     }
   }, [id, router, toast]);
-  
+
   useEffect(() => {
     if (state.message) {
       if (state.success) {
@@ -83,8 +83,8 @@ export default function EditColunasPage() {
       } else {
         let description = state.message;
         if (state.errors) {
-            const errorMessages = Object.values(state.errors).flat().join(' ');
-            description += ` ${errorMessages}`;
+          const errorMessages = Object.values(state.errors).flat().join(' ');
+          description += ` ${errorMessages}`;
         }
         toast({
           title: "Erro ao Atualizar",
@@ -115,24 +115,24 @@ export default function EditColunasPage() {
         <form action={formAction}>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="grid gap-2">
-                    <Label htmlFor="columnName">Nome da Coluna</Label>
-                    <Input id="columnName" name="columnName" defaultValue={column.columnName} required />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="category">Categoria (Tag)</Label>
-                    <Input id="category" name="category" defaultValue={column.category} required />
-                </div>
+              <div className="grid gap-2">
+                <Label htmlFor="columnName">Nome da Coluna</Label>
+                <Input id="columnName" name="columnName" defaultValue={column.columnName} required />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="category">Categoria (Tag)</Label>
+                <Input id="category" name="category" defaultValue={column.category} required />
+              </div>
             </div>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="grid gap-2">
-                    <Label htmlFor="author">Autor</Label>
-                    <Input id="author" name="author" defaultValue={column.author} required />
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="authorImage">Link da Foto do Autor</Label>
-                    <Input id="authorImage" name="authorImage" type="url" defaultValue={column.authorImage} required />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="author">Autor</Label>
+                <Input id="author" name="author" defaultValue={column.author} required />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="authorImage">Link da Foto do Autor</Label>
+                <Input id="authorImage" name="authorImage" type="url" defaultValue={column.authorImage} required />
+              </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="authorLink">Link do Autor (Opcional)</Label>
@@ -155,18 +155,18 @@ export default function EditColunasPage() {
               <Textarea id="excerpt" name="excerpt" defaultValue={column.excerpt} required />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="dataAiHint">Dica para IA da Imagem (Opcional)</Label>
-                <Input id="dataAiHint" name="dataAiHint" defaultValue={column.dataAiHint || ''} />
+              <Label htmlFor="dataAiHint">Dica para IA da Imagem (Opcional)</Label>
+              <Input id="dataAiHint" name="dataAiHint" defaultValue={column.dataAiHint || ''} />
             </div>
-             <div className="grid gap-2">
-                <Label htmlFor="content">Conteúdo da Coluna</Label>
-                <Textarea id="content" name="content" defaultValue={column.content} className="min-h-[300px]" required />
+            <div className="grid gap-2">
+              <Label htmlFor="content">Conteúdo da Coluna</Label>
+              <Textarea id="content" name="content" defaultValue={column.content} className="min-h-[300px]" required />
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
             <SubmitButton />
             <Button variant="outline" asChild>
-                <Link href="/admin/colunas">Cancelar</Link>
+              <Link href="/admin/colunas">Cancelar</Link>
             </Button>
           </CardFooter>
         </form>

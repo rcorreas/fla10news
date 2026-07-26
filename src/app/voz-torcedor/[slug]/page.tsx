@@ -9,6 +9,7 @@ import { ptBR } from 'date-fns/locale'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { AdBanner } from '@/components/ad-banner'
+import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Clock, Eye, MessageSquare } from 'lucide-react'
 import { slugify, formatPublishedTime } from '@/lib/utils';
@@ -117,8 +118,10 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
           },
         }}
       />
-      <div className="mb-8">
-        <AdBanner width={728} height={90} />
+      <div className="mb-8 flex justify-center px-4">
+        <a href="https://meli.la/1yUshX3" target="_blank" rel="noopener noreferrer" className="block w-full max-w-[728px] hover:opacity-90 transition-opacity">
+          <Image src="https://i.imgur.com/JzHwtHD.jpeg" alt="Publicidade" width={728} height={90} className="w-full h-auto rounded-lg shadow-md border border-border" />
+        </a>
       </div>
       <article>
         <header className="mb-8">
@@ -177,8 +180,9 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
             </p>
         </div>
 
-        <div className="mt-12 pt-8 border-t">
+        <div className="mt-12 pt-8 border-t flex flex-col items-center gap-6">
             <AdBanner width={728} height={90} />
+            <AdsKeeperWidget widgetId="2046585" />
         </div>
       </article>
 
@@ -212,8 +216,10 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
         </section>
       )}
 
-      <div className="mt-12">
-        <AdBanner width={728} height={90} />
+      <div className="mt-12 flex justify-center px-4">
+        <a href="https://amzn.to/4pm8HFl" target="_blank" rel="noopener noreferrer" className="block w-full max-w-[728px] hover:opacity-90 transition-opacity">
+          <Image src="https://i.imgur.com/xZYv2gr.png" alt="Publicidade" width={728} height={90} className="w-full h-auto rounded-lg shadow-md border border-border" />
+        </a>
       </div>
     </div>
   )
