@@ -180,6 +180,8 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
             </p>
         </div>
 
+        <AdsKeeperWidget widgetId="2046582" />
+
         <div className="mt-12 pt-8 border-t flex flex-col items-center gap-6">
             <AdBanner width={728} height={90} />
             <AdsKeeperWidget widgetId="2046585" />
