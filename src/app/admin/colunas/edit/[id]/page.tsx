@@ -24,7 +24,7 @@ const initialState: any = {
   errors: null,
 };
 
-function o fi == SubmitButton() {
+function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" disabled={pending}>
