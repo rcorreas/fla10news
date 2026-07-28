@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { AdminClientLayout } from "@/components/admin/admin-client-layout";
 
 export const metadata: Metadata = {
   robots: {
@@ -8,10 +7,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AdminLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return <AdminClientLayout>{children}</AdminClientLayout>
+  return children;
 }
