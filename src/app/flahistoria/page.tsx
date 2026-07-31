@@ -59,13 +59,13 @@ export default async function FlaHistoriaPage({ searchParams }: { searchParams: 
                         <Card key={article.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                             <CardHeader className="p-0 relative">
                                 <Link href={`/flahistoria/${article.slug}`}>
-                                    <Image 
-                                        src={article.image} 
-                                        alt={article.title} 
-                                        width={600} 
-                                        height={400} 
-                                        className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" 
-                                        data-ai-hint={article.dataAiHint} 
+                                    <Image
+                                        src={article.image}
+                                        alt={article.title}
+                                        width={600}
+                                        height={400}
+                                        className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105"
+                                        data-ai-hint={article.dataAiHint}
                                     />
                                 </Link>
                                 <ShareButton title={article.title} slug={article.slug} type="flahistoria" />
@@ -94,10 +94,10 @@ export default async function FlaHistoriaPage({ searchParams }: { searchParams: 
                 </div>
             )}
 
-            <PaginationControls 
-                currentPage={currentPage} 
-                totalPages={totalPages} 
-                basePath="/flahistoria" 
+            <PaginationControls
+                currentPage={currentPage}
+                totalPages={totalPages}
+                basePath="/flahistoria"
             />
 
             <div className="mt-12">
