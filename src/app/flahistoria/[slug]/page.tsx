@@ -12,6 +12,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Badge } from '@/components/ui/badge'
 import { ShareButton } from '@/components/share-button'
 import { ArticleShareButton } from '@/components/article-share-button'
+import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
 import { JsonLd } from '@/components/json-ld'
@@ -179,7 +180,12 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
           },
         }}
       />
-      <div className="mb-8">
+      <div className="mb-8 flex justify-center px-4">
+        <a href="https://meli.la/1yUshX3" target="_blank" rel="noopener noreferrer" className="block w-full max-w-[728px] hover:opacity-90 transition-opacity">
+          <Image src="https://i.imgur.com/JzHwtHD.jpeg" alt="Publicidade" width={728} height={90} className="w-full h-auto rounded-lg shadow-md border border-border" />
+        </a>
+      </div>
+      <div className="mb-8 flex justify-center px-4">
         <AdBanner width={728} height={90} />
       </div>
 
@@ -278,8 +284,11 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
           </div>
         )}
 
-        <div className="mt-12 pt-8 border-t">
-          <AdBanner width={728} height={90} />
+        <AdsKeeperWidget widgetId="2046582" />
+
+        <div className="mt-12 pt-8 border-t flex flex-col items-center gap-6">
+            <AdBanner width={728} height={90} />
+            <AdsKeeperWidget widgetId="2046585" />
         </div>
       </article>
 
