@@ -28,6 +28,7 @@ const teamCrests: Record<string, string> = {
   "Estudiantes": "https://i.imgur.com/ejaLTel.png",
   "Cusco": "https://i.imgur.com/2UG0yV1.png",
   "Chapecoense": "https://i.imgur.com/OBdBxSJ.png",
+  "Mirassol": "https://upload.wikimedia.org/wikipedia/pt/2/29/Mirassol_Futebol_Clube.png",
 };
 
 
