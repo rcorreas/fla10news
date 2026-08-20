@@ -316,7 +316,7 @@ export default async function Home() {
                   <div className="p-6 md:p-8 w-full md:w-2/3">
                     <p className="text-white text-xl md:text-2xl font-bold mb-2">{galleryItems[0].title}</p>
                     <div className="flex items-center text-sm text-gray-300 gap-4">
-                      <span>Por {galleryItems[0].artist}</span>
+                      {galleryItems[0].artist && <span>Por {galleryItems[0].artist}</span>}
                       <span className="flex items-center gap-1.5"><Eye className="h-4 w-4" /> {galleryItems[0].views || 0}</span>
                     </div>
                   </div>

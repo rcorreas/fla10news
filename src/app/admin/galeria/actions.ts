@@ -9,7 +9,7 @@ const GallerySchema = z.object({
   imageUrl: z.string().url({ message: "Por favor, insira um link válido para a imagem." }),
   title: z.string().min(3, { message: "O título deve ter pelo menos 3 caracteres." }),
   legenda: z.string().optional(),
-  artist: z.string().min(2, { message: "O nome do autor/artista deve ter pelo menos 2 caracteres." }),
+  artist: z.string().optional(),
   date: z.string().min(1, { message: "Data é obrigatória." }),
 });
 
@@ -18,7 +18,7 @@ export async function createGalleryItem(prevState: any, formData: FormData) {
     imageUrl: formData.get("imageUrl"),
     title: formData.get("title"),
     legenda: formData.get("legenda") || "",
-    artist: formData.get("artist"),
+    artist: formData.get("artist") || "",
     date: formData.get("date"),
   });
 
@@ -59,7 +59,7 @@ export async function updateGalleryItem(id: string, prevState: any, formData: Fo
     imageUrl: formData.get("imageUrl"),
     title: formData.get("title"),
     legenda: formData.get("legenda") || "",
-    artist: formData.get("artist"),
+    artist: formData.get("artist") || "",
     date: formData.get("date"),
   });
 

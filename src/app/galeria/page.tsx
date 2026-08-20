@@ -39,7 +39,7 @@ export default async function GaleriaPage() {
                   <p className="text-white text-lg font-bold line-clamp-3 mb-2">{item.title}</p>
                   <div className="flex justify-between items-center text-sm text-gray-300">
                     <div className="flex flex-col gap-1">
-                      <span>Por {item.artist}</span>
+                      {item.artist && <span>Por {item.artist}</span>}
                       <span>{new Date(item.date).toLocaleDateString('pt-BR')}</span>
                     </div>
                     <span className="flex items-center gap-1.5"><Eye className="h-4 w-4" /> {item.views || 0}</span>

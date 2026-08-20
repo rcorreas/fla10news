@@ -6,7 +6,7 @@ export interface GalleryItem {
   imageUrl: string;
   title: string;
   legenda?: string;
-  artist: string;
+  artist?: string;
   date: string;
   views?: number;
 }
@@ -26,7 +26,7 @@ export async function getGalleryItems(limitCount?: number): Promise<GalleryItem[
         imageUrl: data.imageUrl || '',
         title: data.title || data.caption || '',
         legenda: data.legenda || '',
-        artist: data.artist || 'Autor Desconhecido',
+        artist: data.artist || '',
         date: data.date || new Date().toISOString().split('T')[0],
         views: data.views || 0,
       } as GalleryItem;
@@ -51,7 +51,7 @@ export async function getGalleryItemById(id: string): Promise<GalleryItem | null
         imageUrl: data.imageUrl || '',
         title: data.title || data.caption || '',
         legenda: data.legenda || '',
-        artist: data.artist || 'Autor Desconhecido',
+        artist: data.artist || '',
         date: data.date || new Date().toISOString().split('T')[0],
         views: data.views || 0,
       };

@@ -62,7 +62,7 @@ export default async function GalleryItemPage({ params }: { params: Promise<{ id
               <h1 className="text-2xl lg:text-3xl font-headline font-bold mb-4">{item.title}</h1>
               
               <div className="flex flex-col gap-2 text-sm text-muted-foreground mb-6">
-                <span className="font-medium text-foreground">Por {item.artist}</span>
+                {item.artist && <span className="font-medium text-foreground">Por {item.artist}</span>}
                 <span>{new Date(item.date).toLocaleDateString('pt-BR')}</span>
                 <span className="flex items-center gap-1.5"><Eye className="h-4 w-4" /> {(item.views || 0) + 1} visualizações</span>
               </div>

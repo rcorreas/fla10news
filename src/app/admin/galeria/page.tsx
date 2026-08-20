@@ -18,7 +18,8 @@ import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 
 // Icons
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2, Pencil } from "lucide-react";
+import { EditDialog } from "./edit-dialog";
 
 const initialState: any = {
   success: false,
@@ -48,6 +49,7 @@ export default function GaleriaAdminPage() {
 
   const [galleryList, setGalleryList] = useState<GalleryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [editingItem, setEditingItem] = useState<GalleryItem | null>(null);
 
   const fetchGalleryItems = async () => {
     setIsLoading(true);
@@ -118,8 +120,8 @@ export default function GaleriaAdminPage() {
                 <Input id="imageUrl" name="imageUrl" type="url" placeholder="https://exemplo.com/imagem.png" required />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="artist">Autor/Artista</Label>
-                <Input id="artist" name="artist" placeholder="Ex: João Silva" required />
+                <Label htmlFor="artist">Autor/Artista (opcional)</Label>
+                <Input id="artist" name="artist" placeholder="Ex: João Silva" />
               </div>
             </div>
             
@@ -177,9 +179,12 @@ export default function GaleriaAdminPage() {
                     </TableCell>
                     <TableCell className="font-medium max-w-xs truncate" title={item.title}>{item.title}</TableCell>
                     <TableCell className="max-w-xs truncate" title={item.legenda}>{item.legenda || '-'}</TableCell>
-                    <TableCell>{item.artist}</TableCell>
+                    <TableCell>{item.artist || '-'}</TableCell>
                     <TableCell>{new Date(item.date).toLocaleDateString('pt-BR')}</TableCell>
                     <TableCell className="text-right space-x-2">
+                      <Button variant="ghost" size="icon" onClick={() => setEditingItem(item)}>
+                        <Pencil className="h-4 w-4 text-blue-500" />
+                      </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button variant="ghost" size="icon">
@@ -214,6 +219,12 @@ export default function GaleriaAdminPage() {
           )}
         </CardContent>
       </Card>
+      
+      <EditDialog 
+        item={editingItem} 
+        onClose={() => setEditingItem(null)} 
+        onSuccess={() => fetchGalleryItems()} 
+      />
     </div>
   );
 }
