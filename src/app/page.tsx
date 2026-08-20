@@ -24,7 +24,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, PlayCircle, Trophy, MessageSquare } from 'lucide-react'
+import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, PlayCircle, Trophy, MessageSquare, Palette } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { AdBanner } from '@/components/ad-banner'
 import { SofascoreWidget } from '@/components/sofascore-widget'
@@ -34,6 +34,7 @@ import { getColumns } from '@/data/columns'
 import { getVideos } from '@/data/videos'
 import { getVozTorcedores } from '@/data/voz-torcedor'
 import { getHistoryArticles } from '@/data/history'
+import { getGalleryItems } from '@/data/gallery'
 import { MainCarousel } from '@/components/home/main-carousel'
 import { HistoryCoverflow } from '@/components/home/history-coverflow'
 import { ActiveReaders } from '@/components/home/active-readers'
@@ -81,6 +82,8 @@ export default async function Home() {
   const allVideos = await getVideos(6);
   const historicArticles = await getHistoryArticles(3);
   const vozTorcedores = await getVozTorcedores(3);
+  const allGalleryTotal = await getGalleryItems();
+  const galleryItems = allGalleryTotal.slice(0, 1);
 
   const mainHeadlines = allNews.slice(0, 6);
   const dailyNews = allNews.slice(6, 12); // Now shows 6 articles
@@ -130,7 +133,8 @@ export default async function Home() {
     allColumnsTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
     allVideosTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
     allHistoryTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
-    allVozTorcedorTotal.reduce((sum, item) => sum + (item.views || 0), 0);
+    allVozTorcedorTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
+    allGalleryTotal.reduce((sum, item) => sum + (item.views || 0), 0);
 
   return (
     <div>
@@ -292,6 +296,32 @@ export default async function Home() {
               </Card>
             ))}
           </div>
+        </section>
+
+        <section>
+          <SectionHeader title="Galeria de Arte Rubro-Negra" subtitle="A paixão do Flamengo retratada em imagens marcantes." href="/galeria" icon={Palette} />
+          {galleryItems.length > 0 && (
+            <div className="relative overflow-hidden rounded-lg shadow-lg group">
+              <Link href={`/galeria/${galleryItems[0].id}`}>
+                <Image 
+                  src={galleryItems[0].imageUrl} 
+                  alt={galleryItems[0].caption} 
+                  width={1200} 
+                  height={600} 
+                  className="w-full object-cover aspect-[2/1] transition-transform duration-500 group-hover:scale-105" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end">
+                  <div className="p-6 md:p-8 w-full md:w-2/3">
+                    <p className="text-white text-xl md:text-2xl font-bold mb-2">{galleryItems[0].caption}</p>
+                    <div className="flex items-center text-sm text-gray-300 gap-4">
+                      <span>Por {galleryItems[0].artist}</span>
+                      <span className="flex items-center gap-1.5"><Eye className="h-4 w-4" /> {galleryItems[0].views || 0}</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          )}
         </section>
 
         <div className="flex justify-center my-8 px-4">
