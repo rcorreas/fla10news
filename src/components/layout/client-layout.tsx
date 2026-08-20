@@ -45,7 +45,7 @@ export function ClientLayout({
   nextGameBanner: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isAdminPage = pathname.startsWith('/admin');
+  const isAdminPage = pathname?.startsWith('/admin') || false;
 
   return (
     <AuthProvider>

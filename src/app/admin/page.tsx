@@ -3,6 +3,7 @@ import { getNews } from "@/data/news";
 import { getColumns } from "@/data/columns";
 import { getVideos } from "@/data/videos";
 import { getHistoryArticles } from "@/data/history";
+import { getVozTorcedores } from "@/data/voz-torcedor";
 import { getUserCount } from "@/data/users";
 import { getDailyViews } from "@/data/analytics";
 import { StatCard } from "@/components/admin/stat-card";
@@ -20,6 +21,7 @@ export default async function AdminDashboard() {
     const columns = await getColumns();
     const videos = await getVideos();
     const history = await getHistoryArticles();
+    const vozTorcedor = await getVozTorcedores();
     const userCount = await getUserCount();
     const dailyViews = await getDailyViews(15);
 
@@ -27,13 +29,15 @@ export default async function AdminDashboard() {
     const totalNewsViews = news.reduce((acc, article) => acc + (article.views || 0), 0);
     const totalColumnsViews = columns.reduce((acc, column) => acc + (column.views || 0), 0);
     const totalHistoryViews = history.reduce((acc, article) => acc + (article.views || 0), 0);
+    const totalVozTorcedorViews = vozTorcedor.reduce((acc, article) => acc + (article.views || 0), 0);
 
     // Calcula compartilhamentos dinamicamente com base nas visualizações
     const totalNewsShares = news.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.05), 0);
     const totalColumnsShares = columns.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.08), 0);
     const totalVideoShares = videos.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.04), 0);
     const totalHistoryShares = history.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.05), 0);
-    const totalContentShares = totalNewsShares + totalColumnsShares + totalVideoShares + totalHistoryShares;
+    const totalVozTorcedorShares = vozTorcedor.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.06), 0);
+    const totalContentShares = totalNewsShares + totalColumnsShares + totalVideoShares + totalHistoryShares + totalVozTorcedorShares;
 
     // Destinos de Compartilhamento dinâmicos com base no total de compartilhamentos
     const shareDestinationsData = [
@@ -65,24 +69,20 @@ export default async function AdminDashboard() {
     }));
     const totalFutebolNews = news.filter(n => n.mainCategory === 'Futebol').length;
     
-    const recentContent = [...news, ...columns, ...videos, ...history]
+    const recentContent = [...news, ...columns, ...videos, ...history, ...vozTorcedor]
         .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
         .slice(0, 5)
         .map(item => {
-            if ('excerpt' in item && 'content' in item) { // News or Column
-                return {
-                    title: item.title,
-                    type: 'columnName' in item ? 'Coluna' : 'Notícia',
-                    date: item.publishedAt,
-                    slug: 'columnName' in item ? `/colunas/${item.slug}` : `/noticias/${item.slug}`
-                }
-            } else { // Video
-                 return {
-                    title: item.title,
-                    type: 'Vídeo',
-                    date: item.publishedAt,
-                    slug: `/videos/${item.slug}`
-                }
+            if ('columnName' in item) {
+                return { title: item.title, type: 'Coluna', date: item.publishedAt, slug: `/colunas/${item.slug}` }
+            } else if ('summary' in item) {
+                return { title: item.title, type: 'Voz do Torcedor', date: item.publishedAt, slug: `/voz-torcedor/${item.slug}` }
+            } else if ('subtitle' in item) {
+                return { title: item.title, type: 'História', date: item.publishedAt, slug: `/flahistoria/${item.slug}` }
+            } else if ('excerpt' in item) {
+                return { title: item.title, type: 'Notícia', date: item.publishedAt, slug: `/noticias/${item.slug}` }
+            } else {
+                 return { title: item.title, type: 'Vídeo', date: item.publishedAt, slug: `/videos/${item.slug}` }
             }
         });
     
@@ -91,6 +91,7 @@ export default async function AdminDashboard() {
         { type: "colunas", views: totalColumnsViews, fill: "hsl(var(--chart-2))" },
         { type: "videos", views: totalVideoViews, fill: "hsl(var(--chart-3))" },
         { type: "historia", views: totalHistoryViews, fill: "hsl(var(--chart-4))" },
+        { type: "voz do torcedor", views: totalVozTorcedorViews, fill: "hsl(var(--chart-5))" },
     ];
 
     const todayString = new Date(new Date().getTime() - 3 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -110,8 +111,8 @@ export default async function AdminDashboard() {
                 <StatCard title="Usuários Cadastrados" value={userCount} icon={UserPlus} />
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-                 <StatCard title="Visualizações Totais" value={(totalVideoViews + totalNewsViews + totalColumnsViews + totalHistoryViews).toLocaleString('pt-BR')} icon={Eye} description="Notícias, Colunas, Vídeos e História" />
+             <div className="grid gap-4 md:grid-cols-2">
+                 <StatCard title="Visualizações Totais" value={(totalVideoViews + totalNewsViews + totalColumnsViews + totalHistoryViews + totalVozTorcedorViews).toLocaleString('pt-BR')} icon={Eye} description="Todos os conteúdos somados" />
                  <StatCard title="Compartilhamentos" value={totalContentShares.toLocaleString('pt-BR')} icon={Share2} description="Total em todas as plataformas" />
             </div>
 
@@ -216,6 +217,7 @@ export default async function AdminDashboard() {
                                         <Badge variant={
                                             item.type === 'Notícia' ? 'default' :
                                             item.type === 'Coluna' ? 'secondary' :
+                                            item.type === 'Voz do Torcedor' ? 'destructive' :
                                             'outline'
                                         }>{item.type}</Badge>
                                     </TableCell>

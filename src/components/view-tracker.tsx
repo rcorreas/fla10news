@@ -1,18 +1,27 @@
 "use client";
 
-import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, Suspense } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { trackPageView } from "@/app/actions/analytics";
 
-export function ViewTracker() {
+function Tracker() {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
 
     useEffect(() => {
         // Skip tracking for admin pages to avoid skewing stats
         if (pathname && !pathname.startsWith('/admin')) {
             trackPageView().catch(console.error);
         }
-    }, [pathname]);
+    }, [pathname, searchParams]);
 
     return null;
+}
+
+export function ViewTracker() {
+    return (
+        <Suspense fallback={null}>
+            <Tracker />
+        </Suspense>
+    );
 }
