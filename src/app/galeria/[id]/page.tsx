@@ -6,6 +6,7 @@ import { getGalleryItemById, incrementGalleryItemViews } from '@/data/gallery';
 import { incrementDailyViews } from '@/data/analytics';
 import { Eye, ArrowLeft } from 'lucide-react';
 import { ShareButton } from '@/components/share-button';
+import { absoluteUrl } from '@/lib/site';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
@@ -17,20 +18,23 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     };
   }
 
+  const proxyImageUrl = absoluteUrl(`/api/proxy-image?url=${encodeURIComponent(item.imageUrl)}`);
+
   return {
     title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
     description: item.legenda || item.title,
     openGraph: {
       title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
       description: item.legenda || item.title,
-      images: [item.imageUrl],
+      url: absoluteUrl(`/galeria/${item.id}`),
+      images: [proxyImageUrl],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
       description: item.legenda || item.title,
-      images: [item.imageUrl],
+      images: [proxyImageUrl],
     },
   };
 }
