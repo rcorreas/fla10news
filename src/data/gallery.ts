@@ -4,7 +4,8 @@ import { collection, getDocs, query, orderBy, limit as firebaseLimit, doc, updat
 export interface GalleryItem {
   id: string;
   imageUrl: string;
-  caption: string;
+  title: string;
+  legenda?: string;
   artist: string;
   date: string;
   views?: number;
@@ -23,7 +24,8 @@ export async function getGalleryItems(limitCount?: number): Promise<GalleryItem[
       return {
         id: doc.id,
         imageUrl: data.imageUrl || '',
-        caption: data.caption || '',
+        title: data.title || data.caption || '',
+        legenda: data.legenda || '',
         artist: data.artist || 'Autor Desconhecido',
         date: data.date || new Date().toISOString().split('T')[0],
         views: data.views || 0,
@@ -47,7 +49,8 @@ export async function getGalleryItemById(id: string): Promise<GalleryItem | null
       return {
         id: docSnap.id,
         imageUrl: data.imageUrl || '',
-        caption: data.caption || '',
+        title: data.title || data.caption || '',
+        legenda: data.legenda || '',
         artist: data.artist || 'Autor Desconhecido',
         date: data.date || new Date().toISOString().split('T')[0],
         views: data.views || 0,

@@ -7,7 +7,8 @@ import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "
 
 const GallerySchema = z.object({
   imageUrl: z.string().url({ message: "Por favor, insira um link válido para a imagem." }),
-  caption: z.string().min(5, { message: "A legenda deve ter pelo menos 5 caracteres." }),
+  title: z.string().min(3, { message: "O título deve ter pelo menos 3 caracteres." }),
+  legenda: z.string().optional(),
   artist: z.string().min(2, { message: "O nome do autor/artista deve ter pelo menos 2 caracteres." }),
   date: z.string().min(1, { message: "Data é obrigatória." }),
 });
@@ -15,7 +16,8 @@ const GallerySchema = z.object({
 export async function createGalleryItem(prevState: any, formData: FormData) {
   const validatedFields = GallerySchema.safeParse({
     imageUrl: formData.get("imageUrl"),
-    caption: formData.get("caption"),
+    title: formData.get("title"),
+    legenda: formData.get("legenda") || "",
     artist: formData.get("artist"),
     date: formData.get("date"),
   });
@@ -55,7 +57,8 @@ export async function updateGalleryItem(id: string, prevState: any, formData: Fo
 
   const validatedFields = GallerySchema.safeParse({
     imageUrl: formData.get("imageUrl"),
-    caption: formData.get("caption"),
+    title: formData.get("title"),
+    legenda: formData.get("legenda") || "",
     artist: formData.get("artist"),
     date: formData.get("date"),
   });

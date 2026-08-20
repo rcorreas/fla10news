@@ -303,16 +303,18 @@ export default async function Home() {
           {galleryItems.length > 0 && (
             <div className="relative overflow-hidden rounded-lg shadow-lg group">
               <Link href={`/galeria/${galleryItems[0].id}`}>
-                <Image 
-                  src={galleryItems[0].imageUrl} 
-                  alt={galleryItems[0].caption} 
-                  width={1200} 
-                  height={600} 
-                  className="w-full object-cover aspect-[2/1] transition-transform duration-500 group-hover:scale-105" 
-                />
+                <div className="w-full bg-black/5 flex justify-center items-center">
+                  <Image 
+                    src={galleryItems[0].imageUrl} 
+                    alt={galleryItems[0].title} 
+                    width={1200} 
+                    height={800} 
+                    className="w-auto h-auto max-h-[600px] object-contain transition-transform duration-500 group-hover:scale-105" 
+                  />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end">
                   <div className="p-6 md:p-8 w-full md:w-2/3">
-                    <p className="text-white text-xl md:text-2xl font-bold mb-2">{galleryItems[0].caption}</p>
+                    <p className="text-white text-xl md:text-2xl font-bold mb-2">{galleryItems[0].title}</p>
                     <div className="flex items-center text-sm text-gray-300 gap-4">
                       <span>Por {galleryItems[0].artist}</span>
                       <span className="flex items-center gap-1.5"><Eye className="h-4 w-4" /> {galleryItems[0].views || 0}</span>

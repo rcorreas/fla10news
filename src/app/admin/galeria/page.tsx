@@ -124,8 +124,13 @@ export default function GaleriaAdminPage() {
             </div>
             
             <div className="grid gap-2">
-              <Label htmlFor="caption">Legenda da Imagem</Label>
-              <Input id="caption" name="caption" placeholder="Uma legenda descritiva para a imagem" required />
+              <Label htmlFor="title">Título da Obra/Foto</Label>
+              <Input id="title" name="title" placeholder="Um título para a imagem" required />
+            </div>
+            
+            <div className="grid gap-2">
+              <Label htmlFor="legenda">Legenda da Imagem (opcional)</Label>
+              <Input id="legenda" name="legenda" placeholder="Informações adicionais sobre a imagem" />
             </div>
             <div className="grid gap-2 md:w-1/2">
               <Label htmlFor="date">Data da Obra/Foto</Label>
@@ -155,6 +160,7 @@ export default function GaleriaAdminPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Imagem</TableHead>
+                  <TableHead>Título</TableHead>
                   <TableHead>Legenda</TableHead>
                   <TableHead>Autor</TableHead>
                   <TableHead>Data</TableHead>
@@ -166,10 +172,11 @@ export default function GaleriaAdminPage() {
                   <TableRow key={item.id}>
                     <TableCell>
                         <div className="relative w-16 h-16 rounded overflow-hidden">
-                            <Image src={item.imageUrl} alt={item.caption} fill className="object-cover" />
+                            <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
                         </div>
                     </TableCell>
-                    <TableCell className="font-medium max-w-xs truncate" title={item.caption}>{item.caption}</TableCell>
+                    <TableCell className="font-medium max-w-xs truncate" title={item.title}>{item.title}</TableCell>
+                    <TableCell className="max-w-xs truncate" title={item.legenda}>{item.legenda || '-'}</TableCell>
                     <TableCell>{item.artist}</TableCell>
                     <TableCell>{new Date(item.date).toLocaleDateString('pt-BR')}</TableCell>
                     <TableCell className="text-right space-x-2">

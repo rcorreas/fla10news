@@ -29,14 +29,14 @@ export default async function GaleriaPage() {
             <Link href={`/galeria/${item.id}`}>
               <Image 
                 src={item.imageUrl} 
-                alt={item.caption} 
+                alt={item.title} 
                 width={800} 
                 height={600} 
                 className="w-full object-cover transition-transform duration-500 group-hover:scale-105" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <p className="text-white text-lg font-bold line-clamp-3 mb-2">{item.caption}</p>
+                  <p className="text-white text-lg font-bold line-clamp-3 mb-2">{item.title}</p>
                   <div className="flex justify-between items-center text-sm text-gray-300">
                     <div className="flex flex-col gap-1">
                       <span>Por {item.artist}</span>
