@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: 'Aprecie a paixão rubro-negra através de imagens e obras exclusivas.',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function GaleriaPage() {
   const items = await getGalleryItems();
 
