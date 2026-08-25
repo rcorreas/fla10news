@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     default: siteName,
     template: `%s | ${siteName}`,
   },
-  description: 'Seu portal diário de notícias sobre o Clube de Regatas do Flamengo.',
-  keywords: 'Notícias do Flamengo, Notícias do Flamengo hoje, Flamengo, Flamengo hoje, Nação rubro-negra',
+  description: 'Seu portal com as últimas notícias do Flamengo, incluindo notícias do Flamengo hoje e notícias do Flamengo contratações.',
+  keywords: 'notícias do flamengo, notícias do flamengo hoje, flamengo hoje, notícias do flamengo contratações, Clube de Regatas do Flamengo',
   alternates: {
     canonical: '/',
   },

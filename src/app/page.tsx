@@ -3,14 +3,14 @@ import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, siteName } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Flamengo | Últimas notícias, resultados, mercado e próximos jogos',
-  description: 'Notícias do Flamengo hoje, bastidores, mercado, resultados, próximos jogos, colunas, vídeos e análises do Fla10 News.',
+  title: 'Notícias do Flamengo Hoje | Últimas notícias e contratações',
+  description: 'Confira as notícias do Flamengo, incluindo notícias do Flamengo hoje e notícias do Flamengo contratações, bastidores, resultados, próximos jogos e análises do Fla10 News.',
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'Flamengo | Últimas notícias, resultados, mercado e próximos jogos',
-    description: 'Notícias do Flamengo hoje, bastidores, mercado, resultados, próximos jogos, colunas, vídeos e análises do Fla10 News.',
+    title: 'Notícias do Flamengo Hoje | Últimas notícias e contratações',
+    description: 'Confira as notícias do Flamengo, incluindo notícias do Flamengo hoje e notícias do Flamengo contratações, bastidores, resultados, próximos jogos e análises do Fla10 News.',
     url: absoluteUrl('/'),
     siteName,
     type: 'website',
@@ -139,6 +139,7 @@ export default async function Home() {
   return (
     <div>
       <h1 className="sr-only">FLA10 News - notícias do Flamengo, resultados, mercado e próximos jogos</h1>
+      <h2 className="sr-only">Acompanhe as últimas notícias do Flamengo hoje, principais contratações do Flamengo e análises sobre o Mengão.</h2>
       <JsonLd
         data={{
           '@context': 'https://schema.org',
@@ -218,7 +219,7 @@ export default async function Home() {
                 <Card key={news.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                   <CardHeader className="p-0 relative">
                     <Link href={`/noticias/${news.slug}`}>
-                      <Image src={news.image} alt={news.title} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={news.dataAiHint} />
+                      <Image src={news.image} alt={`${news.title} - Notícias do Flamengo`} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={news.dataAiHint} />
                     </Link>
                     <Badge className="absolute top-2 left-2">{news.category}</Badge>
                     <ShareButton title={news.title} slug={news.slug} />

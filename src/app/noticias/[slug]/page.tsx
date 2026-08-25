@@ -178,6 +178,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           </div>
 
           <h1 className="font-headline text-4xl md:text-5xl font-bold leading-tight mb-4">{article.title}</h1>
+          <h2 className="sr-only">Acompanhe todos os detalhes desta notícia do Flamengo hoje, informações exclusivas e fique por dentro das últimas contratações do Flamengo.</h2>
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div>
                 <span>Por <Link href={`/autor/${slugify(article.author || 'Redacao NRN')}`} className="hover:underline hover:text-[#FF073A] transition-colors">{article.author || 'Redação NRN'}</Link></span> &bull; <span>{articleDate}</span>
@@ -192,7 +193,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <div className="relative overflow-hidden rounded-lg mb-8">
           <Image
             src={article.image}
-            alt={article.title}
+            alt={`${article.title} - Notícias do Flamengo hoje e contratações`}
             width={1200}
             height={675}
             className="w-full h-auto object-cover rounded-lg transition-transform duration-300 ease-in-out hover:scale-105"
@@ -280,7 +281,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               <Card key={news.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                 <CardHeader className="p-0 relative">
                     <Link href={`/noticias/${news.slug}`}>
-                        <Image src={news.image} alt={news.title} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={news.dataAiHint} />
+                        <Image src={news.image} alt={`${news.title} - Notícias do Flamengo`} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={news.dataAiHint} />
                     </Link>
                   <Badge className="absolute top-2 left-2">{news.category}</Badge>
                   <ShareButton title={news.title} slug={news.slug} />
