@@ -137,7 +137,7 @@ export default async function Home() {
     allGalleryTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
     allRaioxTotal.reduce((sum, item) => sum + (item.views || 0), 0);
 
-  const isToday = (dateField) => {
+  const isToday = (dateField: string | Date | undefined) => {
     if (!dateField) return false;
     const itemDate = new Date(dateField);
     return itemDate >= startOfToday;
