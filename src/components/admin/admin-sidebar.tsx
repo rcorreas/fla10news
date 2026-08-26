@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Fla10Logo } from "../fla10-logo";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { LayoutDashboard, CalendarClock, Newspaper, PenSquare, Video, Menu, Home, Users, Trophy, MessageSquare, Palette } from "lucide-react";
+import { LayoutDashboard, CalendarClock, Newspaper, PenSquare, Video, Menu, Home, Users, Trophy, MessageSquare, Palette, ScanLine } from "lucide-react";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -20,6 +20,7 @@ const navItems = [
   { href: "/admin/inscritos", label: "Gerenciar Inscritos", icon: Users },
   { href: "/admin/voz-torcedor", label: "Gerenciar A Voz do Torcedor", icon: MessageSquare },
   { href: "/admin/galeria", label: "Gerenciar Galeria", icon: Palette },
+  { href: "/admin/raiox", label: "Gerenciar Raio-X", icon: ScanLine },
 ];
 
 function NavLink({ href, label, icon: Icon }: { href: string; label: string; icon: React.ElementType }) {

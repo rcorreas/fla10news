@@ -24,7 +24,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, PlayCircle, Trophy, MessageSquare, Palette } from 'lucide-react'
+import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, PlayCircle, Trophy, MessageSquare, Palette, ScanLine } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { AdBanner } from '@/components/ad-banner'
 import { SofascoreWidget } from '@/components/sofascore-widget'
@@ -35,6 +35,7 @@ import { getVideos } from '@/data/videos'
 import { getVozTorcedores } from '@/data/voz-torcedor'
 import { getHistoryArticles } from '@/data/history'
 import { getGalleryItems } from '@/data/gallery'
+import { getRaiox } from '@/data/raiox'
 import { MainCarousel } from '@/components/home/main-carousel'
 import { HistoryCoverflow } from '@/components/home/history-coverflow'
 import { ActiveReaders } from '@/components/home/active-readers'
@@ -84,6 +85,7 @@ export default async function Home() {
   const vozTorcedores = await getVozTorcedores(3);
   const allGalleryTotal = await getGalleryItems();
   const galleryItems = allGalleryTotal.slice(0, 1);
+  const raioxList = await getRaiox(1);
 
   const mainHeadlines = allNews.slice(0, 6);
   const dailyNews = allNews.slice(6, 12); // Now shows 6 articles
@@ -128,13 +130,15 @@ export default async function Home() {
   const allVideosTotal = await getVideos();
   const allHistoryTotal = await getHistoryArticles();
   const allVozTorcedorTotal = await getVozTorcedores();
+  const allRaioxTotal = await getRaiox();
   const totalViews = 
     allNewsTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
     allColumnsTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
     allVideosTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
     allHistoryTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
     allVozTorcedorTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
-    allGalleryTotal.reduce((sum, item) => sum + (item.views || 0), 0);
+    allGalleryTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
+    allRaioxTotal.reduce((sum, item) => sum + (item.views || 0), 0);
 
   return (
     <div>
@@ -258,6 +262,32 @@ export default async function Home() {
             <Image src="/imagem-canal.png" alt="Canal FlaDez no YouTube" width={1200} height={250} className="w-full h-auto object-cover" priority />
           </a>
         </div>
+
+        <section>
+          <SectionHeader title="Raio-X Tático" subtitle="As melhores análises táticas do Mengão." href="/raio-x" icon={ScanLine} />
+          {raioxList.length > 0 ? (
+            <div className="flex justify-center">
+              <Card key={raioxList[0].slug} className="w-full max-w-5xl flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
+                <CardHeader className="p-0 relative">
+                  <Link href={`/raio-x/${raioxList[0].slug}`}>
+                    <Image src={raioxList[0].image} alt={`${raioxList[0].title} - Raio-X Tático`} width={1200} height={600} className="w-full object-cover aspect-[21/9] transition-transform duration-300 group-hover:scale-105" data-ai-hint={raioxList[0].dataAiHint} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div className="absolute bottom-6 left-6 right-6">
+                        <Badge className="mb-3">{raioxList[0].category}</Badge>
+                        <h3 className="text-2xl md:text-4xl font-bold text-white leading-tight font-headline group-hover:text-primary transition-colors">{raioxList[0].title}</h3>
+                        <p className="text-gray-300 mt-2 line-clamp-2 md:text-lg">{raioxList[0].excerpt}</p>
+                    </div>
+                  </Link>
+                  <ShareButton title={raioxList[0].title} slug={raioxList[0].slug} type="raio-x" />
+                </CardHeader>
+              </Card>
+            </div>
+          ) : (
+             <div className="text-center py-8 text-muted-foreground">
+                <p>Nenhuma análise recente para exibir.</p>
+            </div>
+          )}
+        </section>
 
         <section>
           <SectionHeader title="Colunas e Opinião" subtitle="Análises e comentários dos torcedores e dos melhores cronistas esportivos." href="/colunas" icon={Users} />
