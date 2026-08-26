@@ -8,6 +8,7 @@ import type { GalleryItem } from "@/data/gallery";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -114,6 +115,11 @@ export function EditDialog({ item, onClose, onSuccess }: EditDialogProps) {
             <div className="grid gap-2">
               <Label htmlFor="edit-legenda">Legenda da Imagem (opcional)</Label>
               <Input id="edit-legenda" name="legenda" defaultValue={item.legenda} />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="edit-texto">Texto (opcional)</Label>
+              <Textarea id="edit-texto" name="texto" defaultValue={item.texto} className="min-h-[120px]" />
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

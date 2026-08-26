@@ -89,6 +89,14 @@ export default async function GalleryItemPage({ params }: { params: Promise<{ id
                 <p className="text-base leading-relaxed text-muted-foreground">{item.legenda}</p>
               </div>
             )}
+            
+            {item.texto && (
+              <div className="prose prose-sm dark:prose-invert max-w-none">
+                <div className="text-base leading-relaxed text-foreground whitespace-pre-wrap">
+                  {item.texto}
+                </div>
+              </div>
+            )}
           </div>
           
           <div className="pt-8 mt-auto shrink-0 border-t border-border/50">

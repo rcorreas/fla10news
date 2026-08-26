@@ -11,6 +11,7 @@ import type { GalleryItem } from "@/data/gallery";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -134,6 +135,12 @@ export default function GaleriaAdminPage() {
               <Label htmlFor="legenda">Legenda da Imagem (opcional)</Label>
               <Input id="legenda" name="legenda" placeholder="Informações adicionais sobre a imagem" />
             </div>
+            
+            <div className="grid gap-2">
+              <Label htmlFor="texto">Texto (opcional)</Label>
+              <Textarea id="texto" name="texto" placeholder="Texto adicional (história, contexto, etc)" className="min-h-[120px]" />
+            </div>
+
             <div className="grid gap-2 md:w-1/2">
               <Label htmlFor="date">Data da Obra/Foto</Label>
               <Input id="date" name="date" type="date" required defaultValue={new Date().toISOString().split('T')[0]} />
