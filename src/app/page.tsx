@@ -149,7 +149,7 @@ export default async function Home() {
     allVideosTotal.filter(item => isToday(item.publishedAt)).length +
     allHistoryTotal.filter(item => isToday(item.publishedAt)).length +
     allVozTorcedorTotal.filter(item => isToday(item.publishedAt)).length +
-    allGalleryTotal.filter(item => isToday(item.createdAt || item.date)).length +
+    allGalleryTotal.filter(item => isToday(item.date)).length +
     allRaioxTotal.filter(item => isToday(item.publishedAt)).length;
 
   return (

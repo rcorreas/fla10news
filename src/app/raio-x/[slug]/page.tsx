@@ -85,7 +85,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   // Increment dynamic view count in Firebase asynchronously
   try {
-    const raioxRef = doc(db, 'raiox', raiox.id);
+    const raioxRef = doc(db, 'raiox', article.id);
     updateDoc(raioxRef, {
       views: increment(1)
     }).catch(err => console.error("Error updating raiox views:", err));
@@ -285,30 +285,30 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <h2 className="text-3xl font-headline font-bold mb-6">Últimas Raio-X Tático</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {otherNews.map((news) => (
-              <Card key={raiox.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
+              <Card key={news.slug} className="flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                 <CardHeader className="p-0 relative">
-                    <Link href={`/raio-x/${raiox.slug}`}>
-                        <Image src={raiox.image} alt={`${raiox.title} - Raio-X Tático do Flamengo`} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={raiox.dataAiHint} />
+                    <Link href={`/raio-x/${news.slug}`}>
+                        <Image src={news.image} alt={`${news.title} - Raio-X Tático do Flamengo`} width={600} height={400} className="rounded-t-lg object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-105" data-ai-hint={news.dataAiHint} />
                     </Link>
-                  <Badge className="absolute top-2 left-2">{raiox.category}</Badge>
-                  <ShareButton title={raiox.title} slug={raiox.slug} />
+                  <Badge className="absolute top-2 left-2">{news.category}</Badge>
+                  <ShareButton title={news.title} slug={news.slug} type="raio-x" />
                 </CardHeader>
                 <CardContent className="flex-grow p-4 space-y-2">
                   <CardTitle className="text-lg font-bold font-body leading-tight">
-                    <Link href={`/raio-x/${raiox.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
-                       {raiox.title}
+                    <Link href={`/raio-x/${news.slug}`} className="hover:text-[#FF073A] transition-colors duration-200">
+                       {news.title}
                     </Link>
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground line-clamp-2">{raiox.excerpt}</p>
+                  <p className="text-sm text-muted-foreground line-clamp-2">{news.excerpt}</p>
                 </CardContent>
                 <CardFooter className="p-4 pt-0 text-xs text-muted-foreground">
                     <div className="flex justify-between items-center w-full">
                         <div className="flex items-center gap-1.5">
                             <Clock className="h-3 w-3" />
-                            <span>{formatPublishedTime(raiox.publishedAt)}</span>
+                            <span>{formatPublishedTime(news.publishedAt)}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <span>Por <Link href={`/autor/${slugify(raiox.author || 'Redacao NRN')}`} className="hover:underline hover:text-primary transition-colors">{raiox.author || 'Redação NRN'}</Link></span>
+                            <span>Por <Link href={`/autor/${slugify(news.author || 'Redacao NRN')}`} className="hover:underline hover:text-primary transition-colors">{news.author || 'Redação NRN'}</Link></span>
                         </div>
                     </div>
                 </CardFooter>
