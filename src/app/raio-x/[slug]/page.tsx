@@ -181,7 +181,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <header className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <Badge variant="default">{article.category}</Badge>
-            <ArticleShareButton title={article.title} slug={article.slug} />
+            <ArticleShareButton title={article.title} slug={article.slug} type="raio-x" />
           </div>
 
           <h1 className="font-headline text-4xl md:text-5xl font-bold leading-tight mb-4">{article.title}</h1>
