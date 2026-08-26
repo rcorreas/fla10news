@@ -106,10 +106,7 @@ export default async function Home() {
   const day = parts.find(p => p.type === 'day')?.value;
   const startOfToday = new Date(`${year}-${month}-${day}T00:00:00-03:00`);
 
-  const newsTodayCount = allNews.filter(news => {
-      const newsDate = new Date(news.publishedAt);
-      return newsDate >= startOfToday;
-  }).length;
+
   
   let lastUpdateText = "Agora";
   if (latestNews) {
@@ -139,6 +136,21 @@ export default async function Home() {
     allVozTorcedorTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
     allGalleryTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
     allRaioxTotal.reduce((sum, item) => sum + (item.views || 0), 0);
+
+  const isToday = (dateField) => {
+    if (!dateField) return false;
+    const itemDate = new Date(dateField);
+    return itemDate >= startOfToday;
+  };
+
+  const newsTodayCount = 
+    allNewsTotal.filter(item => isToday(item.publishedAt)).length +
+    allColumnsTotal.filter(item => isToday(item.publishedAt)).length +
+    allVideosTotal.filter(item => isToday(item.publishedAt)).length +
+    allHistoryTotal.filter(item => isToday(item.publishedAt)).length +
+    allVozTorcedorTotal.filter(item => isToday(item.publishedAt)).length +
+    allGalleryTotal.filter(item => isToday(item.createdAt || item.date)).length +
+    allRaioxTotal.filter(item => isToday(item.publishedAt)).length;
 
   return (
     <div>

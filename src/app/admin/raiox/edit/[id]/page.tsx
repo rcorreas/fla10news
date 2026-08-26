@@ -4,7 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter, useParams } from "next/navigation";
 import { getRaioxById } from "@/data/raiox";
-import { updateRaioxArticle } from "@/app/admin/materias/actions";
+import { updateRaioxArticle } from "@/app/admin/raiox/actions";
 import type { RaioxArticle } from "@/data/raiox";
 
 // UI Components
