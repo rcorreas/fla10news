@@ -42,6 +42,7 @@ export async function generateMetadata(
 
   const desc = truncateDescription(article.excerpt || article.content || '');
   const url = absoluteUrl(`/raio-x/${article.slug}`);
+  const proxyImageUrl = absoluteUrl(`/api/proxy-image?url=${encodeURIComponent(article.image)}`);
 
   return {
     title: article.title,
@@ -53,7 +54,14 @@ export async function generateMetadata(
       title: article.title,
       description: desc,
       url,
-      images: [article.image],
+      images: [
+        {
+          url: proxyImageUrl,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        }
+      ],
       type: 'article',
       publishedTime: article.publishedAt.toISOString(),
       authors: article.author ? [article.author] : undefined,
@@ -62,7 +70,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: article.title,
       description: desc,
-      images: [article.image],
+      images: [proxyImageUrl],
     },
   }
 }

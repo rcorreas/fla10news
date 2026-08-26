@@ -54,7 +54,14 @@ export async function generateMetadata(
       title: article.title,
       description: desc,
       url,
-      images: [proxyImageUrl],
+      images: [
+        {
+          url: proxyImageUrl,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        }
+      ],
       type: 'article',
       publishedTime: article.publishedAt.toISOString(),
       authors: article.author ? [article.author] : undefined,
