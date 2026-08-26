@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ArrowLeft, Menu, Newspaper, Users, Video, Trophy, Shield, ChevronDown, LayoutGrid, ScanLine, Palette } from 'lucide-react'
+import { ArrowLeft, Menu, Newspaper, Users, Video, Trophy, Shield, ChevronDown, LayoutGrid, ScanLine, Palette, MessageSquare } from 'lucide-react'
 import { Fla10Logo } from '@/components/fla10-logo'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -22,6 +22,7 @@ const navLinks = [
   { href: '/videos', label: 'Vídeos', icon: Video },
   { href: '/raio-x', label: 'Raio-X', icon: ScanLine },
   { href: '/galeria', label: 'Galeria', icon: Palette },
+  { href: '/voz-torcedor', label: 'A Voz do Torcedor', icon: MessageSquare },
 ]
 
 const clubeLinks = [
