@@ -282,7 +282,7 @@ export default async function Home() {
               <Card key={raioxList[0].slug} className="w-full max-w-5xl flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
                 <CardHeader className="p-0 relative">
                   <Link href={`/raio-x/${raioxList[0].slug}`}>
-                    <Image src={raioxList[0].image} alt={`${raioxList[0].title} - Raio-X Tático`} width={1200} height={600} className="w-full object-cover aspect-[21/9] transition-transform duration-300 group-hover:scale-105" data-ai-hint={raioxList[0].dataAiHint} />
+                    <Image src={raioxList[0].image} alt={`${raioxList[0].title} - Raio-X Tático`} width={1200} height={600} className="w-full object-cover aspect-[4/3] md:aspect-[21/9] transition-transform duration-300 group-hover:scale-105" data-ai-hint={raioxList[0].dataAiHint} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div className="absolute bottom-6 left-6 right-6">
                         <Badge className="mb-3">{raioxList[0].category}</Badge>
