@@ -2,6 +2,7 @@ import './globals.css';
 import { NextGameBanner } from '@/components/next-game-banner';
 import { ClientLayout } from '@/components/layout/client-layout';
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { JsonLd } from '@/components/json-ld';
 import { absoluteUrl, siteName, siteUrl } from '@/lib/site';
 
@@ -42,33 +43,37 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head>
         {/* Google Analytics */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-F06XH79CM7"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-F06XH79CM7', {
-                page_path: window.location.pathname,
-              });
-            `,
-          }}
+        <Script 
+          src="https://www.googletagmanager.com/gtag/js?id=G-F06XH79CM7" 
+          strategy="afterInteractive" 
         />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-F06XH79CM7', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Playfair+Display:wght@700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script
-          async
+        
+        {/* Google AdSense */}
+        <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1816855957581879"
           crossOrigin="anonymous"
-        ></script>
+          strategy="afterInteractive"
+        />
+        
         {/* AdsKeeper Loader */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script src="https://jsc.adskeeper.com/site/1101178.js" async></script>
+        <Script 
+          src="https://jsc.adskeeper.com/site/1101178.js" 
+          strategy="afterInteractive" 
+        />
       </head>
       <body className="min-h-screen bg-background font-body antialiased flex flex-col">
         <JsonLd
