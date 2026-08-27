@@ -12,6 +12,7 @@ import { AdBanner } from '@/components/ad-banner'
 import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ShareButton } from '@/components/share-button'
+import { RichTextRenderer } from '@/components/rich-text-renderer'
 
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
@@ -125,7 +126,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       // If content is plain text with double newlines
       if (content.includes('\n\n')) {
           return content.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
-              if (p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote')) {
+              // Parse simple image links or shortcodes
+              const imgMatch = p.match(/^\[img\](.*?)\[\/img\]$/i) || p.match(/^(https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|webp|gif))$/i);
+              if (imgMatch && imgMatch[1]) {
+                  return `<img src="${imgMatch[1]}" alt="Imagem inserida" class="w-full h-auto rounded-lg my-6" />`;
+              }
+              
+              if (p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote') || p.startsWith('<script') || p.startsWith('<img')) {
                   return p;
               }
               return `<p>${p.replace(/\n/g, '<br/>')}</p>`;
@@ -135,7 +142,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       // If content has single newlines
       if (content.includes('\n')) {
           return content.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
-              if (p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote')) {
+              // Parse simple image links or shortcodes
+              const imgMatch = p.match(/^\[img\](.*?)\[\/img\]$/i) || p.match(/^(https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|webp|gif))$/i);
+              if (imgMatch && imgMatch[1]) {
+                  return `<img src="${imgMatch[1]}" alt="Imagem inserida" class="w-full h-auto rounded-lg my-6" />`;
+              }
+
+              if (p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote') || p.startsWith('<script') || p.startsWith('<img')) {
                   return p;
               }
               return `<p>${p}</p>`;
@@ -235,7 +248,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <div 
           className="text-lg space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold [&_a]:text-[#ff073a] [&_a]:font-bold [&_a]:hover:underline"
         >
-          <div dangerouslySetInnerHTML={{ __html: firstHalf }} />
+          <RichTextRenderer content={firstHalf} />
 
           {article.image2 && (
               <div className="my-8 space-y-4">
@@ -267,7 +280,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </div>
           )}
 
-          <div dangerouslySetInnerHTML={{ __html: secondHalf }} />
+          <RichTextRenderer content={secondHalf} />
         </div>
 
 

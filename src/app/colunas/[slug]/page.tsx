@@ -16,6 +16,7 @@ import { slugify, formatPublishedTime } from '@/lib/utils';
 import { ShareButton } from '@/components/share-button'
 import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { ArticleShareButton } from '@/components/article-share-button'
+import { RichTextRenderer } from '@/components/rich-text-renderer'
 import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 
@@ -123,6 +124,42 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
   const authorSlug = generateSlug(column.author);
   const columnUrl = absoluteUrl(`/colunas/${column.slug}`);
   const columnDescription = truncateDescription(column.excerpt || column.content || '');
+
+  const parseContent = (content: string): string[] => {
+      if (content.toLowerCase().includes('</p>')) {
+          const parts = content.split(/(<\/p>)/i);
+          const result = [];
+          let current = '';
+          for (const part of parts) {
+              current += part;
+              if (part.toLowerCase() === '</p>') {
+                  result.push(current.trim());
+                  current = '';
+              }
+          }
+          if (current.trim().length > 0) result.push(current.trim());
+          return result;
+      }
+      if (content.includes('\n\n')) {
+          return content.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
+              const imgMatch = p.match(/^\[img\](.*?)\[\/img\]$/i) || p.match(/^(https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|webp|gif))$/i);
+              if (imgMatch && imgMatch[1]) return `<img src="${imgMatch[1]}" alt="Imagem inserida" class="w-full h-auto rounded-lg my-6" />`;
+              if (p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote') || p.startsWith('<script') || p.startsWith('<img')) return p;
+              return `<p>${p.replace(/\n/g, '<br/>')}</p>`;
+          });
+      }
+      if (content.includes('\n')) {
+          return content.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
+              const imgMatch = p.match(/^\[img\](.*?)\[\/img\]$/i) || p.match(/^(https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|webp|gif))$/i);
+              if (imgMatch && imgMatch[1]) return `<img src="${imgMatch[1]}" alt="Imagem inserida" class="w-full h-auto rounded-lg my-6" />`;
+              if (p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote') || p.startsWith('<script') || p.startsWith('<img')) return p;
+              return `<p>${p}</p>`;
+          });
+      }
+      return [content];
+  };
+
+  const parsedContent = column.content ? parseContent(column.content).join('\n') : '';
 
   return (
     <div className="container mx-auto max-w-4xl py-12">
@@ -239,11 +276,10 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
           </div>
         </header>
         
-        {column.content && (
-          <div 
-            className="text-lg space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold [&_a]:text-[#ff073a] [&_a]:font-bold [&_a]:hover:underline"
-            dangerouslySetInnerHTML={{ __html: column.content }}
-          />
+        {parsedContent && (
+          <div className="text-lg space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold [&_a]:text-[#ff073a] [&_a]:font-bold [&_a]:hover:underline">
+            <RichTextRenderer content={parsedContent} />
+          </div>
         )}
 
         {column.authorDescription && (
