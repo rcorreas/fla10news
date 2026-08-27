@@ -105,9 +105,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const articleDescription = truncateDescription(article.excerpt || article.content || '');
 
   const parseContent = (content: string): string[] => {
+      // Process shortcodes globally first!
+      let processed = content.replace(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" alt="Imagem inserida" class="w-full h-auto rounded-lg my-6" />');
+
       // If content has </p> tags, split by them safely
-      if (content.toLowerCase().includes('</p>')) {
-          const parts = content.split(/(<\/p>)/i);
+      if (processed.toLowerCase().includes('</p>')) {
+          const parts = processed.split(/(<\/p>)/i);
           const result = [];
           let current = '';
           for (const part of parts) {
@@ -124,14 +127,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       }
       
       // If content is plain text with double newlines
-      if (content.includes('\n\n')) {
-          return content.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
-              // Parse simple image links or shortcodes
-              const imgMatch = p.match(/^\[img\](.*?)\[\/img\]$/i) || p.match(/^(https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|webp|gif))$/i);
-              if (imgMatch && imgMatch[1]) {
-                  return `<img src="${imgMatch[1]}" alt="Imagem inserida" class="w-full h-auto rounded-lg my-6" />`;
-              }
-              
+      if (processed.includes('\n\n')) {
+          return processed.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
               if (p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote') || p.startsWith('<script') || p.startsWith('<img')) {
                   return p;
               }
@@ -140,14 +137,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       }
 
       // If content has single newlines
-      if (content.includes('\n')) {
-          return content.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
-              // Parse simple image links or shortcodes
-              const imgMatch = p.match(/^\[img\](.*?)\[\/img\]$/i) || p.match(/^(https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|webp|gif))$/i);
-              if (imgMatch && imgMatch[1]) {
-                  return `<img src="${imgMatch[1]}" alt="Imagem inserida" class="w-full h-auto rounded-lg my-6" />`;
-              }
-
+      if (processed.includes('\n')) {
+          return processed.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
               if (p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote') || p.startsWith('<script') || p.startsWith('<img')) {
                   return p;
               }
@@ -156,7 +147,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       }
 
       // Fallback
-      return [content];
+      return [processed];
   };
   
   const paragraphs = article.content ? parseContent(article.content) : [];
