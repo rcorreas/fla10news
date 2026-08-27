@@ -106,7 +106,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   const parseContent = (content: string): string[] => {
       // Process shortcodes globally first!
-      let processed = content.replace(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" alt="Imagem inserida" class="w-full h-auto rounded-lg my-6" />');
+      let processed = content.replace(/\[img(?: credit="([^"]*)")?\](.*?)\[\/img\]/gi, (match, credit, url) => {
+        if (credit) {
+          return `<figure class="my-6"><img src="${url}" alt="Imagem inserida" class="w-full h-auto rounded-lg" /><figcaption class="text-xs text-muted-foreground mt-2 text-right">Foto: ${credit}</figcaption></figure>`;
+        }
+        return `<img src="${url}" alt="Imagem inserida" class="w-full h-auto rounded-lg my-6" />`;
+      });
 
       // If content has </p> tags, split by them safely
       if (processed.toLowerCase().includes('</p>')) {

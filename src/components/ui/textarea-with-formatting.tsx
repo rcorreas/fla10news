@@ -76,7 +76,14 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
               size="sm" 
               onClick={() => {
                 const url = prompt("Digite a URL da imagem:");
-                if (url) insertText(`[img]${url}[/img]`);
+                if (url) {
+                  const credit = prompt("Créditos da imagem (ou deixe em branco):");
+                  if (credit && credit.trim() !== '') {
+                    insertText(`[img credit="${credit.trim()}"]${url}[/img]`);
+                  } else {
+                    insertText(`[img]${url}[/img]`);
+                  }
+                }
               }}
               title="Inserir Imagem"
               className="h-8 flex gap-1 px-2"
