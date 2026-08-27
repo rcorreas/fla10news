@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 import * as React from 'react'
 import Image from 'next/image'
