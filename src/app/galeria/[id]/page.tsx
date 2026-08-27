@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     };
   }
 
-  const proxyImageUrl = absoluteUrl(`/api/proxy-image?url=${encodeURIComponent(item.imageUrl)}`);
+  
 
   return {
     title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
@@ -27,14 +27,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
       description: item.legenda || item.title,
       url: absoluteUrl(`/galeria/${item.id}`),
-      images: [proxyImageUrl],
+      images: [item.imageUrl],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
       description: item.legenda || item.title,
-      images: [proxyImageUrl],
+      images: [item.imageUrl],
     },
   };
 }

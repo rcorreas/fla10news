@@ -40,7 +40,7 @@ export async function generateMetadata(
 
   const desc = `Assista ao vídeo: ${video.title}`;
   const url = absoluteUrl(`/videos/${video.slug}`);
-  const proxyImageUrl = absoluteUrl(`/api/proxy-image?url=${encodeURIComponent(video.image)}`);
+  
 
   return {
     title: video.title,
@@ -52,14 +52,14 @@ export async function generateMetadata(
       title: video.title,
       description: desc,
       url,
-      images: [proxyImageUrl],
+      images: [video.image],
       type: 'video.other',
     },
     twitter: {
       card: 'summary_large_image',
       title: video.title,
       description: desc,
-      images: [proxyImageUrl],
+      images: [video.image],
     },
   }
 }

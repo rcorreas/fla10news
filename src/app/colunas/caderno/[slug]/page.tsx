@@ -42,7 +42,7 @@ export async function generateMetadata(
       imageUrl = "https://i.imgur.com/ICtiAp0.png";
   }
 
-  const proxyImageUrl = absoluteUrl(`/api/proxy-image?url=${encodeURIComponent(imageUrl)}`);
+  
 
   return {
     title: columnName,
@@ -50,14 +50,14 @@ export async function generateMetadata(
     openGraph: {
       title: columnName,
       description: desc,
-      images: [proxyImageUrl],
+      images: [imageUrl],
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
       title: columnName,
       description: desc,
-      images: [proxyImageUrl],
+      images: [imageUrl],
     },
   }
 }

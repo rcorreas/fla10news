@@ -36,7 +36,7 @@ export async function generateMetadata(
   const desc = truncateDescription(voz.summary || voz.content || '');
   const imageUrl = 'https://i.imgur.com/ESMmQcc.png';
   const url = absoluteUrl(`/voz-torcedor/${voz.slug}`);
-  const proxyImageUrl = absoluteUrl(`/api/proxy-image?url=${encodeURIComponent(imageUrl)}`);
+  
 
   return {
     title: voz.title,
@@ -48,7 +48,7 @@ export async function generateMetadata(
       title: voz.title,
       description: desc,
       url,
-      images: [proxyImageUrl],
+      images: [imageUrl],
       type: 'article',
       publishedTime: voz.publishedAt.toISOString(),
       authors: [voz.authorName],
@@ -57,7 +57,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: voz.title,
       description: desc,
-      images: [proxyImageUrl],
+      images: [imageUrl],
     },
   }
 }
