@@ -1,3 +1,4 @@
+import { absoluteUrl } from '@/lib/site';
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -62,7 +63,8 @@ export function formatDurationISO(duration: string): string {
 export function getSocialMetaImageUrl(url: string | undefined | null): string {
   if (!url) return '';
   if (url.includes('imgur.com')) {
-    return `https://wsrv.nl/?url=${encodeURIComponent(url)}`;
+    // Proxy Imgur images through DuckDuckGo to bypass hotlinking protection and avoid 429 errors from wsrv.nl
+    return `https://external-content.duckduckgo.com/iu/?u=${encodeURIComponent(url)}`;
   }
   return url;
 }

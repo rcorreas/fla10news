@@ -11,14 +11,13 @@ export async function GET(request: Request) {
   }
 
   try {
-    const targetUrl = imageUrl.includes('imgur.com') 
-      ? `https://wsrv.nl/?url=${encodeURIComponent(imageUrl)}`
-      : imageUrl;
+    const targetUrl = imageUrl;
 
     const response = await fetch(targetUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        'Referer': 'https://imgur.com/'
       },
     });
 
@@ -26,17 +25,16 @@ export async function GET(request: Request) {
         return new NextResponse('Error fetching image from origin', { status: response.status });
     }
 
-    const contentType = response.headers.get('content-type');
-    const buffer = await response.arrayBuffer();
-
-    return new NextResponse(buffer, {
+    return new Response(response.body, {
+      status: response.status,
       headers: {
-        'Content-Type': contentType || 'image/jpeg',
+        'Content-Type': response.headers.get('content-type') || 'image/jpeg',
         'Cache-Control': 'public, max-age=31536000, immutable',
-      },
+      }
     });
-  } catch (error) {
+
+  } catch (error: any) {
     console.error('Error proxying image:', error);
-    return new NextResponse('Error fetching image', { status: 500 });
+    return new NextResponse('Error fetching image: ' + error.message, { status: 500 });
   }
 }
