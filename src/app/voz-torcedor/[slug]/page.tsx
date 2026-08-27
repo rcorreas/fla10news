@@ -12,7 +12,7 @@ import { AdBanner } from '@/components/ad-banner'
 import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Clock, Eye, MessageSquare } from 'lucide-react'
-import { slugify, formatPublishedTime } from '@/lib/utils';
+import { slugify, formatPublishedTime , getSocialMetaImageUrl } from '@/lib/utils';
 import { ShareButton } from '@/components/share-button'
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
@@ -48,7 +48,7 @@ export async function generateMetadata(
       title: voz.title,
       description: desc,
       url,
-      images: [imageUrl],
+      images: [getSocialMetaImageUrl(imageUrl)],
       type: 'article',
       publishedTime: voz.publishedAt.toISOString(),
       authors: [voz.authorName],
@@ -57,7 +57,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: voz.title,
       description: desc,
-      images: [imageUrl],
+      images: [getSocialMetaImageUrl(imageUrl)],
     },
   }
 }

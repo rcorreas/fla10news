@@ -1,4 +1,4 @@
-import { formatPublishedTime, formatDurationISO } from '@/lib/utils';
+import { formatPublishedTime, formatDurationISO , getSocialMetaImageUrl } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -52,14 +52,14 @@ export async function generateMetadata(
       title: video.title,
       description: desc,
       url,
-      images: [video.image],
+      images: [getSocialMetaImageUrl(video.image)],
       type: 'video.other',
     },
     twitter: {
       card: 'summary_large_image',
       title: video.title,
       description: desc,
-      images: [video.image],
+      images: [getSocialMetaImageUrl(video.image)],
     },
   }
 }

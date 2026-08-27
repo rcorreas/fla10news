@@ -1,3 +1,4 @@
+import { getSocialMetaImageUrl } from '@/lib/utils';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -27,14 +28,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
       description: item.legenda || item.title,
       url: absoluteUrl(`/galeria/${item.id}`),
-      images: [item.imageUrl],
+      images: [getSocialMetaImageUrl(item.imageUrl)],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
       description: item.legenda || item.title,
-      images: [item.imageUrl],
+      images: [getSocialMetaImageUrl(item.imageUrl)],
     },
   };
 }

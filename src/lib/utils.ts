@@ -58,3 +58,11 @@ export function formatDurationISO(duration: string): string {
   }
   return `PT${duration}S`;
 }
+
+export function getSocialMetaImageUrl(url: string | undefined | null): string {
+  if (!url) return '';
+  if (url.includes('imgur.com')) {
+    return `https://wsrv.nl/?url=${encodeURIComponent(url)}`;
+  }
+  return url;
+}

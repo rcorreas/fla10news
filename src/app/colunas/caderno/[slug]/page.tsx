@@ -7,7 +7,7 @@ import { Clock } from "lucide-react";
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AdBanner } from '@/components/ad-banner';
-import { slugify, formatPublishedTime } from '@/lib/utils';
+import { slugify, formatPublishedTime , getSocialMetaImageUrl } from '@/lib/utils';
 import { notFound } from 'next/navigation';
 import { absoluteUrl } from '@/lib/site';
 
@@ -50,14 +50,14 @@ export async function generateMetadata(
     openGraph: {
       title: columnName,
       description: desc,
-      images: [imageUrl],
+      images: [getSocialMetaImageUrl(imageUrl)],
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
       title: columnName,
       description: desc,
-      images: [imageUrl],
+      images: [getSocialMetaImageUrl(imageUrl)],
     },
   }
 }

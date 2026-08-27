@@ -1,3 +1,4 @@
+import { getSocialMetaImageUrl } from '@/lib/utils';
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -54,7 +55,7 @@ export async function generateMetadata(
       title: article.title,
       description: desc,
       url,
-      images: [article.image],
+      images: [getSocialMetaImageUrl(article.image)],
       type: 'article',
       publishedTime: article.publishedAt.toISOString(),
       authors: [article.author],
@@ -63,7 +64,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: article.title,
       description: desc,
-      images: [article.image],
+      images: [getSocialMetaImageUrl(article.image)],
     },
   }
 }

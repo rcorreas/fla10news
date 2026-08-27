@@ -1,4 +1,4 @@
-import { formatPublishedTime, slugify } from '@/lib/utils';
+import { formatPublishedTime, slugify , getSocialMetaImageUrl } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -56,7 +56,7 @@ export async function generateMetadata(
       url,
       images: [
         {
-          url: article.image,
+          url: getSocialMetaImageUrl(article.image),
           width: 1200,
           height: 630,
           alt: article.title,
@@ -70,7 +70,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: article.title,
       description: desc,
-      images: [article.image],
+      images: [getSocialMetaImageUrl(article.image)],
     },
   }
 }
