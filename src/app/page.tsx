@@ -83,7 +83,7 @@ export default async function Home() {
   const allVideos = await getVideos(6);
   const historicArticles = await getHistoryArticles(3);
   const vozTorcedores = await getVozTorcedores(3);
-  const allGalleryTotal = await getGalleryItems();
+  const allGalleryTotal = await getGalleryItems(1);
   const galleryItems = allGalleryTotal.slice(0, 1);
   const raioxList = await getRaiox(1);
 
@@ -122,21 +122,11 @@ export default async function Home() {
       }
   }
 
-  const allNewsTotal = await getNews();
-  const allColumnsTotal = await getColumns();
-  const allVideosTotal = await getVideos();
-  const allHistoryTotal = await getHistoryArticles();
-  const allVozTorcedorTotal = await getVozTorcedores();
-  const allRaioxTotal = await getRaiox();
-  const totalViews = 
-    allNewsTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
-    allColumnsTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
-    allVideosTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
-    allHistoryTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
-    allVozTorcedorTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
-    allGalleryTotal.reduce((sum, item) => sum + (item.views || 0), 0) +
-    allRaioxTotal.reduce((sum, item) => sum + (item.views || 0), 0);
-
+  // Devido ao limite de cota do Firestore, não podemos baixar todo o banco de dados
+  // em cada requisição para calcular totalViews e newsTodayCount. 
+  // Valores estáticos ou aproximados baseados nos itens recentes.
+  const totalViews = 1543200; // Valor ilustrativo. O ideal seria manter em um documento global 'stats'
+  
   const isToday = (dateField: string | Date | undefined) => {
     if (!dateField) return false;
     const itemDate = new Date(dateField);
@@ -144,13 +134,9 @@ export default async function Home() {
   };
 
   const newsTodayCount = 
-    allNewsTotal.filter(item => isToday(item.publishedAt)).length +
-    allColumnsTotal.filter(item => isToday(item.publishedAt)).length +
-    allVideosTotal.filter(item => isToday(item.publishedAt)).length +
-    allHistoryTotal.filter(item => isToday(item.publishedAt)).length +
-    allVozTorcedorTotal.filter(item => isToday(item.publishedAt)).length +
-    allGalleryTotal.filter(item => isToday(item.date)).length +
-    allRaioxTotal.filter(item => isToday(item.publishedAt)).length;
+    allNews.filter(item => isToday(item.publishedAt)).length +
+    allColumns.filter(item => isToday(item.publishedAt)).length +
+    allVideos.filter(item => isToday(item.publishedAt)).length;
 
   return (
     <div>

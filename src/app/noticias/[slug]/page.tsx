@@ -124,12 +124,22 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       
       // If content is plain text with double newlines
       if (content.includes('\n\n')) {
-          return content.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p.replace(/\n/g, '<br/>')}</p>`);
+          return content.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
+              if (p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote')) {
+                  return p;
+              }
+              return `<p>${p.replace(/\n/g, '<br/>')}</p>`;
+          });
       }
 
       // If content has single newlines
       if (content.includes('\n')) {
-          return content.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p}</p>`);
+          return content.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
+              if (p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote')) {
+                  return p;
+              }
+              return `<p>${p}</p>`;
+          });
       }
 
       // Fallback
