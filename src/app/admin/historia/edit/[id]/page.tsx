@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { TextareaWithFormatting } from "@/components/ui/textarea-with-formatting";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -158,7 +159,7 @@ export default function EditHistoriaPage() {
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="content">Matéria Completa</Label>
-                <Textarea id="content" name="content" defaultValue={article.content} className="min-h-[300px]" required />
+                <TextareaWithFormatting id="content" name="content" defaultValue={article.content} className="min-h-[300px]" required />
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">

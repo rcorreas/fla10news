@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { TextareaWithFormatting } from "@/components/ui/textarea-with-formatting";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -206,7 +207,7 @@ export default function ColunasPage() {
             </div>
              <div className="grid gap-2">
                 <Label htmlFor="content">Conteúdo da Coluna</Label>
-                <Textarea id="content" name="content" placeholder="Escreva a coluna completa aqui. Você pode usar tags HTML." className="min-h-[300px]" required />
+                <TextareaWithFormatting id="content" name="content" placeholder="Escreva a coluna completa aqui. Você pode usar tags HTML." className="min-h-[300px]" required />
             </div>
           </CardContent>
           <CardFooter>
