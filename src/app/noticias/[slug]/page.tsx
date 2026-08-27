@@ -160,9 +160,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   };
   
   const paragraphs = article.content ? parseContent(article.content) : [];
-  const midPoint = Math.floor(paragraphs.length / 2);
-  const firstHalf = paragraphs.slice(0, midPoint).join('\n');
-  const secondHalf = paragraphs.slice(midPoint).join('\n');
+  const parsedContent = paragraphs.join('\n');
 
 
   return (
@@ -248,7 +246,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <div 
           className="text-lg space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold [&_a]:text-[#ff073a] [&_a]:font-bold [&_a]:hover:underline"
         >
-          <RichTextRenderer content={firstHalf} />
+          <RichTextRenderer 
+             content={parsedContent} 
+             adSlot={
+               !article.image2 ? (
+                 <div className="my-8 flex flex-col items-center gap-6">
+                   <AdBanner width={300} height={250} />
+                   <AdsKeeperWidget widgetId="2046582" />
+                 </div>
+               ) : null
+             }
+          />
 
           {article.image2 && (
               <div className="my-8 space-y-4">
@@ -272,15 +280,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                   </div>
               </div>
           )}
-
-          {!article.image2 && midPoint > 0 && (
-            <div className="my-8 flex flex-col items-center gap-6">
-              <AdBanner width={300} height={250} />
-              <AdsKeeperWidget widgetId="2046582" />
-            </div>
-          )}
-
-          <RichTextRenderer content={secondHalf} />
         </div>
 
 

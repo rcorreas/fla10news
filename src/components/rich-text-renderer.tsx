@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface RichTextRendererProps {
   content: string;
+  adSlot?: React.ReactNode;
 }
 
-export function RichTextRenderer({ content }: RichTextRendererProps) {
+export function RichTextRenderer({ content, adSlot }: RichTextRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [adContainer, setAdContainer] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -25,7 +28,37 @@ export function RichTextRenderer({ content }: RichTextRendererProps) {
       
       oldScript.parentNode?.replaceChild(newScript, oldScript);
     });
-  }, [content]);
 
-  return <div ref={containerRef} dangerouslySetInnerHTML={{ __html: content }} />;
+    if (adSlot) {
+      const children = Array.from(containerRef.current.children);
+      // Try to find root-level paragraphs to insert the ad nicely in the middle
+      const paragraphs = children.filter((el) => el.tagName.toLowerCase() === "p");
+      
+      if (paragraphs.length > 0) {
+        // Only insert if we haven't already created the container
+        if (!adContainer) {
+            const middleIndex = Math.floor(paragraphs.length / 2);
+            const targetParagraph = paragraphs[middleIndex];
+            
+            const newAdDiv = document.createElement("div");
+            targetParagraph.parentNode?.insertBefore(newAdDiv, targetParagraph.nextSibling);
+            setAdContainer(newAdDiv);
+        }
+      } else if (children.length > 0 && !adContainer) {
+        // Fallback: if no paragraphs, insert after the middle root element
+        const middleIndex = Math.floor(children.length / 2);
+        const targetElement = children[middleIndex];
+        const newAdDiv = document.createElement("div");
+        targetElement.parentNode?.insertBefore(newAdDiv, targetElement.nextSibling);
+        setAdContainer(newAdDiv);
+      }
+    }
+  }, [content, adSlot, adContainer]);
+
+  return (
+    <>
+      <div ref={containerRef} dangerouslySetInnerHTML={{ __html: content }} />
+      {adContainer && adSlot && createPortal(adSlot, adContainer)}
+    </>
+  );
 }

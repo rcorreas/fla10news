@@ -278,7 +278,10 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
         
         {parsedContent && (
           <div className="text-lg space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold [&_a]:text-[#ff073a] [&_a]:font-bold [&_a]:hover:underline">
-            <RichTextRenderer content={parsedContent} />
+            <RichTextRenderer 
+                content={parsedContent} 
+                adSlot={<AdsKeeperWidget widgetId="2046582" />}
+            />
           </div>
         )}
 
@@ -290,8 +293,6 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
             </p>
           </div>
         )}
-
-        <AdsKeeperWidget widgetId="2046582" />
 
         <div className="mt-12 pt-8 border-t flex flex-col items-center gap-6">
             <AdBanner width={728} height={90} />
