@@ -57,7 +57,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: columnName,
       description: desc,
-      images: [getSocialMetaImageUrl(imageUrl)],
+      images: [imageUrl],
     },
   }
 }

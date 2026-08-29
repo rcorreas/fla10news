@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       card: 'summary_large_image',
       title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
       description: item.legenda || item.title,
-      images: [getSocialMetaImageUrl(item.imageUrl)],
+      images: [item.imageUrl],
     },
   };
 }
