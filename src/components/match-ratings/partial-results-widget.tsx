@@ -84,12 +84,12 @@ export default function PartialResultsWidget({ match }: { match: MatchRating }) 
             <div className="bg-yellow-50 p-4 rounded-lg text-center border border-yellow-100">
               <Trophy className="w-6 h-6 mx-auto text-yellow-500 mb-2" />
               <p className="text-xs font-bold text-yellow-700 uppercase mb-1">O Craque</p>
-              <p className="font-bold text-gray-900 line-clamp-1">{topCraque ? topCraque.name : '-'}</p>
+              <p className="font-bold text-gray-900 line-clamp-1">{(topCraque as MatchPlayer | null)?.name || '-'}</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg text-center border border-gray-200">
               <AlertTriangle className="w-6 h-6 mx-auto text-gray-400 mb-2" />
               <p className="text-xs font-bold text-gray-500 uppercase mb-1">O Bagre</p>
-              <p className="font-bold text-gray-900 line-clamp-1">{topBagre ? topBagre.name : '-'}</p>
+              <p className="font-bold text-gray-900 line-clamp-1">{(topBagre as MatchPlayer | null)?.name || '-'}</p>
             </div>
           </div>
 
