@@ -21,6 +21,7 @@ const navItems = [
   { href: "/admin/voz-torcedor", label: "Gerenciar A Voz do Torcedor", icon: MessageSquare },
   { href: "/admin/galeria", label: "Gerenciar Galeria", icon: Palette },
   { href: "/admin/raiox", label: "Gerenciar Raio-X", icon: ScanLine },
+  { href: "/admin/atuacoes", label: "Gerenciar Atuações", icon: Trophy },
 ];
 
 function NavLink({ href, label, icon: Icon }: { href: string; label: string; icon: React.ElementType }) {

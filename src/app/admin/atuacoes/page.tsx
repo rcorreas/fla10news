@@ -229,6 +229,9 @@ export default function AtuacoesAdminPage() {
                       </span>
                     </TableCell>
                     <TableCell className="text-right space-x-2">
+                      <Button asChild variant="secondary" size="sm">
+                        <Link href={`/atuacoes/${match.id}`} target="_blank">Ver</Link>
+                      </Button>
                       {match.status === 'open' && (
                         <Button variant="outline" size="sm" onClick={() => handleClose(match.id)}>
                           <Lock className="h-4 w-4 mr-2" /> Encerrar
