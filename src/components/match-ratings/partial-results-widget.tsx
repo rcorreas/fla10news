@@ -21,11 +21,11 @@ export default function PartialResultsWidget({ match }: { match: MatchRating }) 
   }
 
   // Encontrar o jogador com mais votos de Craque
-  let topCraque = null;
+  let topCraque: import('@/types/match-ratings').MatchPlayer | null = null;
   let maxCraqueVotes = 0;
 
   // Encontrar o jogador com mais votos de Bagre
-  let topBagre = null;
+  let topBagre: import('@/types/match-ratings').MatchPlayer | null = null;
   let maxBagreVotes = 0;
 
   // Ordenar jogadores por média de nota (Top 3)
