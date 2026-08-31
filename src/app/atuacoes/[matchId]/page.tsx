@@ -2,8 +2,9 @@ import { notFound } from "next/navigation";
 import { getMatchRatingById } from "@/data/match-ratings";
 import MatchRatingForm from "@/components/match-ratings/match-rating-form";
 
-export async function generateMetadata({ params }: { params: { matchId: string } }) {
-  const match = await getMatchRatingById(params.matchId);
+export async function generateMetadata({ params }: { params: Promise<{ matchId: string }> }) {
+  const { matchId } = await params;
+  const match = await getMatchRatingById(matchId);
   if (!match) return { title: 'Atuações Não Encontradas' };
   
   return {
@@ -12,8 +13,9 @@ export async function generateMetadata({ params }: { params: { matchId: string }
   };
 }
 
-export default async function AtuacoesPage({ params }: { params: { matchId: string } }) {
-  const match = await getMatchRatingById(params.matchId);
+export default async function AtuacoesPage({ params }: { params: Promise<{ matchId: string }> }) {
+  const { matchId } = await params;
+  const match = await getMatchRatingById(matchId);
 
   if (!match) {
     notFound();
