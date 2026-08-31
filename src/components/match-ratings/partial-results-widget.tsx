@@ -1,8 +1,8 @@
-import type { MatchRating } from '@/types/match-ratings';
+import type { MatchRating, MatchPlayer } from '@/types/match-ratings';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trophy, AlertTriangle } from 'lucide-react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function PartialResultsWidget({ match }: { match: MatchRating }) {
   const { results, players } = match;
@@ -21,11 +21,11 @@ export default function PartialResultsWidget({ match }: { match: MatchRating }) 
   }
 
   // Encontrar o jogador com mais votos de Craque
-  let topCraque: import('@/types/match-ratings').MatchPlayer | null = null;
+  let topCraque: MatchPlayer | null = null;
   let maxCraqueVotes = 0;
 
   // Encontrar o jogador com mais votos de Bagre
-  let topBagre: import('@/types/match-ratings').MatchPlayer | null = null;
+  let topBagre: MatchPlayer | null = null;
   let maxBagreVotes = 0;
 
   // Ordenar jogadores por média de nota (Top 3)
