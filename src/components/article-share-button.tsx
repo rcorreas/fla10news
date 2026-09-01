@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "./ui/button"
 import { Facebook, Twitter, Linkedin, Link as LinkIcon, Share2, Instagram, MessageCircle, Send } from 'lucide-react'
 
-export function ArticleShareButton({ title, slug, type = 'noticias' }: { title: string, slug: string, type?: 'noticias' | 'colunas' | 'videos' | 'flahistoria' | 'voz-torcedor' | 'galeria' | 'raio-x' }) {
+export function ArticleShareButton({ title, slug, type = 'noticias' }: { title: string, slug: string, type?: 'noticias' | 'colunas' | 'videos' | 'flahistoria' | 'voz-torcedor' | 'galeria' | 'raio-x' | 'tirinhas' }) {
     const { toast } = useToast()
     const [isMounted, setIsMounted] = useState(false)
 
@@ -20,6 +20,7 @@ export function ArticleShareButton({ title, slug, type = 'noticias' }: { title: 
             case 'videos': return 'o vídeo';
             case 'flahistoria': return 'a matéria';
             case 'voz-torcedor': return 'a publicação';
+            case 'tirinhas': return 'a tirinha';
             default: return 'a notícia';
         }
     }
