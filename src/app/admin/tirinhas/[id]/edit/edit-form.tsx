@@ -9,7 +9,7 @@ import type { TirinhaItem } from "@/data/tirinhas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { TextareaWithFormatting } from "@/components/ui/textarea-with-formatting";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -91,7 +91,7 @@ export function EditTirinhaForm({ tirinha }: { tirinha: TirinhaItem }) {
 
           <div className="grid gap-2">
             <Label htmlFor="description">Descrição (Opcional)</Label>
-            <Textarea id="description" name="description" defaultValue={tirinha.description} />
+            <TextareaWithFormatting id="description" name="description" defaultValue={tirinha.description} />
           </div>
           
         </CardContent>

@@ -8,6 +8,8 @@ import { incrementDailyViews } from '@/data/analytics';
 import { Eye, ArrowLeft } from 'lucide-react';
 import { ShareButton } from '@/components/share-button';
 import { absoluteUrl } from '@/lib/site';
+import { AdBanner } from '@/components/ad-banner';
+import { AdsKeeperWidget } from '@/components/adskeeper-widget';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
@@ -54,6 +56,9 @@ export default async function GalleryItemPage({ params }: { params: Promise<{ id
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="mb-8 flex justify-center">
+         <AdBanner width={728} height={90} />
+      </div>
       <div className="mb-6">
         <Link href="/galeria" className="inline-flex items-center text-primary hover:underline font-medium">
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -109,6 +114,11 @@ export default async function GalleryItemPage({ params }: { params: Promise<{ id
              </div>
           </div>
         </div>
+      </div>
+
+      <div className="mt-12 pt-8 border-t flex flex-col items-center gap-6">
+          <AdBanner width={728} height={90} />
+          <AdsKeeperWidget widgetId="2046585" />
       </div>
     </div>
   );

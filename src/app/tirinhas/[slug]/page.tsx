@@ -11,6 +11,7 @@ import { AdBanner } from '@/components/ad-banner'
 import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
+import { RichTextRenderer } from '@/components/rich-text-renderer'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
@@ -153,8 +154,8 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
         </div>
 
         {tirinha.description && (
-             <div className="mb-8 text-lg text-center text-muted-foreground max-w-3xl mx-auto">
-                 <p>{tirinha.description}</p>
+             <div className="mb-8 text-lg text-center text-muted-foreground max-w-3xl mx-auto space-y-4">
+                 <RichTextRenderer content={tirinha.description} />
              </div>
         )}
         

@@ -3,6 +3,8 @@ import Image from 'next/image';
 import { getGalleryItems } from '@/data/gallery';
 import { Eye } from 'lucide-react';
 import Link from 'next/link';
+import { AdBanner } from '@/components/ad-banner';
+import { AdsKeeperWidget } from '@/components/adskeeper-widget';
 
 export const metadata: Metadata = {
   title: 'Galeria de Arte Rubro-Negra | FLA10 News',
@@ -16,6 +18,9 @@ export default async function GaleriaPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <div className="mb-8 flex justify-center">
+         <AdBanner width={728} height={90} />
+      </div>
       <div className="mb-8 border-b border-primary/40 pb-4">
         <h1 className="text-4xl font-headline font-bold text-primary">Galeria de Arte Rubro-Negra</h1>
         <p className="text-xl text-muted-foreground mt-2">
@@ -49,6 +54,11 @@ export default async function GaleriaPage() {
             </Link>
           </div>
         ))}
+      </div>
+      
+      <div className="mt-12 pt-8 border-t flex flex-col items-center gap-6">
+          <AdBanner width={728} height={90} />
+          <AdsKeeperWidget widgetId="2046585" />
       </div>
     </div>
   );
