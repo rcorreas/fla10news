@@ -24,7 +24,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, PlayCircle, Trophy, MessageSquare, Palette, ScanLine } from 'lucide-react'
+import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, PlayCircle, Trophy, MessageSquare, Palette, ScanLine, Image as ImageIcon } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { AdBanner } from '@/components/ad-banner'
 import { SofascoreWidget } from '@/components/sofascore-widget'
@@ -36,6 +36,7 @@ import { getVozTorcedores } from '@/data/voz-torcedor'
 import { getHistoryArticles } from '@/data/history'
 import { getGalleryItems } from '@/data/gallery'
 import { getRaiox } from '@/data/raiox'
+import { getTirinhas } from '@/data/tirinhas'
 import { MainCarousel } from '@/components/home/main-carousel'
 import { HistoryCoverflow } from '@/components/home/history-coverflow'
 import { ActiveReaders } from '@/components/home/active-readers'
@@ -86,6 +87,7 @@ export default async function Home() {
   const allGalleryTotal = await getGalleryItems(1);
   const galleryItems = allGalleryTotal.slice(0, 1);
   const raioxList = await getRaiox(1);
+  const allTirinhas = await getTirinhas(1);
 
   const mainHeadlines = allNews.slice(0, 6);
   const dailyNews = allNews.slice(6, 12); // Now shows 6 articles
@@ -136,7 +138,8 @@ export default async function Home() {
   const newsTodayCount = 
     allNews.filter(item => isToday(item.publishedAt)).length +
     allColumns.filter(item => isToday(item.publishedAt)).length +
-    allVideos.filter(item => isToday(item.publishedAt)).length;
+    allVideos.filter(item => isToday(item.publishedAt)).length +
+    allTirinhas.filter(item => isToday(item.publishedAt)).length;
 
   return (
     <div>
@@ -283,6 +286,22 @@ export default async function Home() {
           ) : (
              <div className="text-center py-8 text-muted-foreground">
                 <p>Nenhuma análise recente para exibir.</p>
+            </div>
+          )}
+        </section>
+
+        <section>
+          <SectionHeader title="Fla10 Tirinhas" subtitle="O bom humor rubro-negro." href="/tirinhas" icon={ImageIcon} />
+          {allTirinhas.length > 0 ? (
+            <div className="flex flex-col items-center">
+              <Link href={`/tirinhas/${allTirinhas[0].slug}`} className="block w-full max-w-4xl hover:opacity-95 transition-opacity mb-8 shadow-lg rounded-lg overflow-hidden border border-border">
+                <Image src={allTirinhas[0].imageHome} alt={allTirinhas[0].title} width={1200} height={800} className="w-full h-auto object-contain bg-white" data-ai-hint={allTirinhas[0].dataAiHint} />
+              </Link>
+              <AdBanner width={728} height={90} />
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+                <p>Nenhuma tirinha publicada ainda.</p>
             </div>
           )}
         </section>
