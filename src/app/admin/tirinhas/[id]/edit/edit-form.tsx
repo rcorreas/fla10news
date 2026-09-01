@@ -3,7 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
-import { updateTirinha } from "../actions";
+import { updateTirinha } from "../../actions";
 import type { TirinhaItem } from "@/data/tirinhas";
 
 import { Button } from "@/components/ui/button";
