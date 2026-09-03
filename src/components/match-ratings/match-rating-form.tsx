@@ -201,7 +201,16 @@ export default function MatchRatingForm({ match }: { match: MatchRating }) {
             </SelectTrigger>
             <SelectContent>
               {match.players.map(p => (
-                <SelectItem key={`c-${p.id}`} value={p.id}>{p.name}</SelectItem>
+                <SelectItem key={`c-${p.id}`} value={p.id}>
+                  <div className="flex items-center gap-2">
+                    {p.photoUrl ? (
+                      <img src={p.photoUrl} alt="" className="w-6 h-6 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-gray-200" />
+                    )}
+                    <span>{p.name}</span>
+                  </div>
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -218,7 +227,16 @@ export default function MatchRatingForm({ match }: { match: MatchRating }) {
             </SelectTrigger>
             <SelectContent>
               {match.players.map(p => (
-                <SelectItem key={`b-${p.id}`} value={p.id}>{p.name}</SelectItem>
+                <SelectItem key={`b-${p.id}`} value={p.id}>
+                  <div className="flex items-center gap-2">
+                    {p.photoUrl ? (
+                      <img src={p.photoUrl} alt="" className="w-6 h-6 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-gray-200" />
+                    )}
+                    <span>{p.name}</span>
+                  </div>
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>

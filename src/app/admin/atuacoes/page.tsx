@@ -17,6 +17,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import flamengoPlayers from "@/data/flamengo_players.json";
 
 // Icons
 import { Loader2, Trash2, Lock, Plus, X } from "lucide-react";
@@ -165,9 +167,33 @@ export default function AtuacoesAdminPage() {
               <div className="space-y-4">
                 {players.map((player, index) => (
                   <div key={index} className="flex flex-wrap md:flex-nowrap items-end gap-2 p-4 border rounded-lg">
-                    <div className="grid gap-2 flex-1">
-                      <Label>Nome</Label>
-                      <Input value={player.name} onChange={(e) => updatePlayer(index, 'name', e.target.value)} required />
+                    <div className="grid gap-2 flex-1 min-w-[200px]">
+                      <Label>Jogador</Label>
+                      <Select 
+                        value={player.name} 
+                        onValueChange={(val) => {
+                          const p = flamengoPlayers.find(x => x.name === val);
+                          if (p) {
+                            const newPlayers = [...players];
+                            newPlayers[index] = { 
+                              ...newPlayers[index], 
+                              name: p.name, 
+                              position: p.position, 
+                              photoUrl: p.photo 
+                            };
+                            setPlayers(newPlayers);
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="bg-white">
+                          <SelectValue placeholder="Selecione um jogador" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {flamengoPlayers.map(p => (
+                            <SelectItem key={p.name} value={p.name}>{p.position} - {p.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="grid gap-2 flex-1">
                       <Label>Posição</Label>

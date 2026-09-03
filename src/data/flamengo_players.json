@@ -1,0 +1,182 @@
+[
+  {
+    "number": "1",
+    "name": "Agustín Rossi",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/352324-1633537886.JPG?lm=4711",
+    "position": "Goleiro"
+  },
+  {
+    "number": "42",
+    "name": "Andrew",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/610417-1710238883.jpg?lm=4711",
+    "position": "Goleiro"
+  },
+  {
+    "number": "49",
+    "name": "Dyogo Alves",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/1082543-1725327039.jpg?lm=4711",
+    "position": "Goleiro"
+  },
+  {
+    "number": "3",
+    "name": "Léo Ortiz",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/374136-1751370337.jpg?lm=4711",
+    "position": "Zagueiro"
+  },
+  {
+    "number": "4",
+    "name": "Léo Pereira",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/288431-1751370674.jpg?lm=4711",
+    "position": "Zagueiro"
+  },
+  {
+    "number": "44",
+    "name": "Vitão",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/428783-1641992592.png?lm=4711",
+    "position": "Zagueiro"
+  },
+  {
+    "number": "13",
+    "name": "Danilo",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/145707-1663577215.jpg?lm=4711",
+    "position": "Zagueiro"
+  },
+  {
+    "number": "61",
+    "name": "João Souza",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/1193868-1751370812.jpg?lm=4711",
+    "position": "Zagueiro"
+  },
+  {
+    "number": "6",
+    "name": "Ayrton Lucas",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/349585-1751371057.jpg?lm=4711",
+    "position": "Lateral Esq."
+  },
+  {
+    "number": "26",
+    "name": "Alex Sandro",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/79960-1751370710.jpg?lm=4711",
+    "position": "Lateral Esq."
+  },
+  {
+    "number": "22",
+    "name": "Emerson Royal",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/476344-1737380789.jpg?lm=4711",
+    "position": "Lateral Dir."
+  },
+  {
+    "number": "2",
+    "name": "Guillermo Varela",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/188862-1770771666.jpg?lm=4711",
+    "position": "Lateral Dir."
+  },
+  {
+    "number": "52",
+    "name": "Evertton Araújo",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/931007-1744744070.jpg?lm=4711",
+    "position": "Volante"
+  },
+  {
+    "number": "5",
+    "name": "Erick Pulgar",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/215616-1744288828.jpg?lm=4711",
+    "position": "Volante"
+  },
+  {
+    "number": "21",
+    "name": "Jorginho",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/102017-1682590896.jpg?lm=4711",
+    "position": "Volante"
+  },
+  {
+    "number": "18",
+    "name": "Nicolás de la Cruz",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/397458-1719565799.jpg?lm=4711",
+    "position": "Meia Central"
+  },
+  {
+    "number": "8",
+    "name": "Saúl Ñíguez",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/148928-1764256774.jpg?lm=4711",
+    "position": "Meia Central"
+  },
+  {
+    "number": "20",
+    "name": "Lucas Paquetá",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/444523-1780929763.jpg?lm=4711",
+    "position": "Meia Ofensivo"
+  },
+  {
+    "number": "10",
+    "name": "Giorgian de Arrascaeta",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/248410-1668501457.jpg?lm=4711",
+    "position": "Meia Ofensivo"
+  },
+  {
+    "number": "15",
+    "name": "Jorge Carrascal",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/354145-1770034381.jpg?lm=4711",
+    "position": "Meia Ofensivo"
+  },
+  {
+    "number": "99",
+    "name": "Lorran",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/1009030-1757676794.jpg?lm=4711",
+    "position": "Meia Ofensivo"
+  },
+  {
+    "number": "16",
+    "name": "Samuel Lino",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/694928-1695982815.jpg?lm=4711",
+    "position": "Ponta Esquerda"
+  },
+  {
+    "number": "11",
+    "name": "Everton",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/321239-1744288639.jpg?lm=4711",
+    "position": "Ponta Esquerda"
+  },
+  {
+    "number": "19",
+    "name": "Gonzalo Plata",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/592735-1744288468.jpg?lm=4711",
+    "position": "Ponta Direita"
+  },
+  {
+    "number": "7",
+    "name": "Luiz Araújo",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/435485-1752878567.jpg?lm=4711",
+    "position": "Ponta Direita"
+  },
+  {
+    "number": "14",
+    "name": "Anthony Valencia",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/974374-1785923217.jpg?lm=4711",
+    "position": "Ponta Direita"
+  },
+  {
+    "number": "9",
+    "name": "Pedro",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/432895-1668696996.jpg?lm=4711",
+    "position": "Centroavante"
+  },
+  {
+    "number": "64",
+    "name": "Wallace Yan",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/1082602-1743043446.jpg?lm=4711",
+    "position": "Centroavante"
+  },
+  {
+    "number": "30",
+    "name": "Joaquín Freitas",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/1324003-1771857419.jpg?lm=4711",
+    "position": "Centroavante"
+  },
+  {
+    "number": "27",
+    "name": "Bruno Henrique",
+    "photo": "https://img.a.transfermarkt.technology/portrait/medium/353108-1733188857.jpg?lm=4711",
+    "position": "Centroavante"
+  }
+]
