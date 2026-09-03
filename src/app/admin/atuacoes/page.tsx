@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import flamengoPlayers from "@/data/flamengo_players.json";
 
 // Icons
-import { Loader2, Trash2, Lock, Plus, X } from "lucide-react";
+import { Loader2, Trash2, Lock, Plus, X, Pencil } from "lucide-react";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -257,6 +257,11 @@ export default function AtuacoesAdminPage() {
                     <TableCell className="text-right space-x-2">
                       <Button asChild variant="secondary" size="sm">
                         <Link href={`/atuacoes/${match.id}`} target="_blank">Ver</Link>
+                      </Button>
+                      <Button asChild variant="outline" size="sm">
+                        <Link href={`/admin/atuacoes/edit/${match.id}`}>
+                          <Pencil className="h-4 w-4 mr-2" /> Editar
+                        </Link>
                       </Button>
                       {match.status === 'open' && (
                         <Button variant="outline" size="sm" onClick={() => handleClose(match.id)}>

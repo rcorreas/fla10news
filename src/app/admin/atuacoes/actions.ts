@@ -98,3 +98,51 @@ export async function deleteMatchRating(id: string) {
     return { success: false, message: "Erro ao excluir." };
   }
 }
+
+export async function updateMatchRating(id: string, prevState: any, formData: FormData) {
+  const validatedFields = MatchRatingSchema.safeParse({
+    score: formData.get("score"),
+    competition: formData.get("competition"),
+    attendanceAndStadium: formData.get("attendanceAndStadium"),
+    tacticalSummary: formData.get("tacticalSummary"),
+    playersJson: formData.get("playersJson"),
+    coachName: formData.get("coachName"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      message: "Erro de validação. Verifique os campos.",
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    let players = [];
+    try {
+      players = JSON.parse(validatedFields.data.playersJson);
+    } catch (e) {
+      return { success: false, message: "Erro ao interpretar jogadores" };
+    }
+
+    const docRef = doc(db, "match_ratings", id);
+    
+    await updateDoc(docRef, {
+      "header.score": validatedFields.data.score,
+      "header.competition": validatedFields.data.competition,
+      "header.attendanceAndStadium": validatedFields.data.attendanceAndStadium || '',
+      "header.tacticalSummary": validatedFields.data.tacticalSummary,
+      "coach.name": validatedFields.data.coachName,
+      players: players,
+    });
+
+    revalidatePath("/admin/atuacoes");
+    revalidatePath(`/atuacoes/${id}`);
+
+    return { success: true, message: "Partida atualizada com sucesso!" };
+
+  } catch (error) {
+    console.error("Error updating match rating:", error);
+    return { success: false, message: "Ocorreu um erro no servidor. Tente novamente." };
+  }
+}
