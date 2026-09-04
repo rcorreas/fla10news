@@ -89,18 +89,13 @@ const parseContent = (content: string): string[] => {
   // Função para limpar a URL de qualquer tag HTML que o editor possa ter injetado
   const cleanUrl = (url: string) => url.replace(/<[^>]+>/g, '').trim();
 
-  // Trata a tag [img=Legenda]URL[/img]
-  let formattedContent = content.replace(/\[img=([^\]]+)\]([\s\S]*?)\[\/img\]/gi, (match, caption, url) => {
-    return `<figure class="my-8"><img src="${cleanUrl(url)}" alt="${caption.trim()}" class="block w-full h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
-  });
-
-  // Trata a tag [img]URL|Legenda[/img]
-  formattedContent = formattedContent.replace(/\[img\]([\s\S]*?)\|([\s\S]*?)\[\/img\]/gi, (match, url, caption) => {
-    return `<figure class="my-8"><img src="${cleanUrl(url)}" alt="${caption.trim()}" class="block w-full h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
-  });
-
-  // Trata a tag [img]URL[/img] normal
-  formattedContent = formattedContent.replace(/\[img\]([\s\S]*?)\[\/img\]/gi, (match, url) => {
+  // Trata as tags [img] geradas pelo painel (com ou sem crédito/legenda)
+  // Suporta: [img]URL[/img], [img credit="..."]URL[/img], [img=...]URL[/img], [img]URL|...[/img]
+  let formattedContent = content.replace(/\[img(?:=([^\]]*)| credit="([^"]*)")?\]([\s\S]*?)(?:\|(.*?))?\[\/img\]/gi, (match, eqCap, creditCap, url, pipeCap) => {
+    const caption = eqCap || creditCap || pipeCap;
+    if (caption && caption.trim() !== '') {
+      return `<figure class="my-8"><img src="${cleanUrl(url)}" alt="${caption.trim()}" class="block w-full h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
+    }
     return `<img src="${cleanUrl(url)}" alt="Imagem" class="block w-full h-auto rounded-lg shadow-md my-6" />`;
   });
 
