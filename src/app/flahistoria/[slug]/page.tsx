@@ -86,12 +86,15 @@ function formatViews(views: number): string {
 }
 
 const parseContent = (content: string): string[] => {
+  // Previne que brackets codificados escapem da regex
+  let formattedContent = content.replace(/&#91;/g, '[').replace(/&#93;/g, ']').replace(/&lsqb;/g, '[').replace(/&rsqb;/g, ']');
+
   // Função para limpar a URL de qualquer tag HTML que o editor possa ter injetado
   const cleanUrl = (url: string) => url.replace(/<[^>]+>/g, '').trim();
 
   // Trata as tags [img] geradas pelo painel (com ou sem crédito/legenda)
   // Suporta: [img]URL[/img], [img credit="..."]URL[/img], [img=...]URL[/img], [img]URL|...[/img]
-  let formattedContent = content.replace(/\[img(?:=([^\]]*)| credit="([^"]*)")?\]([\s\S]*?)(?:\|(.*?))?\[\/img\]/gi, (match, eqCap, creditCap, url, pipeCap) => {
+  formattedContent = formattedContent.replace(/\[img(?:=([^\]]*)| credit="([^"]*)")?\]([\s\S]*?)(?:\|(.*?))?\[\/img\]/gi, (match, eqCap, creditCap, url, pipeCap) => {
     const caption = eqCap || creditCap || pipeCap;
     if (caption && caption.trim() !== '') {
       return `<figure class="my-8"><img src="${cleanUrl(url)}" alt="${caption.trim()}" class="block w-full h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
@@ -102,6 +105,9 @@ const parseContent = (content: string): string[] => {
   // Transforma URLs de imagens soltas em tags <img> (se não estiverem dentro de um atributo HTML)
   const imageUrlRegex = /(?<!["'=])(https?:\/\/[^\s<>"]+?\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s<>"]*)?)/gi;
   formattedContent = formattedContent.replace(imageUrlRegex, '<img src="$1" alt="Imagem" class="block w-full h-auto rounded-lg shadow-md my-6" />');
+
+  // Limpa qualquer bracket [img] ou [/img] que tenha sobrado por conta de erro de digitação
+  formattedContent = formattedContent.replace(/\[\/?img[^\]]*\]/gi, '');
 
   // If content has </p> tags, split by them safely
   if (formattedContent.toLowerCase().includes('</p>')) {
