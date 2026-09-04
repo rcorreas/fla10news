@@ -86,9 +86,22 @@ function formatViews(views: number): string {
 }
 
 const parseContent = (content: string): string[] => {
-  // Transforma URLs de imagens soltas em tags <img>
+  // Trata a tag [img=Legenda]URL[/img]
+  let formattedContent = content.replace(/\[img=([^\]]+)\](.*?)\[\/img\]/gi, (match, caption, url) => {
+    return `<figure class="my-8"><img src="${url.trim()}" alt="${caption.trim()}" class="block w-full h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
+  });
+
+  // Trata a tag [img]URL|Legenda[/img]
+  formattedContent = formattedContent.replace(/\[img\](.*?)\|(.*?)\[\/img\]/gi, (match, url, caption) => {
+    return `<figure class="my-8"><img src="${url.trim()}" alt="${caption.trim()}" class="block w-full h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
+  });
+
+  // Trata a tag [img]URL[/img] normal
+  formattedContent = formattedContent.replace(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" alt="Imagem" class="block w-full h-auto rounded-lg shadow-md my-6" />');
+
+  // Transforma URLs de imagens soltas em tags <img> (se não estiverem dentro de um atributo HTML)
   const imageUrlRegex = /(?<!["'=])(https?:\/\/[^\s<>"]+?\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s<>"]*)?)/gi;
-  const formattedContent = content.replace(imageUrlRegex, '<img src="$1" alt="Imagem" class="w-full h-auto rounded-lg shadow-md my-6" />');
+  formattedContent = formattedContent.replace(imageUrlRegex, '<img src="$1" alt="Imagem" class="block w-full h-auto rounded-lg shadow-md my-6" />');
 
   // If content has </p> tags, split by them safely
   if (formattedContent.toLowerCase().includes('</p>')) {
