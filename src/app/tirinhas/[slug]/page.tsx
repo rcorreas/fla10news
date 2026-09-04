@@ -96,7 +96,7 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
   const description = truncateDescription(tirinha.description || 'Confira esta tirinha do Fla10.');
 
   return (
-    <div className="container mx-auto max-w-5xl py-12">
+    <div className="w-full pt-12">
       <JsonLd
         data={{
           '@context': 'https://schema.org',
@@ -121,12 +121,12 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
         }}
       />
       
-      <div className="mb-8 flex justify-center px-4">
+      <div className="container mx-auto mb-8 flex justify-center">
          <AdBanner width={728} height={90} />
       </div>
 
       <article>
-        <header className="mb-8 text-center">
+        <header className="container mx-auto mb-8 text-center">
           <h1 className="font-headline text-4xl md:text-5xl font-bold leading-tight mb-4">{tirinha.title}</h1>
           <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-6">
             <span>{publishDate}</span>
@@ -141,32 +141,33 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
           </div>
         </header>
 
-        <div className="relative mb-8 w-full max-w-4xl mx-auto shadow-2xl overflow-hidden bg-white rounded-none sm:rounded-lg">
+        {/* Formato Webtoon: 100% da largura em telas pequenas, centralizado em telas grandes */}
+        <div className="w-full max-w-[800px] mx-auto mb-8 bg-white sm:shadow-2xl sm:rounded-lg overflow-hidden">
           <Image
             src={tirinha.image}
             alt={`${tirinha.title}`}
             width={1200}
             height={2400}
-            className="w-full h-auto block"
+            className="w-full h-auto block m-0 p-0"
             data-ai-hint={tirinha.dataAiHint}
             priority
           />
         </div>
 
         {tirinha.description && (
-             <div className="mb-8 text-lg text-center text-muted-foreground max-w-3xl mx-auto space-y-4">
+             <div className="container mx-auto mb-8 text-lg text-center text-muted-foreground max-w-3xl space-y-4">
                  <RichTextRenderer content={tirinha.description} />
              </div>
         )}
         
-        <div className="mt-12 pt-8 border-t flex flex-col items-center gap-6">
+        <div className="container mx-auto mt-12 pt-8 border-t flex flex-col items-center gap-6">
             <AdBanner width={728} height={90} />
             <AdsKeeperWidget widgetId="2046585" />
         </div>
       </article>
 
       {otherTirinhas.length > 0 && (
-        <section className="mt-12 pt-8 border-t">
+        <section className="container mx-auto mt-12 pt-8 border-t pb-12">
           <h2 className="text-3xl font-headline font-bold mb-6">Mais Tirinhas</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {otherTirinhas.map((item) => (
