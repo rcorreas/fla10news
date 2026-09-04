@@ -254,7 +254,7 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
           )}
         </div>
 
-        <div className="prose prose-lg max-w-none text-foreground/90 text-justify space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold">
+        <div className="prose prose-lg max-w-none text-foreground/90 text-justify space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold [&_a]:text-[#FF073A] [&_a]:font-bold [&_a]:underline hover:[&_a]:text-red-700">
           {article.content && (
             <>
               <div dangerouslySetInnerHTML={{ __html: firstHalf }} />
