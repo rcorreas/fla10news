@@ -86,9 +86,13 @@ function formatViews(views: number): string {
 }
 
 const parseContent = (content: string): string[] => {
+  // Transforma URLs de imagens soltas em tags <img>
+  const imageUrlRegex = /(?<!["'=])(https?:\/\/[^\s<>"]+?\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s<>"]*)?)/gi;
+  const formattedContent = content.replace(imageUrlRegex, '<img src="$1" alt="Imagem" class="w-full h-auto rounded-lg shadow-md my-6" />');
+
   // If content has </p> tags, split by them safely
-  if (content.toLowerCase().includes('</p>')) {
-    const parts = content.split(/(<\/p>)/i);
+  if (formattedContent.toLowerCase().includes('</p>')) {
+    const parts = formattedContent.split(/(<\/p>)/i);
     const result = [];
     let current = '';
     for (const part of parts) {
@@ -105,17 +109,17 @@ const parseContent = (content: string): string[] => {
   }
 
   // If content is plain text with double newlines
-  if (content.includes('\n\n')) {
-    return content.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p.replace(/\n/g, '<br/>')}</p>`);
+  if (formattedContent.includes('\n\n')) {
+    return formattedContent.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p.replace(/\n/g, '<br/>')}</p>`);
   }
 
   // If content has single newlines
-  if (content.includes('\n')) {
-    return content.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p}</p>`);
+  if (formattedContent.includes('\n')) {
+    return formattedContent.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p}</p>`);
   }
 
   // Fallback
-  return [content];
+  return [formattedContent];
 };
 
 export default async function HistoryArticlePage({ params }: { params: Promise<{ slug: string }> }) {

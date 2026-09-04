@@ -141,13 +141,13 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
           </div>
         </header>
 
-        <div className="relative mb-8 bg-white p-4 rounded-lg shadow-md border border-border">
+        <div className="relative mb-8 w-full max-w-4xl mx-auto shadow-2xl overflow-hidden bg-white rounded-none sm:rounded-lg">
           <Image
             src={tirinha.image}
             alt={`${tirinha.title}`}
             width={1200}
-            height={1200}
-            className="w-full h-auto object-contain rounded-lg"
+            height={2400}
+            className="w-full h-auto block"
             data-ai-hint={tirinha.dataAiHint}
             priority
           />
