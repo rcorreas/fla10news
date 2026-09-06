@@ -16,9 +16,9 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function main() {
-  const columnRef = doc(db, "columns", "m8ZOLEojLO1laVTZ1k6j");
-  await updateDoc(columnRef, {
-    slug: "endrick-e-os-dois-olhares-dentro-da-selecao"
+  const tirinhaRef = doc(db, "tirinhas", "cuNi6aSYNm1WF6qf4Cv4");
+  await updateDoc(tirinhaRef, {
+    slug: "a-logica-do-placar"
   });
   console.log("Updated slug successfully!");
   process.exit(0);
