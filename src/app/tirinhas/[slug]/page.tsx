@@ -142,16 +142,56 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
         </header>
 
         {/* Formato Webtoon: 100% da largura em telas pequenas, centralizado em telas grandes */}
-        <div className="w-full max-w-[800px] mx-auto mb-8 bg-white sm:shadow-2xl sm:rounded-lg overflow-hidden">
-          <Image
-            src={tirinha.image}
-            alt={`${tirinha.title}`}
-            width={1200}
-            height={2400}
-            className="w-full h-auto block m-0 p-0"
-            data-ai-hint={tirinha.dataAiHint}
-            priority
-          />
+        <div className="w-full max-w-[800px] mx-auto mb-8 flex flex-col gap-6">
+          {tirinha.image && (
+            <div className="bg-white sm:shadow-2xl sm:rounded-lg overflow-hidden">
+              <Image
+                src={tirinha.image}
+                alt={`${tirinha.title}`}
+                width={1200}
+                height={2400}
+                className="w-full h-auto block m-0 p-0"
+                data-ai-hint={tirinha.dataAiHint}
+                priority
+              />
+            </div>
+          )}
+          
+          {tirinha.image2 && (
+            <div className="bg-white sm:shadow-2xl sm:rounded-lg overflow-hidden">
+              <Image
+                src={tirinha.image2}
+                alt={`${tirinha.title} - Parte 2`}
+                width={1200}
+                height={2400}
+                className="w-full h-auto block m-0 p-0"
+              />
+            </div>
+          )}
+          
+          {tirinha.image3 && (
+            <div className="bg-white sm:shadow-2xl sm:rounded-lg overflow-hidden">
+              <Image
+                src={tirinha.image3}
+                alt={`${tirinha.title} - Parte 3`}
+                width={1200}
+                height={2400}
+                className="w-full h-auto block m-0 p-0"
+              />
+            </div>
+          )}
+          
+          {tirinha.image4 && (
+            <div className="bg-white sm:shadow-2xl sm:rounded-lg overflow-hidden">
+              <Image
+                src={tirinha.image4}
+                alt={`${tirinha.title} - Parte 4`}
+                width={1200}
+                height={2400}
+                className="w-full h-auto block m-0 p-0"
+              />
+            </div>
+          )}
         </div>
 
         {tirinha.description && (

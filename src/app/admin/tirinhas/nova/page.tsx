@@ -96,9 +96,27 @@ export default function NovaTirinhaPage() {
             </div>
 
             <div className="grid gap-2">
-                <Label htmlFor="image">Link para imagem da Tirinha</Label>
+                <Label htmlFor="image">Link para imagem da Tirinha (1)</Label>
                 <Input id="image" name="image" type="url" placeholder="https://exemplo.com/tirinha-full.jpg" required />
-                <p className="text-xs text-muted-foreground">Esta imagem aparecerá expandida na página da tirinha.</p>
+                <p className="text-xs text-muted-foreground">Esta imagem aparecerá primeiro, expandida na página da tirinha.</p>
+            </div>
+
+            <div className="grid gap-2">
+                <Label htmlFor="image2">Link para imagem da Tirinha 2 (Opcional)</Label>
+                <Input id="image2" name="image2" type="url" placeholder="https://exemplo.com/tirinha-2.jpg" />
+                <p className="text-xs text-muted-foreground">Imagem adicional que aparecerá logo abaixo da primeira.</p>
+            </div>
+
+            <div className="grid gap-2">
+                <Label htmlFor="image3">Link para imagem da Tirinha 3 (Opcional)</Label>
+                <Input id="image3" name="image3" type="url" placeholder="https://exemplo.com/tirinha-3.jpg" />
+                <p className="text-xs text-muted-foreground">Imagem adicional que aparecerá logo abaixo da segunda.</p>
+            </div>
+
+            <div className="grid gap-2">
+                <Label htmlFor="image4">Link para imagem da Tirinha 4 (Opcional)</Label>
+                <Input id="image4" name="image4" type="url" placeholder="https://exemplo.com/tirinha-4.jpg" />
+                <p className="text-xs text-muted-foreground">Imagem adicional que aparecerá logo abaixo da terceira.</p>
             </div>
 
             <div className="grid gap-2">

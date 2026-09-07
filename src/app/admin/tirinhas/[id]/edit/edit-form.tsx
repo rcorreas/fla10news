@@ -85,8 +85,23 @@ export function EditTirinhaForm({ tirinha }: { tirinha: TirinhaItem }) {
           </div>
 
           <div className="grid gap-2">
-              <Label htmlFor="image">Link para imagem da Tirinha</Label>
+              <Label htmlFor="image">Link para imagem da Tirinha (1)</Label>
               <Input id="image" name="image" type="url" defaultValue={tirinha.image} required />
+          </div>
+
+          <div className="grid gap-2">
+              <Label htmlFor="image2">Link para imagem da Tirinha 2 (Opcional)</Label>
+              <Input id="image2" name="image2" type="url" defaultValue={tirinha.image2} />
+          </div>
+
+          <div className="grid gap-2">
+              <Label htmlFor="image3">Link para imagem da Tirinha 3 (Opcional)</Label>
+              <Input id="image3" name="image3" type="url" defaultValue={tirinha.image3} />
+          </div>
+
+          <div className="grid gap-2">
+              <Label htmlFor="image4">Link para imagem da Tirinha 4 (Opcional)</Label>
+              <Input id="image4" name="image4" type="url" defaultValue={tirinha.image4} />
           </div>
 
           <div className="grid gap-2">

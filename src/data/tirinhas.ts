@@ -7,6 +7,9 @@ export type TirinhaItem = {
     slug: string;
     imageHome: string;
     image: string;
+    image2?: string;
+    image3?: string;
+    image4?: string;
     description?: string;
     publishedAt: Date;
     views: number;
@@ -21,6 +24,9 @@ const fromFirestore = (doc: any): TirinhaItem => {
         slug: data.slug || '',
         imageHome: data.imageHome || data.image || '',
         image: data.image || '',
+        image2: data.image2 || '',
+        image3: data.image3 || '',
+        image4: data.image4 || '',
         description: data.description || '',
         publishedAt: data.publishedAt instanceof Timestamp ? data.publishedAt.toDate() : new Date(),
         views: data.views || 0,

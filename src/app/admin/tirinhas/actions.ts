@@ -12,6 +12,9 @@ export async function createTirinha(prevState: any, formData: FormData) {
     const slug = slugify(slugRaw);
     const imageHome = formData.get("imageHome") as string;
     const image = formData.get("image") as string;
+    const image2 = formData.get("image2") as string;
+    const image3 = formData.get("image3") as string;
+    const image4 = formData.get("image4") as string;
     const description = formData.get("description") as string;
 
     const novaTirinha = {
@@ -19,6 +22,9 @@ export async function createTirinha(prevState: any, formData: FormData) {
       slug,
       imageHome,
       image,
+      image2: image2 || null,
+      image3: image3 || null,
+      image4: image4 || null,
       description: description || null,
       publishedAt: new Date(),
       views: 0,
@@ -52,6 +58,9 @@ export async function updateTirinha(prevState: any, formData: FormData) {
     const slug = slugify(slugRaw);
     const imageHome = formData.get("imageHome") as string;
     const image = formData.get("image") as string;
+    const image2 = formData.get("image2") as string;
+    const image3 = formData.get("image3") as string;
+    const image4 = formData.get("image4") as string;
     const description = formData.get("description") as string;
 
     const tirinhaDoc = doc(db, "tirinhas", id);
@@ -61,6 +70,9 @@ export async function updateTirinha(prevState: any, formData: FormData) {
       slug,
       imageHome,
       image,
+      image2: image2 || null,
+      image3: image3 || null,
+      image4: image4 || null,
       description: description || null,
     });
 
