@@ -4,7 +4,7 @@ import React from 'react'
 import { useToast } from "@/hooks/use-toast"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "./ui/button"
-import { Facebook, Twitter, Linkedin, Link as LinkIcon, Share2, Instagram, MessageCircle, Send } from 'lucide-react'
+import { Facebook, Twitter, Linkedin, Link as LinkIcon, Share2, Instagram, MessageCircle, Send, Star } from 'lucide-react'
 
 export function ShareButton({ title, slug, type = 'noticias' }: { title: string, slug: string, type?: 'noticias' | 'colunas' | 'videos' | 'flahistoria' | 'voz-torcedor' | 'galeria' | 'raio-x' | 'tirinhas' }) {
     const { toast } = useToast()
@@ -117,6 +117,14 @@ export function ShareButton({ title, slug, type = 'noticias' }: { title: string,
                 <DropdownMenuItem onClick={(e) => handleShare(e, 'linkedin')}>
                     <Linkedin className="mr-2 h-4 w-4" />
                     <span>LinkedIn</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open('https://news.google.com/publications/CAowxc3MDA', '_blank', 'noopener,noreferrer');
+                }}>
+                    <Star className="mr-2 h-4 w-4 text-yellow-500" />
+                    <span>Adicionar a Fontes Preferidas do Google</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleCopyLink}>
                     <LinkIcon className="mr-2 h-4 w-4" />
