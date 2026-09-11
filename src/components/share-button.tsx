@@ -81,56 +81,63 @@ export function ShareButton({ title, slug, type = 'noticias' }: { title: string,
     }
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="absolute top-1 right-1 h-8 w-8 bg-black/30 hover:bg-black/50 text-white rounded-full z-10" 
-                    onClick={(e) => {e.preventDefault(); e.stopPropagation();}}
-                    aria-label="Compartilhar"
-                >
-                    <Share2 className="h-4 w-4" />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" onClick={(e) => {e.preventDefault(); e.stopPropagation();}}>
-                <DropdownMenuItem onClick={(e) => handleShare(e, 'twitter')}>
-                    <Twitter className="mr-2 h-4 w-4" />
-                    <span>Twitter / X</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => handleShare(e, 'facebook')}>
-                    <Facebook className="mr-2 h-4 w-4" />
-                    <span>Facebook</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => handleShare(e, 'instagram')}>
-                    <Instagram className="mr-2 h-4 w-4" />
-                    <span>Instagram</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => handleShare(e, 'whatsapp')}>
-                    <MessageCircle className="mr-2 h-4 w-4" />
-                    <span>WhatsApp</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => handleShare(e, 'telegram')}>
-                    <Send className="mr-2 h-4 w-4" />
-                    <span>Telegram</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => handleShare(e, 'linkedin')}>
-                    <Linkedin className="mr-2 h-4 w-4" />
-                    <span>LinkedIn</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => {
+        <div className="absolute top-1 right-1 z-10 flex gap-1" onClick={(e) => {e.preventDefault(); e.stopPropagation();}}>
+            <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 bg-black/30 hover:bg-black/50 text-white rounded-full" 
+                onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     window.open('https://www.google.com/preferences/source?q=https://fla10.news', '_blank', 'noopener,noreferrer');
-                }}>
-                    <Star className="mr-2 h-4 w-4 text-yellow-500" />
-                    <span>Adicionar a Fontes Preferidas do Google</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleCopyLink}>
-                    <LinkIcon className="mr-2 h-4 w-4" />
-                    <span>Copiar Link</span>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+                }}
+                title="Adicionar a Fontes Preferidas do Google"
+                aria-label="Adicionar a Fontes Preferidas do Google"
+            >
+                <Star className="h-4 w-4 text-yellow-500" />
+            </Button>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 bg-black/30 hover:bg-black/50 text-white rounded-full" 
+                        aria-label="Compartilhar"
+                    >
+                        <Share2 className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={(e) => handleShare(e, 'twitter')}>
+                        <Twitter className="mr-2 h-4 w-4" />
+                        <span>Twitter / X</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => handleShare(e, 'facebook')}>
+                        <Facebook className="mr-2 h-4 w-4" />
+                        <span>Facebook</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => handleShare(e, 'instagram')}>
+                        <Instagram className="mr-2 h-4 w-4" />
+                        <span>Instagram</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => handleShare(e, 'whatsapp')}>
+                        <MessageCircle className="mr-2 h-4 w-4" />
+                        <span>WhatsApp</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => handleShare(e, 'telegram')}>
+                        <Send className="mr-2 h-4 w-4" />
+                        <span>Telegram</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => handleShare(e, 'linkedin')}>
+                        <Linkedin className="mr-2 h-4 w-4" />
+                        <span>LinkedIn</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleCopyLink}>
+                        <LinkIcon className="mr-2 h-4 w-4" />
+                        <span>Copiar Link</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
     )
 }
