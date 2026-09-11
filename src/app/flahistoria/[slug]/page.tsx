@@ -93,9 +93,9 @@ const parseContent = (content: string): string[] => {
   const cleanUrl = (url: string) => url.replace(/<[^>]+>/g, '').trim();
 
   // Trata as tags [img] geradas pelo painel (com ou sem crédito/legenda)
-  // Suporta: [img]URL[/img], [img credit="..."]URL[/img], [img=...]URL[/img], [img]URL|...[/img]
-  formattedContent = formattedContent.replace(/\[img(?:=([^\]]*)| credit="([^"]*)")?\]([\s\S]*?)(?:\|(.*?))?\[\/img\]/gi, (match, eqCap, creditCap, url, pipeCap) => {
-    const caption = eqCap || creditCap || pipeCap;
+  // Suporta: [img]URL[/img], [img credit="..."]URL[/img], [img legenda="..."]URL[/img], [img=...]URL[/img], [img]URL|...[/img]
+  formattedContent = formattedContent.replace(/\[img(?:\s+(?:credit|legenda|caption)="([^"]*)")?(?:=([^\]]*))?\]([\s\S]*?)(?:\|(.*?))?\[\/img\]/gi, (match, attrCap, eqCap, url, pipeCap) => {
+    const caption = attrCap || eqCap || pipeCap;
     if (caption && caption.trim() !== '') {
       return `<figure class="my-8"><img src="${cleanUrl(url)}" alt="${caption.trim()}" class="block w-[70%] mx-auto h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
     }
