@@ -121,7 +121,7 @@ export function ShareButton({ title, slug, type = 'noticias' }: { title: string,
                 <DropdownMenuItem onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.open('https://news.google.com/publications/CAowxc3MDA', '_blank', 'noopener,noreferrer');
+                    window.open('https://www.google.com/preferences/source?q=https://fla10.news', '_blank', 'noopener,noreferrer');
                 }}>
                     <Star className="mr-2 h-4 w-4 text-yellow-500" />
                     <span>Adicionar a Fontes Preferidas do Google</span>
