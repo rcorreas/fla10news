@@ -97,14 +97,14 @@ const parseContent = (content: string): string[] => {
   formattedContent = formattedContent.replace(/\[img(?:=([^\]]*)| credit="([^"]*)")?\]([\s\S]*?)(?:\|(.*?))?\[\/img\]/gi, (match, eqCap, creditCap, url, pipeCap) => {
     const caption = eqCap || creditCap || pipeCap;
     if (caption && caption.trim() !== '') {
-      return `<figure class="my-8"><img src="${cleanUrl(url)}" alt="${caption.trim()}" class="block w-full h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
+      return `<figure class="my-8"><img src="${cleanUrl(url)}" alt="${caption.trim()}" class="block w-[70%] mx-auto h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
     }
-    return `<img src="${cleanUrl(url)}" alt="Imagem" class="block w-full h-auto rounded-lg shadow-md my-6" />`;
+    return `<img src="${cleanUrl(url)}" alt="Imagem" class="block w-[70%] mx-auto h-auto rounded-lg shadow-md my-6" />`;
   });
 
   // Transforma URLs de imagens soltas em tags <img> (se não estiverem dentro de um atributo HTML)
   const imageUrlRegex = /(?<!["'=])(https?:\/\/[^\s<>"]+?\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s<>"]*)?)/gi;
-  formattedContent = formattedContent.replace(imageUrlRegex, '<img src="$1" alt="Imagem" class="block w-full h-auto rounded-lg shadow-md my-6" />');
+  formattedContent = formattedContent.replace(imageUrlRegex, '<img src="$1" alt="Imagem" class="block w-[70%] mx-auto h-auto rounded-lg shadow-md my-6" />');
 
   // Limpa qualquer bracket [img] ou [/img] que tenha sobrado por conta de erro de digitação
   formattedContent = formattedContent.replace(/\[\/?img[^\]]*\]/gi, '');
