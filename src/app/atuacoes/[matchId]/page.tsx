@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getMatchRatingById } from "@/data/match-ratings";
 import MatchRatingForm from "@/components/match-ratings/match-rating-form";
+import { ShareButton } from "@/components/share-button";
 
 export async function generateMetadata({ params }: { params: Promise<{ matchId: string }> }) {
   const { matchId } = await params;
@@ -22,8 +23,9 @@ export default async function AtuacoesPage({ params }: { params: Promise<{ match
   }
 
   return (
-    <main className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <div className="mb-8 text-center space-y-4">
+    <main className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 relative">
+      <ShareButton title={`Atuações: ${match.header.score}`} slug={match.id} type="atuacoes" />
+      <div className="mb-8 text-center space-y-4 pt-8">
         <h2 className="text-sm font-semibold tracking-wide uppercase text-red-600">{match.header.competition}</h2>
         <h1 className="text-3xl font-extrabold text-gray-900 sm:text-5xl">{match.header.score}</h1>
         {match.header.attendanceAndStadium && (
