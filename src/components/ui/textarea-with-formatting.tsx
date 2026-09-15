@@ -72,7 +72,7 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
               type="button" 
               variant="ghost" 
               size="sm" 
-              onClick={() => insertText('<div class="bg-muted p-4 rounded-lg my-4">\\n', '\\n</div>')}
+              onClick={() => insertText('<div class="bg-blue-50 border border-blue-200 dark:bg-blue-950 dark:border-blue-900 p-4 rounded-lg my-4">', '</div>')}
               title="Box de Destaque"
               className="h-8 w-8 p-0"
           >
