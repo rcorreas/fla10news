@@ -62,9 +62,13 @@ export function formatDurationISO(duration: string): string {
 
 export function getSocialMetaImageUrl(url: string | undefined | null): string {
   if (!url) return '';
-  if (url.includes('imgur.com')) {
-    // Usa wsrv.nl para garantir que a imagem seja redimensionada, convertida para JPG e fique abaixo do limite de tamanho do WhatsApp, além de contornar proteção de hotlink.
-    return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=1200&h=630&output=jpg&fit=cover`;
+  
+  // Se for um link do imgur, garantimos que ele está usando o domínio i.imgur.com 
+  // e que tem a extensão .jpg para máxima compatibilidade com redes sociais.
+  if (url.includes('imgur.com') && !url.includes('.jpg') && !url.includes('.png')) {
+     const id = url.split('/').pop();
+     return `https://i.imgur.com/${id}.jpg`;
   }
+  
   return url;
 }
