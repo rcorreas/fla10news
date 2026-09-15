@@ -63,9 +63,8 @@ export function formatDurationISO(duration: string): string {
 export function getSocialMetaImageUrl(url: string | undefined | null): string {
   if (!url) return '';
   if (url.includes('imgur.com')) {
-    // Proxy Imgur images through DuckDuckGo to bypass hotlinking protection and avoid 429 errors from wsrv.nl
-    // Append #.jpg so WhatsApp's scraper recognizes it as an image URL
-    return `https://external-content.duckduckgo.com/iu/?u=${encodeURIComponent(url)}#.jpg`;
+    // Usa wsrv.nl para garantir que a imagem seja redimensionada, convertida para JPG e fique abaixo do limite de tamanho do WhatsApp, além de contornar proteção de hotlink.
+    return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=1200&h=630&output=jpg&fit=cover`;
   }
   return url;
 }

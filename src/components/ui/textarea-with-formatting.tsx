@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Bold, Italic, Underline, CornerDownRight, ImageIcon } from 'lucide-react';
+import { Bold, Italic, Underline, CornerDownRight, ImageIcon, Highlighter } from 'lucide-react';
 
 interface TextareaWithFormattingProps extends React.ComponentProps<typeof Textarea> {}
 
@@ -68,6 +68,17 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
           >
             <Underline className="h-4 w-4" />
           </Button>
+          <Button 
+              type="button" 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => insertText('<div class="bg-muted p-4 rounded-lg my-4">\\n', '\\n</div>')}
+              title="Box de Destaque"
+              className="h-8 w-8 p-0"
+          >
+            <Highlighter className="h-4 w-4" />
+          </Button>
+          <div className="w-px h-4 bg-border mx-1" />
           <Button 
               type="button" 
               variant="ghost" 
