@@ -64,7 +64,8 @@ export function getSocialMetaImageUrl(url: string | undefined | null): string {
   if (!url) return '';
   if (url.includes('imgur.com')) {
     // Proxy Imgur images through DuckDuckGo to bypass hotlinking protection and avoid 429 errors from wsrv.nl
-    return `https://external-content.duckduckgo.com/iu/?u=${encodeURIComponent(url)}`;
+    // Append #.jpg so WhatsApp's scraper recognizes it as an image URL
+    return `https://external-content.duckduckgo.com/iu/?u=${encodeURIComponent(url)}#.jpg`;
   }
   return url;
 }
