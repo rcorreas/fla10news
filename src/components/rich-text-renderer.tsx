@@ -9,6 +9,19 @@ interface RichTextRendererProps {
 }
 
 export function RichTextRenderer({ content, adSlot }: RichTextRendererProps) {
+  let processedContent = content;
+  
+  // Atualiza de forma retroativa os boxes antigos (ou criados antes da correção final)
+  processedContent = processedContent.replace(
+    /<div class="(?:bg-muted p-4 rounded-lg my-4|bg-blue-50 border border-blue-200 dark:bg-blue-950 dark:border-blue-900 p-4 rounded-lg my-4 w-fit)">(?:\\n|\n|<br\s*\/?>)*/g,
+    '<div class="bg-blue-50 border border-blue-200 dark:bg-blue-950 dark:border-blue-900 p-4 rounded-lg my-4">'
+  );
+
+  // Limpa as tags de fechamento sujas com \n
+  processedContent = processedContent.replace(
+    /(?:\\n|\n|<br\s*\/?>)*<\/div>/g, 
+    '</div>'
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const [adContainer, setAdContainer] = useState<HTMLElement | null>(null);
 
@@ -57,7 +70,7 @@ export function RichTextRenderer({ content, adSlot }: RichTextRendererProps) {
 
   return (
     <>
-      <div ref={containerRef} dangerouslySetInnerHTML={{ __html: content }} />
+      <div ref={containerRef} dangerouslySetInnerHTML={{ __html: processedContent }} />
       {adContainer && adSlot && createPortal(adSlot, adContainer)}
     </>
   );
