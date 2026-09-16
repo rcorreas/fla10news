@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Bold, Italic, Underline, CornerDownRight, ImageIcon, Highlighter, Minus, Heading3, Link2 } from 'lucide-react';
+import { RelatedArticleInserter } from './related-article-inserter';
 
 interface TextareaWithFormattingProps extends React.ComponentProps<typeof Textarea> {}
 
@@ -114,6 +115,7 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
             <Minus className="h-4 w-4" />
           </Button>
           <div className="w-px h-4 bg-border mx-1" />
+          <RelatedArticleInserter onInsert={insertText} />
           <Button 
               type="button" 
               variant="ghost" 
