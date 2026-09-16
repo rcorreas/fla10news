@@ -174,6 +174,18 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
               type="button" 
               variant="ghost" 
               size="sm" 
+              onClick={() => insertText('\n\n[video]\n\n')}
+              title="Inserir Vídeo do YouTube"
+              className="h-8 flex gap-1 px-2"
+          >
+            <span className="font-bold text-xs">YT</span>
+            <span className="text-xs">Vídeo</span>
+          </Button>
+          <div className="w-px h-4 bg-border mx-1" />
+          <Button 
+              type="button" 
+              variant="ghost" 
+              size="sm" 
               onClick={() => {
                 const url = prompt("Digite a URL da imagem:");
                 if (url) {
