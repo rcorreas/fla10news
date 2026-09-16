@@ -62,13 +62,10 @@ export function formatDurationISO(duration: string): string {
 
 export function getSocialMetaImageUrl(url: string | undefined | null): string {
   if (!url) return '';
-  
-  // Se for um link do imgur, garantimos que ele está usando o domínio i.imgur.com 
-  // e que tem a extensão .jpg para máxima compatibilidade com redes sociais.
-  if (url.includes('imgur.com') && !url.includes('.jpg') && !url.includes('.png')) {
-     const id = url.split('/').pop();
-     return `https://i.imgur.com/${id}.jpg`;
+  if (url.includes('imgur.com')) {
+    // Proxy Imgur images through DuckDuckGo to bypass hotlinking protection and avoid 429 errors from wsrv.nl
+    // Append #.jpg so WhatsApp's scraper recognizes it as an image URL
+    return `https://external-content.duckduckgo.com/iu/?u=${encodeURIComponent(url)}#.jpg`;
   }
-  
   return url;
 }
