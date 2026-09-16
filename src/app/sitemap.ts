@@ -4,6 +4,7 @@ import { getAllHistorySlugs } from '@/data/history';
 import { getAllNewsSlugs } from '@/data/news';
 import { getAllVideoSlugs } from '@/data/videos';
 import { getAllVozTorcedorSlugs } from '@/data/voz-torcedor';
+import { getAuthors } from '@/data/authors';
 import { absoluteUrl } from '@/lib/site';
 
 const staticRoutes = [
@@ -34,12 +35,13 @@ const staticRoutes = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [news, columns, history, videos, vozTorcedor] = await Promise.all([
+  const [news, columns, history, videos, vozTorcedor, authors] = await Promise.all([
     getAllNewsSlugs(),
     getAllColumnSlugs(),
     getAllHistorySlugs(),
     getAllVideoSlugs(),
     getAllVozTorcedorSlugs(),
+    getAuthors(),
   ]);
 
   const now = new Date();
@@ -49,6 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...history.map(({ slug }) => `/flahistoria/${slug}`),
     ...videos.map(({ slug }) => `/videos/${slug}`),
     ...vozTorcedor.map(({ slug }) => `/voz-torcedor/${slug}`),
+    ...authors.map(({ slug }) => `/autor/${slug}`),
   ];
 
   return [...staticRoutes, ...dynamicRoutes]

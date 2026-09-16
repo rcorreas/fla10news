@@ -181,32 +181,58 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
   return (
     <div className="container mx-auto max-w-4xl py-12">
       <JsonLd
-        data={{
-          '@context': 'https://schema.org',
-          '@type': 'Article',
-          headline: column.title,
-          description: columnDescription,
-          image: [column.columnImage || column.authorImage],
-          datePublished: column.publishedAt.toISOString(),
-          dateModified: column.publishedAt.toISOString(),
-          author: {
-            '@type': 'Person',
-            name: column.author,
-            url: absoluteUrl(`/autores/${authorSlug}`),
-          },
-          publisher: {
-            '@type': 'Organization',
-            name: siteName,
-            logo: {
-              '@type': 'ImageObject',
-              url: absoluteUrl('/icon.png'),
+        data={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: column.title,
+            description: columnDescription,
+            image: [column.columnImage || column.authorImage],
+            datePublished: column.publishedAt.toISOString(),
+            dateModified: column.publishedAt.toISOString(),
+            author: {
+              '@type': 'Person',
+              name: column.author,
+              url: absoluteUrl(`/autores/${authorSlug}`),
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: siteName,
+              logo: {
+                '@type': 'ImageObject',
+                url: absoluteUrl('/icon.png'),
+              },
+            },
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': columnUrl,
             },
           },
-          mainEntityOfPage: {
-            '@type': 'WebPage',
-            '@id': columnUrl,
-          },
-        }}
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: absoluteUrl('/'),
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Colunas',
+                item: absoluteUrl('/colunas'),
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: column.title,
+                item: columnUrl,
+              },
+            ],
+          }
+        ]}
       />
       <div className="mb-8 flex justify-center px-4">
         <a href="https://meli.la/1yUshX3" target="_blank" rel="noopener noreferrer" className="block w-full max-w-[728px] hover:opacity-90 transition-opacity">

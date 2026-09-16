@@ -162,32 +162,58 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   return (
     <div className="container mx-auto max-w-4xl py-12">
       <JsonLd
-        data={{
-          '@context': 'https://schema.org',
-          '@type': 'NewsArticle',
-          headline: article.title,
-          description: articleDescription,
-          image: [article.image],
-          datePublished: article.publishedAt.toISOString(),
-          dateModified: article.publishedAt.toISOString(),
-          author: {
-            '@type': 'Person',
-            name: article.author || 'Redação Fla10',
-            url: absoluteUrl(`/autor/${slugify(article.author || 'Redacao Fla10')}`),
-          },
-          publisher: {
-            '@type': 'Organization',
-            name: siteName,
-            logo: {
-              '@type': 'ImageObject',
-              url: absoluteUrl('/icon.png'),
+        data={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'NewsArticle',
+            headline: article.title,
+            description: articleDescription,
+            image: [article.image],
+            datePublished: article.publishedAt.toISOString(),
+            dateModified: article.publishedAt.toISOString(),
+            author: {
+              '@type': 'Person',
+              name: article.author || 'Redação Fla10',
+              url: absoluteUrl(`/autor/${slugify(article.author || 'Redacao Fla10')}`),
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: siteName,
+              logo: {
+                '@type': 'ImageObject',
+                url: absoluteUrl('/icon.png'),
+              },
+            },
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': articleUrl,
             },
           },
-          mainEntityOfPage: {
-            '@type': 'WebPage',
-            '@id': articleUrl,
-          },
-        }}
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: absoluteUrl('/'),
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Notícias',
+                item: absoluteUrl('/noticias'),
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: article.title,
+                item: articleUrl,
+              },
+            ],
+          }
+        ]}
       />
       <div className="mb-8 flex justify-center px-4">
         <a href="https://meli.la/1yUshX3" target="_blank" rel="noopener noreferrer" className="block w-full max-w-[728px] hover:opacity-90 transition-opacity">
