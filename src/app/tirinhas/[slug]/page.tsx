@@ -126,8 +126,13 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
       </div>
 
       <article>
-        <header className="container mx-auto mb-8 text-center">
-          <h1 className="font-headline text-4xl md:text-5xl font-bold leading-tight mb-4">{tirinha.title}</h1>
+        <header className="container mx-auto mb-8 relative">
+          <div className="text-right mb-2">
+            <Link href="/tirinhas" className="text-sm text-primary font-bold hover:underline">
+              Ver todas as tirinhas
+            </Link>
+          </div>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold leading-tight mb-4 text-center">{tirinha.title}</h1>
           <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-6">
             <span>{publishDate}</span>
             <span>&bull;</span>
