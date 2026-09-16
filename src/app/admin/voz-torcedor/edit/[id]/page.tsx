@@ -11,6 +11,7 @@ import type { VozTorcedor } from "@/data/voz-torcedor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { TextareaWithFormatting } from "@/components/ui/textarea-with-formatting";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
