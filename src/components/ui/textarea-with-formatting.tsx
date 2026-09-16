@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Bold, Italic, Underline, CornerDownRight, ImageIcon, Highlighter, Minus, Heading3 } from 'lucide-react';
+import { Bold, Italic, Underline, CornerDownRight, ImageIcon, Highlighter, Minus, Heading3, Link2 } from 'lucide-react';
 
 interface TextareaWithFormattingProps extends React.ComponentProps<typeof Textarea> {}
 
@@ -77,6 +77,21 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
               className="h-8 w-8 p-0"
           >
             <Underline className="h-4 w-4" />
+          </Button>
+          <Button 
+              type="button" 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => {
+                const url = prompt("Digite a URL do link:");
+                if (url) {
+                  insertText(`<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 underline font-semibold hover:text-blue-800 dark:hover:text-blue-300">`, '</a>');
+                }
+              }}
+              title="Inserir Link"
+              className="h-8 w-8 p-0"
+          >
+            <Link2 className="h-4 w-4" />
           </Button>
           <Button 
               type="button" 
