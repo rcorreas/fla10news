@@ -12,6 +12,7 @@ import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
 import { RichTextRenderer } from '@/components/rich-text-renderer'
+import { insertVideoIntoContent } from '@/lib/youtube'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
@@ -199,9 +200,9 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
           )}
         </div>
 
-        {tirinha.description && (
+        {(tirinha.description || tirinha.videoUrl) && (
              <div className="container mx-auto mb-8 text-lg text-center text-muted-foreground max-w-3xl space-y-4">
-                 <RichTextRenderer content={tirinha.description} />
+                 <RichTextRenderer content={insertVideoIntoContent(tirinha.description || '', tirinha.videoUrl)} />
              </div>
         )}
         

@@ -155,8 +155,9 @@ export default function HistoriaPage() {
               </div>
             </div>
              <div className="grid gap-2">
-                <Label htmlFor="videoUrl">Link do Vídeo (Opcional)</Label>
+                <Label htmlFor="videoUrl">Link do Vídeo (YouTube)</Label>
                 <Input id="videoUrl" name="videoUrl" type="url" placeholder="https://youtube.com/watch?v=..." />
+                <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro do conteúdo abaixo.</p>
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="content">Matéria Completa</Label>

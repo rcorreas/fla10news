@@ -12,6 +12,7 @@ import { Clock, PlayCircle, Trophy, Eye } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ShareButton } from '@/components/share-button'
+import { insertVideoIntoContent } from '@/lib/youtube'
 import { ArticleShareButton } from '@/components/article-share-button'
 import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { db } from '@/lib/firebase'
@@ -164,11 +165,11 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
 
   const otherArticles = allArticles.filter(a => a.slug !== article.slug).slice(0, 3);
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-  const videoId = article.videoUrl ? getYouTubeId(article.videoUrl) : null;
   const articleUrl = absoluteUrl(`/flahistoria/${article.slug}`);
   const articleDescription = truncateDescription(article.subtitle || article.content || '');
 
-  const paragraphs = article.content ? parseContent(article.content) : [];
+  const rawContent = article.content ? insertVideoIntoContent(article.content, article.videoUrl) : '';
+  const paragraphs = rawContent ? parseContent(rawContent) : [];
   const midPoint = Math.floor(paragraphs.length / 2);
   const firstHalf = paragraphs.slice(0, midPoint).join('\n');
   const secondHalf = paragraphs.slice(midPoint).join('\n');
@@ -292,21 +293,6 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
             </>
           )}
         </div>
-
-        {videoId && (
-          <div className="mt-12">
-            <div className="relative aspect-video bg-black rounded-lg">
-              <iframe
-                src={`https://www.youtube.com/embed/${videoId}`}
-                title={article.title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute top-0 left-0 w-full h-full rounded-lg"
-              ></iframe>
-            </div>
-          </div>
-        )}
 
         <AdsKeeperWidget widgetId="2046582" />
 

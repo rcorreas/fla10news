@@ -105,6 +105,12 @@ export function EditTirinhaForm({ tirinha }: { tirinha: TirinhaItem }) {
           </div>
 
           <div className="grid gap-2">
+            <Label htmlFor="videoUrl">Link do Vídeo (YouTube)</Label>
+            <Input id="videoUrl" name="videoUrl" type="url" defaultValue={tirinha.videoUrl || ''} placeholder="https://www.youtube.com/watch?v=..." />
+            <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro da descrição abaixo.</p>
+          </div>
+
+          <div className="grid gap-2">
             <Label htmlFor="description">Descrição (Opcional)</Label>
             <TextareaWithFormatting id="description" name="description" defaultValue={tirinha.description} />
           </div>

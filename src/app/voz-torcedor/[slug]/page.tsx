@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Clock, Eye, MessageSquare } from 'lucide-react'
 import { slugify, formatPublishedTime , getSocialMetaImageUrl } from '@/lib/utils';
 import { ShareButton } from '@/components/share-button'
+import { insertVideoIntoContent } from '@/lib/youtube'
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
@@ -88,6 +89,8 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
   const dataPublicacao = format(voz.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const vozUrl = absoluteUrl(`/voz-torcedor/${voz.slug}`);
   const vozDescription = truncateDescription(voz.summary || voz.content || '');
+
+  const parsedContent = voz.content ? insertVideoIntoContent(voz.content, voz.videoUrl) : '';
 
   return (
     <div className="container mx-auto max-w-4xl py-12">
@@ -164,10 +167,10 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
           </div>
         )}
         
-        {voz.content && (
+        {parsedContent && (
           <div 
             className="text-lg space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold [&_a]:text-[#ff073a] [&_a]:font-bold [&_a]:hover:underline"
-            dangerouslySetInnerHTML={{ __html: voz.content }}
+            dangerouslySetInnerHTML={{ __html: parsedContent }}
           />
         )}
 

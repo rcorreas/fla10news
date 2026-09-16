@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Clock, Eye } from 'lucide-react'
 import { slugify, formatPublishedTime , getSocialMetaImageUrl } from '@/lib/utils';
 import { ShareButton } from '@/components/share-button'
+import { insertVideoIntoContent } from '@/lib/youtube'
 import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { ArticleShareButton } from '@/components/article-share-button'
 import { RichTextRenderer } from '@/components/rich-text-renderer'
@@ -176,7 +177,8 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
       return [processed];
   };
 
-  const parsedContent = column.content ? parseContent(column.content).join('\n') : '';
+  const rawContent = column.content ? insertVideoIntoContent(column.content, column.videoUrl) : '';
+  const parsedContent = rawContent ? parseContent(rawContent).join('\n') : '';
 
   return (
     <div className="container mx-auto max-w-4xl py-12">

@@ -11,6 +11,7 @@ const VozTorcedorSchema = z.object({
   summary: z.string().min(10, { message: "O resumo deve ter pelo menos 10 caracteres." }),
   content: z.string().min(10, { message: "O conteúdo deve ter pelo menos 10 caracteres." }),
   image: z.string().url({ message: "Por favor, insira um link válido para a imagem." }).optional().or(z.literal('')),
+  videoUrl: z.string().url({ message: "Por favor, insira um link de vídeo válido." }).optional().or(z.literal('')),
 });
 
 function generateSlug(title: string): string {
@@ -29,6 +30,7 @@ export async function createVozTorcedor(prevState: any, formData: FormData) {
     summary: formData.get("summary"),
     content: formData.get("content"),
     image: formData.get("image"),
+    videoUrl: formData.get("videoUrl"),
   });
 
   if (!validatedFields.success) {
@@ -74,6 +76,7 @@ export async function updateVozTorcedor(id: string, slug: string, prevState: any
     summary: formData.get("summary"),
     content: formData.get("content"),
     image: formData.get("image"),
+    videoUrl: formData.get("videoUrl"),
   });
 
   if (!validatedFields.success) {

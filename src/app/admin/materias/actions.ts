@@ -19,6 +19,7 @@ const NewsSchema = z.object({
   fullArticleLink: z.string().url({ message: "Por favor, insira um link válido para a matéria completa." }).optional().or(z.literal('')),
   dataAiHint: z.string().optional(),
   author: z.string().optional(),
+  videoUrl: z.string().url({ message: "Por favor, insira um link de vídeo válido." }).optional().or(z.literal('')),
 });
 
 function generateSlug(title: string): string {
@@ -44,6 +45,7 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
     fullArticleLink: formData.get("fullArticleLink"),
     dataAiHint: formData.get("dataAiHint"),
     author: formData.get("author"),
+    videoUrl: formData.get("videoUrl"),
   });
 
   if (!validatedFields.success) {
@@ -98,6 +100,7 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
     fullArticleLink: formData.get("fullArticleLink"),
     dataAiHint: formData.get("dataAiHint"),
     author: formData.get("author"),
+    videoUrl: formData.get("videoUrl"),
   });
 
   if (!validatedFields.success) {

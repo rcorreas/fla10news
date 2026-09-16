@@ -18,6 +18,7 @@ const ColumnSchema = z.object({
   category: z.string().min(3, { message: "A categoria deve ter pelo menos 3 caracteres." }),
   content: z.string().min(50, { message: "O conteúdo da coluna deve ter pelo menos 50 caracteres." }),
   dataAiHint: z.string().optional(),
+  videoUrl: z.string().url({ message: "Por favor, insira um link de vídeo válido." }).optional().or(z.literal('')),
 });
 
 function generateSlug(title: string): string {
@@ -43,6 +44,7 @@ export async function createColumn(prevState: any, formData: FormData) {
     category: formData.get("category"),
     content: formData.get("content"),
     dataAiHint: formData.get("dataAiHint"),
+    videoUrl: formData.get("videoUrl"),
   });
 
   if (!validatedFields.success) {
@@ -98,6 +100,7 @@ export async function updateColumn(id: string, slug: string, prevState: any, for
     category: formData.get("category"),
     content: formData.get("content"),
     dataAiHint: formData.get("dataAiHint"),
+    videoUrl: formData.get("videoUrl"),
   });
 
   if (!validatedFields.success) {

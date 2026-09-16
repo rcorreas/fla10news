@@ -13,6 +13,7 @@ import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ShareButton } from '@/components/share-button'
 import { RichTextRenderer } from '@/components/rich-text-renderer'
+import { insertVideoIntoContent } from '@/lib/youtube'
 
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
@@ -155,7 +156,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       return [processed];
   };
   
-  const paragraphs = article.content ? parseContent(article.content) : [];
+  const rawContent = article.content ? insertVideoIntoContent(article.content, article.videoUrl) : '';
+  const paragraphs = rawContent ? parseContent(rawContent) : [];
   const parsedContent = paragraphs.join('\n');
 
 

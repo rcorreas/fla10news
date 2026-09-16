@@ -134,6 +134,12 @@ export default function VozTorcedorPage() {
               <Label htmlFor="summary">Resumo</Label>
               <Textarea id="summary" name="summary" placeholder="Um resumo curto que aparecerá nas listagens" required />
             </div>
+            <Separator />
+            <div className="grid gap-2">
+              <Label htmlFor="videoUrl">Link do Vídeo (YouTube)</Label>
+              <Input id="videoUrl" name="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." />
+              <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro do conteúdo abaixo.</p>
+            </div>
              <div className="grid gap-2">
                 <Label htmlFor="content">Conteúdo da Opinião</Label>
                 <TextareaWithFormatting id="content" name="content" placeholder="Escreva o texto completo da opinião aqui. Você pode usar tags HTML." className="min-h-[300px]" required />

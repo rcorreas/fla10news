@@ -16,6 +16,7 @@ export async function createTirinha(prevState: any, formData: FormData) {
     const image3 = formData.get("image3") as string;
     const image4 = formData.get("image4") as string;
     const description = formData.get("description") as string;
+    const videoUrl = formData.get("videoUrl") as string;
 
     const novaTirinha = {
       title,
@@ -26,6 +27,7 @@ export async function createTirinha(prevState: any, formData: FormData) {
       image3: image3 || null,
       image4: image4 || null,
       description: description || null,
+      videoUrl: videoUrl || null,
       publishedAt: new Date(),
       views: 0,
       dataAiHint: 'cartoon',
@@ -62,6 +64,7 @@ export async function updateTirinha(prevState: any, formData: FormData) {
     const image3 = formData.get("image3") as string;
     const image4 = formData.get("image4") as string;
     const description = formData.get("description") as string;
+    const videoUrl = formData.get("videoUrl") as string;
 
     const tirinhaDoc = doc(db, "tirinhas", id);
     
@@ -74,6 +77,7 @@ export async function updateTirinha(prevState: any, formData: FormData) {
       image3: image3 || null,
       image4: image4 || null,
       description: description || null,
+      videoUrl: videoUrl || null,
     });
 
     revalidatePath("/admin/tirinhas");

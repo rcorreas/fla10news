@@ -17,6 +17,7 @@ export type OpinionColumn = {
     category: string;
     content: string;
     views: number;
+    videoUrl?: string;
 };
 
 // Helper function to generate slugs
@@ -54,6 +55,7 @@ const fromFirestore = (doc: any): OpinionColumn => {
         category: data.category || 'Opinião',
         content: data.content || '',
         views: data.views || 0,
+        videoUrl: data.videoUrl || '',
     };
 };
 

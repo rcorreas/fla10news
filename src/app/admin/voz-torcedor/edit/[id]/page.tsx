@@ -133,6 +133,12 @@ export default function EditVozTorcedorPage() {
               <Label htmlFor="summary">Resumo</Label>
               <Textarea id="summary" name="summary" defaultValue={item.summary} required />
             </div>
+            <Separator />
+            <div className="grid gap-2">
+              <Label htmlFor="videoUrl">Link do Vídeo (YouTube)</Label>
+              <Input id="videoUrl" name="videoUrl" type="url" defaultValue={item.videoUrl || ''} placeholder="https://www.youtube.com/watch?v=..." />
+              <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro do conteúdo abaixo.</p>
+            </div>
              <div className="grid gap-2">
                 <Label htmlFor="content">Conteúdo da Opinião</Label>
                 <TextareaWithFormatting id="content" name="content" defaultValue={item.content} className="min-h-[300px]" required />

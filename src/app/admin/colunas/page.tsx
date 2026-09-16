@@ -205,6 +205,12 @@ export default function ColunasPage() {
                 <Label htmlFor="dataAiHint">Dica para IA da Imagem (Opcional)</Label>
                 <Input id="dataAiHint" name="dataAiHint" placeholder="Ex: journalist writing" />
             </div>
+            <Separator />
+            <div className="grid gap-2">
+              <Label htmlFor="videoUrl">Link do Vídeo (YouTube)</Label>
+              <Input id="videoUrl" name="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." />
+              <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro do conteúdo abaixo.</p>
+            </div>
              <div className="grid gap-2">
                 <Label htmlFor="content">Conteúdo da Coluna</Label>
                 <TextareaWithFormatting id="content" name="content" placeholder="Escreva a coluna completa aqui. Você pode usar tags HTML." className="min-h-[300px]" required />

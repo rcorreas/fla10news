@@ -192,6 +192,12 @@ export default function EditMateriasPage() {
               <Input id="fullArticleLink" name="fullArticleLink" type="url" defaultValue={article.fullArticleLink || ''} placeholder="https://ge.globo.com/..." />
               <p className="text-xs text-muted-foreground">Se preenchido, um botão "Ler matéria completa" aparecerá no final do artigo.</p>
             </div>
+            <Separator />
+            <div className="grid gap-2">
+              <Label htmlFor="videoUrl">Link do Vídeo (YouTube)</Label>
+              <Input id="videoUrl" name="videoUrl" type="url" defaultValue={article.videoUrl || ''} placeholder="https://www.youtube.com/watch?v=..." />
+              <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro do conteúdo abaixo onde deseja que ele apareça. Se não usar a tag, ele aparecerá no topo do texto.</p>
+            </div>
              <div className="grid gap-2">
                 <Label htmlFor="content">Conteúdo da Matéria</Label>
                 <TextareaWithFormatting id="content" name="content" defaultValue={article.content} className="min-h-[300px]" required />

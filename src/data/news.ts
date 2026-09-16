@@ -19,6 +19,7 @@ export type NewsArticle = {
     author?: string;
     views: number;
     fullArticleLink?: string;
+    videoUrl?: string;
 };
 
 const fromFirestore = (doc: any): NewsArticle => {
@@ -40,6 +41,7 @@ const fromFirestore = (doc: any): NewsArticle => {
         author: data.author || 'Redação NRN',
         views: data.views || 0,
         fullArticleLink: data.fullArticleLink || '',
+        videoUrl: data.videoUrl || '',
     };
 };
 
