@@ -66,7 +66,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: tirinha.title,
       description: desc,
-      images: [getSocialMetaImageUrl(tirinha.imageHome)],
+      images: [tirinha.imageHome || ""],
     },
   }
 }
