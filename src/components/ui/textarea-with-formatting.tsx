@@ -36,6 +36,48 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
       }, 0);
     };
 
+    const insertInMiddle = (htmlToInsert: string) => {
+      const textarea = textareaRef.current;
+      if (!textarea) return;
+
+      const text = textarea.value;
+      if (!text || text.length === 0) {
+        insertText(htmlToInsert);
+        return;
+      }
+
+      const mid = Math.floor(text.length / 2);
+      
+      // Tenta encontrar uma quebra de linha após a metade do texto
+      let insertIndex = text.indexOf('\n\n', mid);
+      if (insertIndex === -1) insertIndex = text.indexOf('<br><br>', mid);
+      if (insertIndex === -1) insertIndex = text.indexOf('\n', mid);
+      if (insertIndex === -1) insertIndex = text.indexOf('<br>', mid);
+      
+      // Se não achou depois da metade, tenta antes
+      if (insertIndex === -1) insertIndex = text.lastIndexOf('\n\n', mid);
+      if (insertIndex === -1) insertIndex = text.lastIndexOf('<br><br>', mid);
+      if (insertIndex === -1) insertIndex = text.lastIndexOf('\n', mid);
+      
+      if (insertIndex === -1) {
+        insertIndex = mid;
+      } else {
+        // Avança o índice para depois da quebra de linha
+        if (text.startsWith('\n\n', insertIndex)) insertIndex += 2;
+        else if (text.startsWith('<br><br>', insertIndex)) insertIndex += 8;
+        else if (text.startsWith('\n', insertIndex)) insertIndex += 1;
+        else if (text.startsWith('<br>', insertIndex)) insertIndex += 4;
+      }
+
+      const newText = text.substring(0, insertIndex) + '\n\n' + htmlToInsert + '\n\n' + text.substring(insertIndex);
+      
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value")?.set;
+      nativeInputValueSetter?.call(textarea, newText);
+      
+      const event = new Event('input', { bubbles: true });
+      textarea.dispatchEvent(event);
+    };
+
     return (
       <div className="space-y-2 w-full relative">
         <div className="flex items-center gap-1 mb-2 p-1 border rounded-md bg-muted/40 w-fit">
@@ -115,7 +157,7 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
             <Minus className="h-4 w-4" />
           </Button>
           <div className="w-px h-4 bg-border mx-1" />
-          <RelatedArticleInserter onInsert={insertText} />
+          <RelatedArticleInserter onInsert={insertInMiddle} />
           <Button 
               type="button" 
               variant="ghost" 
