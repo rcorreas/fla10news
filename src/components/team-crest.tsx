@@ -20,7 +20,8 @@ const teamCrests: Record<string, string> = {
   "Vitória": "https://i.imgur.com/NtoSUhj.png",
   "Juventude": "https://i.imgur.com/dieI3rH.png",
   "Cuiabá": "https://i.imgur.com/BwtmjHh.png",
-  "Red Bull Bragantino": "https://i.imgur.com/v7ZxAlE.png",
+  "Red Bull Bragantino": "https://i.imgur.com/IkLhfAA.png",
+  "Bragantino": "https://i.imgur.com/IkLhfAA.png",
   "Athletico-PR": "https://i.imgur.com/aQ3Qp9n.png",
   "Atlético-GO": "https://i.imgur.com/wV1RWSn.png",
   "Santos": "https://i.postimg.cc/PrS7QGkR/Escudo-do-Santos-Futebol-Clube.png",
@@ -32,17 +33,29 @@ const teamCrests: Record<string, string> = {
   "Remo": "https://i.imgur.com/xWyT2HI.png",
   "Independente del Valle": "https://i.imgur.com/iQQ32wC.png",
   "Independiente del Valle": "https://i.imgur.com/iQQ32wC.png",
+  "Ind. del Valle (Ecu)": "https://i.imgur.com/iQQ32wC.png",
+  "Ind. del Valle": "https://i.imgur.com/iQQ32wC.png",
 };
 
 
-export function TeamCrest({ teamName, size = 'md' }: { teamName: string, size?: 'sm' | 'md' | 'lg' }) {
+const normalizedCrests = Object.fromEntries(
+  Object.entries(teamCrests).map(([key, value]) => [
+    key.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(),
+    value
+  ])
+);
+
+export function TeamCrest({ teamName, size = 'md' }: { teamName: string, size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' }) {
     const sizeClasses = {
         sm: 'h-6 w-6',
         md: 'h-8 w-8',
-        lg: 'h-10 w-10'
+        lg: 'h-10 w-10',
+        xl: 'h-16 w-16',
+        '2xl': 'h-20 w-20'
     }
 
-    const crestUrl = teamCrests[teamName];
+    const normalizedTeamName = teamName?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const crestUrl = teamCrests[teamName] || (normalizedTeamName ? normalizedCrests[normalizedTeamName] : null);
 
     if (crestUrl) {
         return (
@@ -51,6 +64,7 @@ export function TeamCrest({ teamName, size = 'md' }: { teamName: string, size?: 
                     src={crestUrl}
                     alt={`${teamName} crest`}
                     fill
+                    unoptimized
                     className="object-contain"
                 />
             </div>
