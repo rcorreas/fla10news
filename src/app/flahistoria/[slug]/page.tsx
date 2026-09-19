@@ -128,14 +128,22 @@ const parseContent = (content: string): string[] => {
     return result;
   }
 
+  const isHtmlBlock = (p: string) => p.startsWith('<div') || p.startsWith('<table') || p.startsWith('<iframe') || p.startsWith('<blockquote') || p.startsWith('<script') || p.startsWith('<img') || p.startsWith('<figure');
+
   // If content is plain text with double newlines
   if (formattedContent.includes('\n\n')) {
-    return formattedContent.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p.replace(/\n/g, '<br/>')}</p>`);
+    return formattedContent.split('\n\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
+        if (isHtmlBlock(p)) return p;
+        return `<p>${p.replace(/\n/g, '<br/>')}</p>`;
+    });
   }
 
   // If content has single newlines
   if (formattedContent.includes('\n')) {
-    return formattedContent.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p}</p>`);
+    return formattedContent.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => {
+        if (isHtmlBlock(p)) return p;
+        return `<p>${p}</p>`;
+    });
   }
 
   // Fallback
@@ -168,7 +176,9 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
   const articleUrl = absoluteUrl(`/flahistoria/${article.slug}`);
   const articleDescription = truncateDescription(article.subtitle || article.content || '');
 
-  const rawContent = article.content ? insertVideoIntoContent(article.content, article.videoUrl) : '';
+  const decodeBrackets = (str: string) => str.replace(/&#91;/g, '[').replace(/&#93;/g, ']').replace(/&lsqb;/g, '[').replace(/&rsqb;/g, ']');
+  const decodedArticleContent = article.content ? decodeBrackets(article.content) : '';
+  const rawContent = decodedArticleContent ? insertVideoIntoContent(decodedArticleContent, article.videoUrl) : '';
   const paragraphs = rawContent ? parseContent(rawContent) : [];
   const midPoint = Math.floor(paragraphs.length / 2);
   const firstHalf = paragraphs.slice(0, midPoint).join('\n');
