@@ -199,6 +199,24 @@ export default function MateriasPage() {
               <Input id="videoUrl" name="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." />
               <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro do conteúdo abaixo onde deseja que ele apareça. Se não usar a tag, ele aparecerá no topo do texto.</p>
             </div>
+            <Separator />
+            <div className="space-y-4 bg-muted/50 p-4 rounded-lg">
+              <h3 className="font-medium text-lg">SEO (Google)</h3>
+              <p className="text-sm text-muted-foreground">Campos opcionais. Se deixados em branco, o sistema usará o título e o subtítulo da matéria.</p>
+              <div className="grid gap-2">
+                <Label htmlFor="metaTitle">Meta Title (Título no Google)</Label>
+                <Input id="metaTitle" name="metaTitle" placeholder="Flávia Saraiva é ouro e Rebeca prata na trave | Fla10" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="metaDescription">Meta Description (Resumo no Google)</Label>
+                <Textarea id="metaDescription" name="metaDescription" placeholder="Flávia Saraiva conquista o ouro e Rebeca Andrade fica com a prata na trave..." className="min-h-[80px]" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="focusKeyword">Palavra-chave Principal</Label>
+                <Input id="focusKeyword" name="focusKeyword" placeholder="Ex: Flávia Saraiva Rebeca Andrade" />
+              </div>
+            </div>
+            <Separator />
              <div className="grid gap-2">
                 <Label htmlFor="content">Conteúdo da Matéria</Label>
                 <TextareaWithFormatting id="content" name="content" placeholder="Escreva a matéria completa aqui. Você pode usar tags HTML como <p>, <h3> e <strong> para formatar o texto." className="min-h-[300px]" required />

@@ -34,19 +34,21 @@ export async function generateMetadata(
     }
   }
 
-  const desc = truncateDescription(voz.summary || voz.content || '');
+  const desc = voz.metaDescription || truncateDescription(voz.summary || voz.content || '');
   const imageUrl = 'https://i.imgur.com/ESMmQcc.png';
   const url = absoluteUrl(`/voz-torcedor/${voz.slug}`);
+  const metaTitle = voz.metaTitle || voz.title;
   
 
   return {
-    title: voz.title,
+    title: metaTitle,
     description: desc,
+    keywords: voz.focusKeyword ? [voz.focusKeyword] : undefined,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: voz.title,
+      title: metaTitle,
       description: desc,
       url,
       images: [getSocialMetaImageUrl(imageUrl)],
@@ -56,7 +58,7 @@ export async function generateMetadata(
     },
     twitter: {
       card: 'summary_large_image',
-      title: voz.title,
+      title: metaTitle,
       description: desc,
       images: [imageUrl || ""],
     },

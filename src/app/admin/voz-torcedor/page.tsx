@@ -135,12 +135,29 @@ export default function VozTorcedorPage() {
               <Label htmlFor="summary">Resumo</Label>
               <Textarea id="summary" name="summary" placeholder="Um resumo curto que aparecerá nas listagens" required />
             </div>
-            <Separator />
             <div className="grid gap-2">
               <Label htmlFor="videoUrl">Link do Vídeo (YouTube)</Label>
               <Input id="videoUrl" name="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." />
               <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro do conteúdo abaixo.</p>
             </div>
+            <Separator />
+            <div className="space-y-4 bg-muted/50 p-4 rounded-lg">
+              <h3 className="font-medium text-lg">SEO (Google)</h3>
+              <p className="text-sm text-muted-foreground">Campos opcionais. Se deixados em branco, o sistema usará o título e o subtítulo da matéria.</p>
+              <div className="grid gap-2">
+                <Label htmlFor="metaTitle">Meta Title (Título no Google)</Label>
+                <Input id="metaTitle" name="metaTitle" placeholder="Ex: Título focado em SEO | Fla10" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="metaDescription">Meta Description (Resumo no Google)</Label>
+                <Textarea id="metaDescription" name="metaDescription" placeholder="Resumo chamativo para os resultados de busca..." className="min-h-[80px]" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="focusKeyword">Palavra-chave Principal</Label>
+                <Input id="focusKeyword" name="focusKeyword" placeholder="Ex: Flamengo Libertadores" />
+              </div>
+            </div>
+            <Separator />
              <div className="grid gap-2">
                 <Label htmlFor="content">Conteúdo da Opinião</Label>
                 <TextareaWithFormatting id="content" name="content" placeholder="Escreva o texto completo da opinião aqui. Você pode usar tags HTML." className="min-h-[300px]" required />

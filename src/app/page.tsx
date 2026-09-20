@@ -24,7 +24,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, PlayCircle, Trophy, MessageSquare, Palette, ScanLine, Image as ImageIcon } from 'lucide-react'
+import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, PlayCircle, Trophy, MessageSquare, Palette, ScanLine, Image as ImageIcon, BarChart3 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { AdBanner } from '@/components/ad-banner'
 import { SofascoreWidget } from '@/components/sofascore-widget'
@@ -44,6 +44,10 @@ import { format, differenceInMinutes, differenceInHours, differenceInDays } from
 import { ShareButton } from '@/components/share-button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { slugify, formatPublishedTime } from '@/lib/utils';
+import { getNextMatchStats, getCampaignStatsList } from '@/data/stats';
+import { getRecentMatches } from '@/data/match-center';
+import { NextMatchWidget, CampaignWidget } from '@/components/home/stats-widgets';
+import { RecentMatchesWidget } from '@/components/home/recent-matches';
 
 
 
@@ -95,6 +99,10 @@ export default async function Home() {
   const homePageVideos = allVideos;
   const latestNews = allNews.length > 0 ? allNews[0] : null;
   const featuredHistoricArticle = historicArticles.length > 0 ? historicArticles[0] : null;
+
+  const nextMatchStats = await getNextMatchStats();
+  const campaignList = await getCampaignStatsList();
+  const recentMatches = await getRecentMatches(3);
 
   const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Sao_Paulo',
@@ -197,9 +205,18 @@ export default async function Home() {
                 </div>
             </div>
           </section>
+
+          {/* WIDGETS DE DESEMPENHO E RESULTADOS */}
+          <section className="mt-6">
+            <SectionHeader title="FLA10 STATS" subtitle="Estatísticas, resultados e o desempenho do Mengão na temporada." icon={BarChart3} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <CampaignWidget campaignList={campaignList} />
+              <RecentMatchesWidget matches={recentMatches} />
+            </div>
+          </section>
           
           {latestNews && (
-            <section>
+            <section className="mt-6">
                 <div className="bg-primary text-primary-foreground p-4 rounded-lg shadow-lg">
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4 overflow-hidden">

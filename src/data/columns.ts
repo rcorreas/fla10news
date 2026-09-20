@@ -18,6 +18,9 @@ export type OpinionColumn = {
     content: string;
     views: number;
     videoUrl?: string;
+    metaTitle?: string;
+    metaDescription?: string;
+    focusKeyword?: string;
 };
 
 // Helper function to generate slugs
@@ -56,6 +59,9 @@ const fromFirestore = (doc: any): OpinionColumn => {
         content: data.content || '',
         views: data.views || 0,
         videoUrl: data.videoUrl || '',
+        metaTitle: data.metaTitle || '',
+        metaDescription: data.metaDescription || '',
+        focusKeyword: data.focusKeyword || '',
     };
 };
 

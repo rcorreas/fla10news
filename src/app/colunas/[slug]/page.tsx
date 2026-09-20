@@ -54,8 +54,9 @@ export async function generateMetadata(
     }
   }
 
-  const desc = truncateDescription(column.excerpt || column.content || '');
+  const desc = column.metaDescription || truncateDescription(column.excerpt || column.content || '');
   const url = absoluteUrl(`/colunas/${column.slug}`);
+  const metaTitle = column.metaTitle || column.title;
   let imageUrl = column.columnImage || 'https://placehold.co/1200x675.png'; // default fallback if no image
 
   if (!column.columnImage) {
@@ -73,13 +74,14 @@ export async function generateMetadata(
   
 
   return {
-    title: column.title,
+    title: metaTitle,
     description: desc,
+    keywords: column.focusKeyword ? [column.focusKeyword] : undefined,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: column.title,
+      title: metaTitle,
       description: desc,
       url,
       images: [getSocialMetaImageUrl(imageUrl)],
@@ -89,7 +91,7 @@ export async function generateMetadata(
     },
     twitter: {
       card: 'summary_large_image',
-      title: column.title,
+      title: metaTitle,
       description: desc,
       images: [imageUrl || ""],
     },

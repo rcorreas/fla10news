@@ -20,6 +20,9 @@ export type NewsArticle = {
     views: number;
     fullArticleLink?: string;
     videoUrl?: string;
+    metaTitle?: string;
+    metaDescription?: string;
+    focusKeyword?: string;
 };
 
 const fromFirestore = (doc: any): NewsArticle => {
@@ -42,6 +45,9 @@ const fromFirestore = (doc: any): NewsArticle => {
         views: data.views || 0,
         fullArticleLink: data.fullArticleLink || '',
         videoUrl: data.videoUrl || '',
+        metaTitle: data.metaTitle || '',
+        metaDescription: data.metaDescription || '',
+        focusKeyword: data.focusKeyword || '',
     };
 };
 

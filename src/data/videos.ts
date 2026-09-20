@@ -12,6 +12,9 @@ export type Video = {
     category: string;
     views: number;
     videoUrl?: string;
+    metaTitle?: string;
+    metaDescription?: string;
+    focusKeyword?: string;
 };
 
 const fromFirestore = (doc: any): Video => {
@@ -27,6 +30,9 @@ const fromFirestore = (doc: any): Video => {
         category: data.category || 'Geral',
         views: data.views || 0,
         videoUrl: data.videoUrl || '',
+        metaTitle: data.metaTitle || '',
+        metaDescription: data.metaDescription || '',
+        focusKeyword: data.focusKeyword || '',
     };
 };
 

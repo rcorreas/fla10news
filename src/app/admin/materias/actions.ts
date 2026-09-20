@@ -20,6 +20,9 @@ const NewsSchema = z.object({
   dataAiHint: z.string().optional(),
   author: z.string().optional(),
   videoUrl: z.string().url({ message: "Por favor, insira um link de vídeo válido." }).optional().or(z.literal('')),
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+  focusKeyword: z.string().optional(),
 });
 
 function generateSlug(title: string): string {
@@ -46,6 +49,9 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
     dataAiHint: formData.get("dataAiHint"),
     author: formData.get("author"),
     videoUrl: formData.get("videoUrl"),
+    metaTitle: formData.get("metaTitle"),
+    metaDescription: formData.get("metaDescription"),
+    focusKeyword: formData.get("focusKeyword"),
   });
 
   if (!validatedFields.success) {
@@ -101,6 +107,9 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
     dataAiHint: formData.get("dataAiHint"),
     author: formData.get("author"),
     videoUrl: formData.get("videoUrl"),
+    metaTitle: formData.get("metaTitle"),
+    metaDescription: formData.get("metaDescription"),
+    focusKeyword: formData.get("focusKeyword"),
   });
 
   if (!validatedFields.success) {

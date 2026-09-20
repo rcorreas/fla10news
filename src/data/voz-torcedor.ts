@@ -12,6 +12,9 @@ export type VozTorcedor = {
     publishedAt: Date;
     views: number;
     videoUrl?: string;
+    metaTitle?: string;
+    metaDescription?: string;
+    focusKeyword?: string;
 };
 
 // Helper function to generate slugs
@@ -38,6 +41,9 @@ const fromFirestore = (doc: any): VozTorcedor => {
         publishedAt: data.publishedAt instanceof Timestamp ? data.publishedAt.toDate() : new Date(),
         views: data.views || 0,
         videoUrl: data.videoUrl || '',
+        metaTitle: data.metaTitle || '',
+        metaDescription: data.metaDescription || '',
+        focusKeyword: data.focusKeyword || '',
     };
 };
 
