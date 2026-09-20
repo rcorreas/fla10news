@@ -214,6 +214,10 @@ export default function EditMateriasPage() {
                 <Label htmlFor="focusKeyword">Palavra-chave Principal</Label>
                 <Input id="focusKeyword" name="focusKeyword" defaultValue={article.focusKeyword || ''} placeholder="Ex: Flávia Saraiva Rebeca Andrade" />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="secondaryKeywords">Palavras-chave Secundárias</Label>
+                <Input id="secondaryKeywords" name="secondaryKeywords" defaultValue={article.secondaryKeywords || ''} placeholder="Ex: ginástica, medalha, olimpiadas (separadas por espaço ou vírgula)" />
+              </div>
             </div>
             <Separator />
              <div className="grid gap-2">

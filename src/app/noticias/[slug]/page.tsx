@@ -49,7 +49,7 @@ export async function generateMetadata(
   return {
     title: metaTitle,
     description: desc,
-    keywords: article.focusKeyword ? [article.focusKeyword] : undefined,
+    keywords: [article.focusKeyword || '', ...(article.secondaryKeywords || '').split(',').map(k => k.trim())].filter(Boolean),
     alternates: {
       canonical: url,
     },

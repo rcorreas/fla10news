@@ -22,6 +22,7 @@ const ColumnSchema = z.object({
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   focusKeyword: z.string().optional(),
+  secondaryKeywords: z.string().optional(),
 });
 
 function generateSlug(title: string): string {
@@ -51,6 +52,7 @@ export async function createColumn(prevState: any, formData: FormData) {
     metaTitle: formData.get("metaTitle"),
     metaDescription: formData.get("metaDescription"),
     focusKeyword: formData.get("focusKeyword"),
+    secondaryKeywords: formData.get("secondaryKeywords"),
   });
 
   if (!validatedFields.success) {
@@ -110,6 +112,7 @@ export async function updateColumn(id: string, slug: string, prevState: any, for
     metaTitle: formData.get("metaTitle"),
     metaDescription: formData.get("metaDescription"),
     focusKeyword: formData.get("focusKeyword"),
+    secondaryKeywords: formData.get("secondaryKeywords"),
   });
 
   if (!validatedFields.success) {

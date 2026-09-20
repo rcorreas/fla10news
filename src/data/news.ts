@@ -23,6 +23,7 @@ export type NewsArticle = {
     metaTitle?: string;
     metaDescription?: string;
     focusKeyword?: string;
+    secondaryKeywords?: string;
 };
 
 const fromFirestore = (doc: any): NewsArticle => {
@@ -48,6 +49,7 @@ const fromFirestore = (doc: any): NewsArticle => {
         metaTitle: data.metaTitle || '',
         metaDescription: data.metaDescription || '',
         focusKeyword: data.focusKeyword || '',
+        secondaryKeywords: data.secondaryKeywords || '',
     };
 };
 

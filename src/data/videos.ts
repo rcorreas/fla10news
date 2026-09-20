@@ -15,6 +15,7 @@ export type Video = {
     metaTitle?: string;
     metaDescription?: string;
     focusKeyword?: string;
+    secondaryKeywords?: string;
 };
 
 const fromFirestore = (doc: any): Video => {
@@ -33,6 +34,7 @@ const fromFirestore = (doc: any): Video => {
         metaTitle: data.metaTitle || '',
         metaDescription: data.metaDescription || '',
         focusKeyword: data.focusKeyword || '',
+        secondaryKeywords: data.secondaryKeywords || '',
     };
 };
 

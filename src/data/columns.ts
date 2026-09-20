@@ -21,6 +21,7 @@ export type OpinionColumn = {
     metaTitle?: string;
     metaDescription?: string;
     focusKeyword?: string;
+    secondaryKeywords?: string;
 };
 
 // Helper function to generate slugs
@@ -62,6 +63,7 @@ const fromFirestore = (doc: any): OpinionColumn => {
         metaTitle: data.metaTitle || '',
         metaDescription: data.metaDescription || '',
         focusKeyword: data.focusKeyword || '',
+        secondaryKeywords: data.secondaryKeywords || '',
     };
 };
 

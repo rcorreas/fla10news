@@ -43,7 +43,7 @@ export async function generateMetadata(
   return {
     title: metaTitle,
     description: desc,
-    keywords: voz.focusKeyword ? [voz.focusKeyword] : undefined,
+    keywords: [voz.focusKeyword || '', ...(voz.secondaryKeywords || '').split(',').map(k => k.trim())].filter(Boolean),
     alternates: {
       canonical: url,
     },

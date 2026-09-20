@@ -227,6 +227,10 @@ export default function ColunasPage() {
                 <Label htmlFor="focusKeyword">Palavra-chave Principal</Label>
                 <Input id="focusKeyword" name="focusKeyword" placeholder="Ex: Flamengo Libertadores" />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="secondaryKeywords">Palavras-chave Secundárias</Label>
+                <Input id="secondaryKeywords" name="secondaryKeywords" placeholder="Ex: maracanã, mengão, futebol (separadas por espaço ou vírgula)" />
+              </div>
             </div>
             <Separator />
              <div className="grid gap-2">

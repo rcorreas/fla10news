@@ -76,7 +76,7 @@ export async function generateMetadata(
   return {
     title: metaTitle,
     description: desc,
-    keywords: column.focusKeyword ? [column.focusKeyword] : undefined,
+    keywords: [column.focusKeyword || '', ...(column.secondaryKeywords || '').split(',').map(k => k.trim())].filter(Boolean),
     alternates: {
       canonical: url,
     },
