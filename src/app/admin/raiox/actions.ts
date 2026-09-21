@@ -19,6 +19,10 @@ const NewsSchema = z.object({
   fullArticleLink: z.string().url({ message: "Por favor, insira um link válido para a matéria completa." }).optional().or(z.literal('')),
   dataAiHint: z.string().optional(),
   author: z.string().optional(),
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+  focusKeyword: z.string().optional(),
+  secondaryKeywords: z.string().optional(),
 });
 
 function generateSlug(title: string): string {
@@ -44,6 +48,10 @@ export async function createRaioxArticle(prevState: any, formData: FormData) {
     fullArticleLink: formData.get("fullArticleLink"),
     dataAiHint: formData.get("dataAiHint"),
     author: formData.get("author"),
+    metaTitle: formData.get("metaTitle"),
+    metaDescription: formData.get("metaDescription"),
+    focusKeyword: formData.get("focusKeyword"),
+    secondaryKeywords: formData.get("secondaryKeywords"),
   });
 
   if (!validatedFields.success) {
@@ -98,6 +106,10 @@ export async function updateRaioxArticle(id: string, slug: string, prevState: an
     fullArticleLink: formData.get("fullArticleLink"),
     dataAiHint: formData.get("dataAiHint"),
     author: formData.get("author"),
+    metaTitle: formData.get("metaTitle"),
+    metaDescription: formData.get("metaDescription"),
+    focusKeyword: formData.get("focusKeyword"),
+    secondaryKeywords: formData.get("secondaryKeywords"),
   });
 
   if (!validatedFields.success) {

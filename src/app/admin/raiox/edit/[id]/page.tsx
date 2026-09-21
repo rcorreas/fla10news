@@ -196,6 +196,28 @@ export default function EditMateriasPage() {
                 <Label htmlFor="content">Conteúdo da raio-x</Label>
                 <TextareaWithFormatting id="content" name="content" defaultValue={article.content} className="min-h-[300px]" required />
             </div>
+            <Separator />
+            <div className="grid gap-6 bg-muted/50 p-6 rounded-lg border border-border mt-6 mb-6">
+              <h3 className="text-lg font-headline font-bold flex items-center gap-2">
+                SEO (Google)
+              </h3>
+              <div className="grid gap-2">
+                <Label htmlFor="metaTitle">Título SEO (Meta Title)</Label>
+                <Input id="metaTitle" name="metaTitle" defaultValue={article.metaTitle || ''} placeholder="Ex: Raio-X: Flamengo x River Plate | Fla10" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="metaDescription">Descrição SEO (Meta Description)</Label>
+                <Textarea id="metaDescription" name="metaDescription" defaultValue={article.metaDescription || ''} placeholder="Aparece nos resultados do Google. Resuma o raio-x em até 150 caracteres." />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="focusKeyword">Palavra-chave Principal</Label>
+                <Input id="focusKeyword" name="focusKeyword" defaultValue={article.focusKeyword || ''} placeholder="Ex: Flamengo Libertadores" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="secondaryKeywords">Palavras-chave Secundárias</Label>
+                <Input id="secondaryKeywords" name="secondaryKeywords" defaultValue={article.secondaryKeywords || ''} placeholder="Ex: tática, libertadores, jorge jesus (separadas por espaço ou vírgula)" />
+              </div>
+            </div>
           </CardContent>
           <CardFooter className="flex justify-between">
             <SubmitButton />

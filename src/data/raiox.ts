@@ -19,6 +19,10 @@ export type RaioxArticle = {
     author?: string;
     views: number;
     fullArticleLink?: string;
+    metaTitle?: string;
+    metaDescription?: string;
+    focusKeyword?: string;
+    secondaryKeywords?: string;
 };
 
 const fromFirestore = (doc: any): RaioxArticle => {
@@ -40,6 +44,10 @@ const fromFirestore = (doc: any): RaioxArticle => {
         author: data.author || 'Redação NRN',
         views: data.views || 0,
         fullArticleLink: data.fullArticleLink || '',
+        metaTitle: data.metaTitle || '',
+        metaDescription: data.metaDescription || '',
+        focusKeyword: data.focusKeyword || '',
+        secondaryKeywords: data.secondaryKeywords || '',
     };
 };
 

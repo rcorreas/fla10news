@@ -40,18 +40,20 @@ export async function generateMetadata(
     }
   }
 
-  const desc = truncateDescription(article.excerpt || article.content || '');
+  const desc = article.metaDescription || truncateDescription(article.excerpt || article.content || '');
   const url = absoluteUrl(`/raio-x/${article.slug}`);
+  const metaTitle = article.metaTitle || article.title;
   
 
   return {
-    title: article.title,
+    title: metaTitle,
     description: desc,
+    keywords: [article.focusKeyword || '', ...(article.secondaryKeywords || '').split(',').map(k => k.trim())].filter(Boolean),
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: article.title,
+      title: metaTitle,
       description: desc,
       url,
       images: [
@@ -59,7 +61,7 @@ export async function generateMetadata(
           url: getSocialMetaImageUrl(article.image),
           width: 1200,
           height: 630,
-          alt: article.title,
+          alt: metaTitle,
         }
       ],
       type: 'article',
@@ -68,7 +70,7 @@ export async function generateMetadata(
     },
     twitter: {
       card: 'summary_large_image',
-      title: article.title,
+      title: metaTitle,
       description: desc,
       images: [article.image || ""],
     },

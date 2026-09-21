@@ -197,6 +197,28 @@ export default function RaioxPage() {
                 <Label htmlFor="content">Conteúdo da raio-x</Label>
                 <TextareaWithFormatting id="content" name="content" placeholder="Escreva a raio-x completa aqui. Você pode usar tags HTML como <p>, <h3> e <strong> para formatar o texto." className="min-h-[300px]" required />
             </div>
+            <Separator />
+            <div className="grid gap-6 bg-muted/50 p-6 rounded-lg border border-border mt-6 mb-6">
+              <h3 className="text-lg font-headline font-bold flex items-center gap-2">
+                SEO (Google)
+              </h3>
+              <div className="grid gap-2">
+                <Label htmlFor="metaTitle">Título SEO (Meta Title)</Label>
+                <Input id="metaTitle" name="metaTitle" placeholder="Ex: Raio-X: Flamengo x River Plate | Fla10" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="metaDescription">Descrição SEO (Meta Description)</Label>
+                <Textarea id="metaDescription" name="metaDescription" placeholder="Aparece nos resultados do Google. Resuma o raio-x em até 150 caracteres." />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="focusKeyword">Palavra-chave Principal</Label>
+                <Input id="focusKeyword" name="focusKeyword" placeholder="Ex: Flamengo Libertadores" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="secondaryKeywords">Palavras-chave Secundárias</Label>
+                <Input id="secondaryKeywords" name="secondaryKeywords" placeholder="Ex: tática, libertadores, jorge jesus (separadas por espaço ou vírgula)" />
+              </div>
+            </div>
           </CardContent>
           <CardFooter>
             <SubmitButton />
