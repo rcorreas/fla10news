@@ -73,7 +73,7 @@ export default function EditMateriasPage() {
           description: "Não foi possível encontrar a raio-x.",
           variant: "destructive",
         });
-        router.push("/admin/materias");
+        router.push("/admin/raiox");
       }
       setLoading(false);
     };
@@ -90,7 +90,7 @@ export default function EditMateriasPage() {
           title: "Sucesso!",
           description: state.message,
         });
-        router.push("/admin/materias");
+        router.push("/admin/raiox");
       } else {
         let description = state.message;
         if (state.errors) {
@@ -228,7 +228,7 @@ export default function EditMateriasPage() {
           <CardFooter className="flex justify-between">
             <SubmitButton />
             <Button variant="outline" asChild>
-                <Link href="/admin/materias">Cancelar</Link>
+                <Link href="/admin/raiox">Cancelar</Link>
             </Button>
           </CardFooter>
         </form>

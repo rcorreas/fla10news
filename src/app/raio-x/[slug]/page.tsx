@@ -47,11 +47,12 @@ export async function generateMetadata(
 
   const desc = article.metaDescription || truncateDescription(article.excerpt || article.content || '');
   const url = absoluteUrl(`/raio-x/${article.slug}`);
+  const hasMetaTitle = !!article.metaTitle;
   const metaTitle = article.metaTitle || article.title;
   
 
   return {
-    title: metaTitle,
+    title: hasMetaTitle ? { absolute: metaTitle } : metaTitle,
     description: desc,
     keywords: [article.focusKeyword || '', ...(article.secondaryKeywords || '').split(',').map(k => k.trim())].filter(Boolean),
     alternates: {
