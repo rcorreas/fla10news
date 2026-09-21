@@ -188,6 +188,12 @@ export default function EditMateriasPage() {
             </div>
             <Separator />
             <div className="grid gap-2">
+                <Label htmlFor="youtubeUrl">Vídeo do YouTube (Opcional)</Label>
+                <Input id="youtubeUrl" name="youtubeUrl" type="url" defaultValue={article.youtubeUrl || ''} placeholder="https://www.youtube.com/watch?v=..." />
+                <p className="text-xs text-muted-foreground">O vídeo será exibido no meio do texto do artigo.</p>
+            </div>
+            <Separator />
+            <div className="grid gap-2">
               <Label htmlFor="fullArticleLink">Link para a raio-x Completa (Opcional)</Label>
               <Input id="fullArticleLink" name="fullArticleLink" type="url" defaultValue={article.fullArticleLink || ''} placeholder="https://ge.globo.com/..." />
               <p className="text-xs text-muted-foreground">Se preenchido, um botão "Ler raio-x completa" aparecerá no final do artigo.</p>

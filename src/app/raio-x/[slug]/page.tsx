@@ -19,6 +19,11 @@ import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
+function getYouTubeId(url: string) {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+    return match ? match[1] : null;
+}
+
 // This generates the routes at build time
 export async function generateStaticParams() {
   const slugs = await getAllRaioxSlugs();
@@ -254,6 +259,21 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         >
           <div dangerouslySetInnerHTML={{ __html: firstHalf }} />
 
+          {article.youtubeUrl && (
+              <div className="my-8 aspect-video w-full">
+                  <iframe
+                      width="100%"
+                      height="100%"
+                      src={`https://www.youtube.com/embed/${getYouTubeId(article.youtubeUrl)}`}
+                      title="YouTube video player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="rounded-lg shadow-md"
+                  ></iframe>
+              </div>
+          )}
+
           {article.image2 && (
               <div className="my-8 space-y-4">
                   <div className="relative aspect-video">
@@ -277,7 +297,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               </div>
           )}
 
-          {!article.image2 && midPoint > 0 && (
+          {!article.image2 && !article.youtubeUrl && midPoint > 0 && (
             <div className="my-8 flex flex-col items-center gap-6">
               <AdBanner width={300} height={250} />
               <AdsKeeperWidget widgetId="2046582" />

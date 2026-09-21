@@ -23,6 +23,7 @@ export type RaioxArticle = {
     metaDescription?: string;
     focusKeyword?: string;
     secondaryKeywords?: string;
+    youtubeUrl?: string;
 };
 
 const fromFirestore = (doc: any): RaioxArticle => {
@@ -48,6 +49,7 @@ const fromFirestore = (doc: any): RaioxArticle => {
         metaDescription: data.metaDescription || '',
         focusKeyword: data.focusKeyword || '',
         secondaryKeywords: data.secondaryKeywords || '',
+        youtubeUrl: data.youtubeUrl || '',
     };
 };
 

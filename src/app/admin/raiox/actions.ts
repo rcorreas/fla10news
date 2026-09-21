@@ -23,6 +23,7 @@ const NewsSchema = z.object({
   metaDescription: z.string().optional(),
   focusKeyword: z.string().optional(),
   secondaryKeywords: z.string().optional(),
+  youtubeUrl: z.string().url({ message: "Por favor, insira um link válido do YouTube." }).optional().or(z.literal('')),
 });
 
 function generateSlug(title: string): string {
@@ -52,6 +53,7 @@ export async function createRaioxArticle(prevState: any, formData: FormData) {
     metaDescription: formData.get("metaDescription"),
     focusKeyword: formData.get("focusKeyword"),
     secondaryKeywords: formData.get("secondaryKeywords"),
+    youtubeUrl: formData.get("youtubeUrl"),
   });
 
   if (!validatedFields.success) {
@@ -110,6 +112,7 @@ export async function updateRaioxArticle(id: string, slug: string, prevState: an
     metaDescription: formData.get("metaDescription"),
     focusKeyword: formData.get("focusKeyword"),
     secondaryKeywords: formData.get("secondaryKeywords"),
+    youtubeUrl: formData.get("youtubeUrl"),
   });
 
   if (!validatedFields.success) {
