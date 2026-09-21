@@ -12,6 +12,8 @@ import { AdBanner } from '@/components/ad-banner'
 import { AdsKeeperWidget } from '@/components/adskeeper-widget'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ShareButton } from '@/components/share-button'
+import { RichTextRenderer } from '@/components/rich-text-renderer'
+import { insertVideoIntoContent } from '@/lib/youtube'
 
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
@@ -19,10 +21,7 @@ import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
-function getYouTubeId(url: string) {
-    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
-    return match ? match[1] : null;
-}
+
 
 // This generates the routes at build time
 export async function generateStaticParams() {
@@ -169,10 +168,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       return [processed];
   };
   
-  const paragraphs = article.content ? parseContent(article.content) : [];
-  const midPoint = Math.floor(paragraphs.length / 2);
-  const firstHalf = paragraphs.slice(0, midPoint).join('\n');
-  const secondHalf = paragraphs.slice(midPoint).join('\n');
+  const rawContent = article.content ? insertVideoIntoContent(article.content, article.youtubeUrl) : '';
+  const paragraphs = rawContent ? parseContent(rawContent) : [];
+  const parsedContent = paragraphs.join('\n');
 
 
   return (
@@ -258,22 +256,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <div 
           className="text-lg space-y-6 [&_h3]:text-2xl [&_h3]:font-headline [&_h3]:font-bold [&_h3]:my-4 [&_strong]:font-bold [&_a]:text-[#ff073a] [&_a]:font-bold [&_a]:hover:underline"
         >
-          <div dangerouslySetInnerHTML={{ __html: firstHalf }} />
-
-          {article.youtubeUrl && (
-              <div className="my-8 aspect-video w-full">
-                  <iframe
-                      width="100%"
-                      height="100%"
-                      src={`https://www.youtube.com/embed/${getYouTubeId(article.youtubeUrl)}`}
-                      title="YouTube video player"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="rounded-lg shadow-md"
-                  ></iframe>
-              </div>
-          )}
+          <RichTextRenderer 
+             content={parsedContent} 
+             adSlot={
+               !article.image2 ? (
+                 <div className="my-8 flex flex-col items-center gap-6">
+                   <AdBanner width={300} height={250} />
+                   <AdsKeeperWidget widgetId="2046582" />
+                 </div>
+               ) : null
+             }
+          />
 
           {article.image2 && (
               <div className="my-8 space-y-4">
@@ -297,15 +290,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                   </div>
               </div>
           )}
-
-          {!article.image2 && !article.youtubeUrl && midPoint > 0 && (
-            <div className="my-8 flex flex-col items-center gap-6">
-              <AdBanner width={300} height={250} />
-              <AdsKeeperWidget widgetId="2046582" />
-            </div>
-          )}
-
-          <div dangerouslySetInnerHTML={{ __html: secondHalf }} />
         </div>
 
 
