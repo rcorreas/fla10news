@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 import * as React from 'react'
 import Image from 'next/image'
@@ -206,7 +206,7 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* WIDGETS DE DESEMPENHO E RESULTADOS */}
+          {/* WIDGETS DE DESEMPENHO E RESULTADOS - OCULTADO TEMPORARIAMENTE
           <section className="mt-6">
             <SectionHeader title="FLA10 STATS" subtitle="Estatísticas, resultados e o desempenho do Mengão na temporada." icon={BarChart3} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -214,6 +214,7 @@ export default async function Home() {
               <RecentMatchesWidget matches={recentMatches} />
             </div>
           </section>
+          */}
           
           {latestNews && (
             <section className="mt-6">

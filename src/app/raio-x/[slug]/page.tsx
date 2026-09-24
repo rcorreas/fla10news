@@ -19,7 +19,7 @@ import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 
-export const revalidate = 3600; // Revalidate at most every hour
+export const dynamic = 'force-dynamic';
 
 
 

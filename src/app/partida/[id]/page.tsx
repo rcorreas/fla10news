@@ -6,7 +6,7 @@ import { HeadToHead } from '@/components/match-center/head-to-head';
 import { MatchLineup } from '@/components/match-center/match-lineup';
 import { Metadata } from 'next';
 
-export const revalidate = 3600; // Cache de 1 hora (ISR) para economizar leituras no Firebase
+export const dynamic = 'force-dynamic';
 
 interface MatchPageProps {
   params: Promise<{
