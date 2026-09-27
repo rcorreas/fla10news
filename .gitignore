@@ -46,4 +46,4 @@ firebase-debug.log
 firestore-debug.log
 
 # codex backups
-.next.codex-backup*
+.next.codex-backup*service-account.json

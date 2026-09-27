@@ -20,9 +20,9 @@ export function insertVideoIntoContent(content: string, videoUrl?: string): stri
 
   // Se o usuário usou a tag [video], substitui ela
   if (content.toLowerCase().includes('[video]')) {
-    return content.replace(/\[video\]/gi, embedHtml);
+    return content.replace(/\[video\]/gi, `\n\n${embedHtml}\n\n`);
   }
 
   // Se não usou a tag, apenas anexa o vídeo no topo do conteúdo
-  return embedHtml + '\n\n' + content;
+  return `${embedHtml}\n\n${content}`;
 }

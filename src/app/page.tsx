@@ -206,15 +206,7 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* WIDGETS DE DESEMPENHO E RESULTADOS - OCULTADO TEMPORARIAMENTE
-          <section className="mt-6">
-            <SectionHeader title="FLA10 STATS" subtitle="Estatísticas, resultados e o desempenho do Mengão na temporada." icon={BarChart3} />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <CampaignWidget campaignList={campaignList} />
-              <RecentMatchesWidget matches={recentMatches} />
-            </div>
-          </section>
-          */}
+
           
           {latestNews && (
             <section className="mt-6">

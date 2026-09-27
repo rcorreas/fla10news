@@ -94,13 +94,32 @@ const parseContent = (content: string): string[] => {
   const cleanUrl = (url: string) => url.replace(/<[^>]+>/g, '').trim();
 
   // Trata as tags [img] geradas pelo painel (com ou sem crédito/legenda)
-  // Suporta: [img]URL[/img], [img credit="..."]URL[/img], [img legenda="..."]URL[/img], [img=...]URL[/img], [img]URL|...[/img]
-  formattedContent = formattedContent.replace(/\[img(?:\s+(?:credit|legenda|caption)="([^"]*)")?(?:=([^\]]*))?\]([\s\S]*?)(?:\|(.*?))?\[\/img\]/gi, (match, attrCap, eqCap, url, pipeCap) => {
-    const caption = attrCap || eqCap || pipeCap;
-    if (caption && caption.trim() !== '') {
-      return `<figure class="my-8"><img src="${cleanUrl(url)}" alt="${caption.trim()}" class="block w-[70%] mx-auto h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
+  formattedContent = formattedContent.replace(/\[img\b([^\]]*)\]([\s\S]*?)\[\/img\]/gi, (match, attrs, contentStr) => {
+    let caption = '';
+    
+    // Extrai legenda usando match com ou sem aspas
+    const attrMatch = attrs.match(/(?:credit|legenda|caption)=["']?([^"']+)["']?/i);
+    if (attrMatch) {
+      caption = attrMatch[1];
+    } else {
+      const eqMatch = attrs.match(/^\s*=(.+)$/);
+      if (eqMatch) caption = eqMatch[1];
     }
-    return `<img src="${cleanUrl(url)}" alt="Imagem" class="block w-[70%] mx-auto h-auto rounded-lg shadow-md my-6" />`;
+    
+    let url = contentStr;
+    if (contentStr.includes('|')) {
+      const parts = contentStr.split('|');
+      url = parts[0];
+      if (!caption && parts.length > 1) {
+        caption = parts[1];
+      }
+    }
+    
+    url = cleanUrl(url);
+    if (caption && caption.trim() !== '') {
+      return `<figure class="my-8"><img src="${url}" alt="${caption.trim()}" class="block w-[70%] mx-auto h-auto rounded-lg shadow-md" /><figcaption class="text-center text-sm text-muted-foreground mt-2">${caption.trim()}</figcaption></figure>`;
+    }
+    return `<img src="${url}" alt="Imagem" class="block w-[70%] mx-auto h-auto rounded-lg shadow-md my-6" />`;
   });
 
   // Transforma URLs de imagens soltas em tags <img> (se não estiverem dentro de um atributo HTML)
