@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 
 export type VozTorcedor = {
     id: string; // Firestore document ID
