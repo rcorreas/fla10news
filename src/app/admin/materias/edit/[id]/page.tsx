@@ -158,11 +158,7 @@ export default function EditMateriasPage() {
                     <Label htmlFor="author">Autor</Label>
                     <Input id="author" name="author" defaultValue={article.author} />
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="publishedAt">Data e Hora de Publicação</Label>
-                    <Input id="publishedAt" name="publishedAt" type="datetime-local" defaultValue={article.publishedAt ? new Date(article.publishedAt.getTime() - article.publishedAt.getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''} />
-                    <p className="text-xs text-muted-foreground">Você pode alterar para o futuro para agendar.</p>
-                </div>
+
             </div>
              <div className="grid grid-cols-1 gap-6">
                 <div className="grid gap-2">
