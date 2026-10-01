@@ -160,11 +160,6 @@ export default function MateriasPage() {
                     <Label htmlFor="author">Autor (Opcional)</Label>
                     <Input id="author" name="author" placeholder="Padrão: Redação NRN" />
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="publishedAt">Data e Hora de Publicação</Label>
-                    <Input id="publishedAt" name="publishedAt" type="datetime-local" />
-                    <p className="text-xs text-muted-foreground">Deixe em branco para agora, ou defina uma data futura para agendar.</p>
-                </div>
             </div>
              <div className="grid grid-cols-1 gap-6">
                 <div className="grid gap-2">

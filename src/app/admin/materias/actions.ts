@@ -195,13 +195,20 @@ export async function deleteNewsArticle(id: string) {
 export async function publishDraftAction(formData: FormData) {
   const id = formData.get("id") as string;
   const slug = formData.get("slug") as string;
+  const publishedDateStr = formData.get("publishedAt") as string | null;
   if (!id) return;
 
   try {
     const newsDocRef = doc(db, "news", id);
+    
+    let publishedAtVal: any = serverTimestamp();
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(publishedDateStr);
+    }
+
     await updateDoc(newsDocRef, {
       status: 'published',
-      publishedAt: serverTimestamp(),
+      publishedAt: publishedAtVal,
     });
 
     revalidatePath("/admin/materias");
