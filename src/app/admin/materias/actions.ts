@@ -3,6 +3,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore";
 
@@ -189,4 +190,28 @@ export async function deleteNewsArticle(id: string) {
     console.error("Error deleting news article:", error);
     return { success: false, message: "Ocorreu um erro ao deletar a notícia." };
   }
+}
+
+export async function publishDraftAction(formData: FormData) {
+  const id = formData.get("id") as string;
+  const slug = formData.get("slug") as string;
+  if (!id) return;
+
+  try {
+    const newsDocRef = doc(db, "news", id);
+    await updateDoc(newsDocRef, {
+      status: 'published',
+      publishedAt: serverTimestamp(),
+    });
+
+    revalidatePath("/admin/materias");
+    revalidatePath("/");
+    revalidatePath("/noticias");
+    revalidatePath(`/noticias/${slug}`);
+  } catch (error) {
+    console.error("Erro ao publicar rascunho:", error);
+    return;
+  }
+
+  redirect(`/noticias/${slug}`);
 }
