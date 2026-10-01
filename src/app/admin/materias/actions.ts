@@ -40,24 +40,24 @@ function generateSlug(title: string): string {
 
 export async function createNewsArticle(prevState: any, formData: FormData) {
   const validatedFields = NewsSchema.safeParse({
-    mainCategory: formData.get("mainCategory"),
-    title: formData.get("title"),
-    excerpt: formData.get("excerpt"),
-    category: formData.get("category"),
-    content: formData.get("content"),
-    image: formData.get("image"),
-    imageCredit: formData.get("imageCredit"),
-    image2: formData.get("image2"),
-    imageCredit2: formData.get("imageCredit2"),
-    fullArticleLink: formData.get("fullArticleLink"),
-    dataAiHint: formData.get("dataAiHint"),
-    author: formData.get("author"),
-    videoUrl: formData.get("videoUrl"),
-    metaTitle: formData.get("metaTitle"),
-    metaDescription: formData.get("metaDescription"),
-    focusKeyword: formData.get("focusKeyword"),
-    secondaryKeywords: formData.get("secondaryKeywords"),
-    status: formData.get("status") || "published",
+    mainCategory: formData.get("mainCategory")?.toString() || "",
+    title: formData.get("title")?.toString() || "",
+    excerpt: formData.get("excerpt")?.toString() || "",
+    category: formData.get("category")?.toString() || "",
+    content: formData.get("content")?.toString() || "",
+    image: formData.get("image")?.toString() || "",
+    imageCredit: formData.get("imageCredit")?.toString() || undefined,
+    image2: formData.get("image2")?.toString() || undefined,
+    imageCredit2: formData.get("imageCredit2")?.toString() || undefined,
+    fullArticleLink: formData.get("fullArticleLink")?.toString() || undefined,
+    dataAiHint: formData.get("dataAiHint")?.toString() || undefined,
+    author: formData.get("author")?.toString() || undefined,
+    videoUrl: formData.get("videoUrl")?.toString() || undefined,
+    metaTitle: formData.get("metaTitle")?.toString() || undefined,
+    metaDescription: formData.get("metaDescription")?.toString() || undefined,
+    focusKeyword: formData.get("focusKeyword")?.toString() || undefined,
+    secondaryKeywords: formData.get("secondaryKeywords")?.toString() || undefined,
+    status: formData.get("status")?.toString() || "published",
     publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
@@ -76,7 +76,7 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
     let publishedDateStr = validatedFields.data.publishedAt;
     let publishedAtVal: any = serverTimestamp();
     if (publishedDateStr && publishedDateStr.trim() !== '') {
-        publishedAtVal = new Date(publishedDateStr);
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
     }
 
     const dataToSave = {
@@ -109,24 +109,24 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
   }
 
   const validatedFields = NewsSchema.safeParse({
-    mainCategory: formData.get("mainCategory"),
-    title: formData.get("title"),
-    excerpt: formData.get("excerpt"),
-    category: formData.get("category"),
-    content: formData.get("content"),
-    image: formData.get("image"),
-    imageCredit: formData.get("imageCredit"),
-    image2: formData.get("image2"),
-    imageCredit2: formData.get("imageCredit2"),
-    fullArticleLink: formData.get("fullArticleLink"),
-    dataAiHint: formData.get("dataAiHint"),
-    author: formData.get("author"),
-    videoUrl: formData.get("videoUrl"),
-    metaTitle: formData.get("metaTitle"),
-    metaDescription: formData.get("metaDescription"),
-    focusKeyword: formData.get("focusKeyword"),
-    secondaryKeywords: formData.get("secondaryKeywords"),
-    status: formData.get("status") || "published",
+    mainCategory: formData.get("mainCategory")?.toString() || "",
+    title: formData.get("title")?.toString() || "",
+    excerpt: formData.get("excerpt")?.toString() || "",
+    category: formData.get("category")?.toString() || "",
+    content: formData.get("content")?.toString() || "",
+    image: formData.get("image")?.toString() || "",
+    imageCredit: formData.get("imageCredit")?.toString() || undefined,
+    image2: formData.get("image2")?.toString() || undefined,
+    imageCredit2: formData.get("imageCredit2")?.toString() || undefined,
+    fullArticleLink: formData.get("fullArticleLink")?.toString() || undefined,
+    dataAiHint: formData.get("dataAiHint")?.toString() || undefined,
+    author: formData.get("author")?.toString() || undefined,
+    videoUrl: formData.get("videoUrl")?.toString() || undefined,
+    metaTitle: formData.get("metaTitle")?.toString() || undefined,
+    metaDescription: formData.get("metaDescription")?.toString() || undefined,
+    focusKeyword: formData.get("focusKeyword")?.toString() || undefined,
+    secondaryKeywords: formData.get("secondaryKeywords")?.toString() || undefined,
+    status: formData.get("status")?.toString() || "published",
     publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
@@ -144,7 +144,7 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
     let publishedDateStr = validatedFields.data.publishedAt;
     let publishedAtVal: any = undefined;
     if (publishedDateStr && publishedDateStr.trim() !== '') {
-        publishedAtVal = new Date(publishedDateStr);
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
     }
 
     const dataToUpdate: any = {
@@ -203,7 +203,7 @@ export async function publishDraftAction(formData: FormData) {
     
     let publishedAtVal: any = serverTimestamp();
     if (publishedDateStr && publishedDateStr.trim() !== '') {
-        publishedAtVal = new Date(publishedDateStr);
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
     }
 
     await updateDoc(newsDocRef, {
