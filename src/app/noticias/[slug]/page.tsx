@@ -42,6 +42,14 @@ export async function generateMetadata(
     }
   }
 
+  const isDraft = article.status === 'draft' || article.publishedAt > new Date();
+  if (isDraft) {
+     return {
+        title: 'Matéria em construção',
+        robots: { index: false, follow: false },
+     }
+  }
+
   const desc = article.metaDescription || truncateDescription(article.excerpt || article.content || '');
   const url = absoluteUrl(`/noticias/${article.slug}`);
   const metaTitle = article.metaTitle || article.title;
@@ -82,14 +90,34 @@ export async function generateMetadata(
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
 
-export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ArticlePage({ 
+  params,
+  searchParams 
+}: { 
+  params: Promise<{ slug: string }>,
+  searchParams: Promise<{ preview?: string }>
+}) {
   const { slug } = await params;
+  const { preview } = await searchParams;
+  
   const article = await getNewsBySlug(slug)
   const latestNews = await getNews(3);
   const otherNews = latestNews.filter(n => n.slug !== slug).slice(0, 2);
 
   if (!article) {
     notFound()
+  }
+
+  const isDraft = article.status === 'draft' || article.publishedAt > new Date();
+
+  if (isDraft && preview !== '1') {
+      return (
+       <div className="container mx-auto py-32 text-center flex flex-col items-center justify-center min-h-[50vh]">
+          <h1 className="text-2xl md:text-3xl font-bold text-muted-foreground">
+             Matéria em construção, aguarde alguns minutos e ela estará disponível online
+          </h1>
+       </div>
+      );
   }
 
   // Increment dynamic view count in Firebase asynchronously

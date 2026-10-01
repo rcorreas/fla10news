@@ -111,3 +111,14 @@ export async function getAllVozTorcedorSlugs(): Promise<{ slug: string }[]> {
         return [];
     }
 }
+
+export async function incrementVozTorcedorViews(id: string): Promise<void> {
+    try {
+        const docRef = doc(db, 'voz_torcedor', id);
+        await updateDoc(docRef, {
+            views: increment(1)
+        });
+    } catch (error) {
+        console.error(`Error incrementing views for voz torcedor item ${id}:`, error);
+    }
+}

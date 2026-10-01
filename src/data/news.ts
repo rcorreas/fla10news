@@ -24,6 +24,7 @@ export type NewsArticle = {
     metaDescription?: string;
     focusKeyword?: string;
     secondaryKeywords?: string;
+    status?: 'draft' | 'published';
 };
 
 const fromFirestore = (doc: any): NewsArticle => {
@@ -50,30 +51,42 @@ const fromFirestore = (doc: any): NewsArticle => {
         metaDescription: data.metaDescription || '',
         focusKeyword: data.focusKeyword || '',
         secondaryKeywords: data.secondaryKeywords || '',
+        status: data.status || 'published',
     };
 };
 
-export async function getNews(count?: number): Promise<NewsArticle[]> {
+export async function getNews(count?: number, includeDrafts = false): Promise<NewsArticle[]> {
     try {
         const newsCollection = collection(db, 'news');
-        const q = count 
-            ? query(newsCollection, orderBy('publishedAt', 'desc'), limit(count))
+        // Buscar um número maior para garantir que teremos suficientes após o filtro local, se count for fornecido
+        const fetchLimit = count ? count * 3 : undefined;
+        
+        const q = fetchLimit 
+            ? query(newsCollection, orderBy('publishedAt', 'desc'), limit(fetchLimit))
             : query(newsCollection, orderBy('publishedAt', 'desc'));
         
         const snapshot = await getDocs(q);
         if (snapshot.empty) {
             return [];
         }
-        return snapshot.docs.map(fromFirestore);
+        
+        const allFetched = snapshot.docs.map(fromFirestore);
+        const now = new Date();
+        
+        const filtered = includeDrafts 
+            ? allFetched 
+            : allFetched.filter(news => news.status !== 'draft' && news.publishedAt <= now);
+            
+        return count ? filtered.slice(0, count) : filtered;
     } catch (error) {
         console.error("Error fetching news:", error);
         return [];
     }
 }
 
-export async function getNewsByCategory(category: string): Promise<NewsArticle[]> {
+export async function getNewsByCategory(category: string, includeDrafts = false): Promise<NewsArticle[]> {
     try {
-        const allNews = await getNews();
+        const allNews = await getNews(undefined, includeDrafts);
         if (!allNews.length) {
             return [];
         }
@@ -148,9 +161,9 @@ function generateSlug(name: string): string {
         .replace(/[^\w-]+/g, '');
 }
 
-export async function getNewsByAuthorSlug(authorSlug: string): Promise<NewsArticle[]> {
+export async function getNewsByAuthorSlug(authorSlug: string, includeDrafts = false): Promise<NewsArticle[]> {
     try {
-        const allNews = await getNews();
+        const allNews = await getNews(undefined, includeDrafts);
         return allNews.filter(news => news.author && generateSlug(news.author) === authorSlug);
     } catch (error) {
         console.error(`Error fetching news for author slug ${authorSlug}:`, error);

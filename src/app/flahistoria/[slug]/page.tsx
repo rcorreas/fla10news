@@ -274,19 +274,26 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
           </div>
         </header>
 
-        <div className="relative overflow-hidden rounded-lg mb-8 aspect-video">
-          <Image
-            src={article.image}
-            alt={article.title}
-            fill
-            className="w-full h-auto object-cover rounded-lg"
-            data-ai-hint={article.dataAiHint}
-            priority
-          />
+        <div className="relative mb-8">
+          <div className="relative overflow-hidden rounded-lg aspect-video">
+            <Image
+              src={article.image}
+              alt={article.title}
+              fill
+              className="w-full h-auto object-cover rounded-lg"
+              data-ai-hint={article.dataAiHint}
+              priority
+            />
+            {article.imageCredit1 && (
+              <span className="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                Imagem: {article.imageCredit1}
+              </span>
+            )}
+          </div>
           {article.imageCredit1 && (
-            <span className="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-              Imagem: {article.imageCredit1}
-            </span>
+            <p className="text-center text-sm text-muted-foreground mt-2">
+              {article.imageCredit1}
+            </p>
           )}
         </div>
 
@@ -310,6 +317,11 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
                       </span>
                     )}
                   </div>
+                  {article.imageCredit2 && (
+                    <p className="text-center text-sm text-muted-foreground mt-2">
+                      {article.imageCredit2}
+                    </p>
+                  )}
                   <div className="mt-4 flex justify-center px-4">
                     <a href="https://amzn.to/4pm8HFl" target="_blank" rel="noopener noreferrer" className="block w-full max-w-[728px] hover:opacity-90 transition-opacity">
                       <Image src="https://i.imgur.com/xZYv2gr.png" alt="Publicidade" width={728} height={90} className="w-full h-auto rounded-lg shadow-md border border-border" />

@@ -34,18 +34,17 @@ const mainCategories = [
   "Olímpicos",
 ];
 
-function SubmitButton() {
+function SubmitButtons() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
-      {pending ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Atualizando...
-        </>
-      ) : (
-        "Salvar Alterações"
-      )}
-    </Button>
+    <div className="flex gap-4">
+        <Button type="submit" name="status" value="draft" variant="outline" disabled={pending}>
+            {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Salvar Rascunho"}
+        </Button>
+        <Button type="submit" name="status" value="published" disabled={pending}>
+            {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Publicar"}
+        </Button>
+    </div>
   );
 }
 
@@ -160,6 +159,13 @@ export default function EditMateriasPage() {
                     <Input id="author" name="author" defaultValue={article.author} />
                 </div>
                 <div className="grid gap-2">
+                    <Label htmlFor="publishedAt">Data e Hora de Publicação</Label>
+                    <Input id="publishedAt" name="publishedAt" type="datetime-local" defaultValue={article.publishedAt ? new Date(article.publishedAt.getTime() - article.publishedAt.getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''} />
+                    <p className="text-xs text-muted-foreground">Você pode alterar para o futuro para agendar.</p>
+                </div>
+            </div>
+             <div className="grid grid-cols-1 gap-6">
+                <div className="grid gap-2">
                     <Label htmlFor="dataAiHint">Dica para IA da Imagem</Label>
                     <Input id="dataAiHint" name="dataAiHint" defaultValue={article.dataAiHint} />
                 </div>
@@ -225,11 +231,16 @@ export default function EditMateriasPage() {
                 <TextareaWithFormatting id="content" name="content" defaultValue={article.content} className="min-h-[300px]" required />
             </div>
           </CardContent>
-          <CardFooter className="flex justify-between">
-            <SubmitButton />
-            <Button variant="outline" asChild>
-                <Link href="/admin/materias">Cancelar</Link>
-            </Button>
+          <CardFooter className="flex justify-between items-center">
+            <SubmitButtons />
+            <div className="flex gap-4">
+                <Button variant="ghost" asChild>
+                    <Link href={`/noticias/${article.slug}?preview=1`} target="_blank">Ver Preview</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                    <Link href="/admin/materias">Cancelar</Link>
+                </Button>
+            </div>
           </CardFooter>
         </form>
       </Card>

@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
-import { getVozTorcedorBySlug, getVozTorcedores } from '@/data/voz-torcedor'
+import { getVozTorcedorBySlug, getVozTorcedores, incrementVozTorcedorViews } from '@/data/voz-torcedor'
 import type { Metadata, ResolvingMetadata } from 'next'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -67,6 +67,7 @@ export async function generateMetadata(
 
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
+import { incrementDailyViews } from '@/data/analytics'
 
 export default async function VozTorcedorPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -77,15 +78,9 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
     notFound()
   }
   
-  // Increment dynamic view count in Firebase asynchronously
-  try {
-    const docRef = doc(db, 'voz_torcedor', voz.id);
-    updateDoc(docRef, {
-      views: increment(1)
-    }).catch(err => console.error("Error updating views:", err));
-  } catch (err) {
-    console.error("Error incrementing views:", err);
-  }
+  // Increment views
+  await incrementVozTorcedorViews(voz.id);
+  await incrementDailyViews();
   
   const otherVoz = allVoz.filter(v => v.id !== voz.id).slice(0, 2);
   const dataPublicacao = format(voz.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });

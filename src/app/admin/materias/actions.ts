@@ -24,6 +24,8 @@ const NewsSchema = z.object({
   metaDescription: z.string().optional(),
   focusKeyword: z.string().optional(),
   secondaryKeywords: z.string().optional(),
+  status: z.enum(['draft', 'published']).optional(),
+  publishedAt: z.string().optional(),
 });
 
 function generateSlug(title: string): string {
@@ -54,6 +56,8 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
     metaDescription: formData.get("metaDescription"),
     focusKeyword: formData.get("focusKeyword"),
     secondaryKeywords: formData.get("secondaryKeywords"),
+    status: formData.get("status") || "published",
+    publishedAt: formData.get("publishedAt"),
   });
 
   if (!validatedFields.success) {
@@ -66,13 +70,21 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
 
   try {
     const slug = generateSlug(validatedFields.data.title);
+    
+    // Processamento da data:
+    let publishedDateStr = validatedFields.data.publishedAt;
+    let publishedAtVal: any = serverTimestamp();
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(publishedDateStr);
+    }
 
     const dataToSave = {
       ...validatedFields.data,
       author: validatedFields.data.author || 'Redação NRN',
       slug: slug,
-      publishedAt: serverTimestamp(),
+      publishedAt: publishedAtVal,
       views: 0,
+      status: validatedFields.data.status || 'published',
     };
 
     await addDoc(collection(db, "news"), dataToSave);
@@ -113,6 +125,8 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
     metaDescription: formData.get("metaDescription"),
     focusKeyword: formData.get("focusKeyword"),
     secondaryKeywords: formData.get("secondaryKeywords"),
+    status: formData.get("status") || "published",
+    publishedAt: formData.get("publishedAt"),
   });
 
   if (!validatedFields.success) {
@@ -126,10 +140,21 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
   try {
     const newsDocRef = doc(db, "news", id);
     
-    const dataToUpdate = {
+    let publishedDateStr = validatedFields.data.publishedAt;
+    let publishedAtVal: any = undefined;
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(publishedDateStr);
+    }
+
+    const dataToUpdate: any = {
       ...validatedFields.data,
       author: validatedFields.data.author || 'Redação NRN',
+      status: validatedFields.data.status || 'published',
     };
+    
+    if (publishedAtVal) {
+        dataToUpdate.publishedAt = publishedAtVal;
+    }
     
     await updateDoc(newsDocRef, dataToUpdate);
     

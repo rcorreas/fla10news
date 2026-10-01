@@ -22,7 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 
 // Icons
-import { Loader2, FilePen, Trash2 } from "lucide-react";
+import { Loader2, FilePen, Trash2, Eye } from "lucide-react";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -40,18 +40,17 @@ const mainCategories = [
   "Olímpicos",
 ];
 
-function SubmitButton() {
+function SubmitButtons() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} className="w-full md:w-auto">
-      {pending ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Publicando...
-        </>
-      ) : (
-        "Publicar Notícia"
-      )}
-    </Button>
+    <div className="flex gap-4 w-full md:w-auto">
+        <Button type="submit" name="status" value="draft" variant="outline" disabled={pending} className="w-full md:w-auto">
+            {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Salvar Rascunho"}
+        </Button>
+        <Button type="submit" name="status" value="published" disabled={pending} className="w-full md:w-auto">
+            {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Publicar"}
+        </Button>
+    </div>
   );
 }
 
@@ -65,7 +64,7 @@ export default function MateriasPage() {
 
   const fetchNews = async () => {
     setIsLoading(true);
-    const news = await getNews();
+    const news = await getNews(undefined, true);
     setNewsList(news);
     setIsLoading(false);
   };
@@ -161,6 +160,13 @@ export default function MateriasPage() {
                     <Input id="author" name="author" placeholder="Padrão: Redação NRN" />
                 </div>
                 <div className="grid gap-2">
+                    <Label htmlFor="publishedAt">Data e Hora de Publicação</Label>
+                    <Input id="publishedAt" name="publishedAt" type="datetime-local" />
+                    <p className="text-xs text-muted-foreground">Deixe em branco para agora, ou defina uma data futura para agendar.</p>
+                </div>
+            </div>
+             <div className="grid grid-cols-1 gap-6">
+                <div className="grid gap-2">
                     <Label htmlFor="dataAiHint">Dica para IA da Imagem</Label>
                     <Input id="dataAiHint" name="dataAiHint" placeholder="Ex: soccer celebration" />
                 </div>
@@ -227,7 +233,7 @@ export default function MateriasPage() {
             </div>
           </CardContent>
           <CardFooter>
-            <SubmitButton />
+            <SubmitButtons />
           </CardFooter>
         </form>
       </Card>
@@ -249,8 +255,8 @@ export default function MateriasPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Título</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Categoria</TableHead>
-                  <TableHead>Tag</TableHead>
                   <TableHead>Data de Publicação</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
@@ -259,10 +265,23 @@ export default function MateriasPage() {
                 {newsList.map((news) => (
                   <TableRow key={news.id}>
                     <TableCell className="font-medium max-w-xs truncate">{news.title}</TableCell>
+                    <TableCell>
+                      {news.status === 'draft' ? (
+                         <Badge variant="secondary">Rascunho</Badge>
+                      ) : news.publishedAt > new Date() ? (
+                         <Badge variant="outline" className="border-blue-500 text-blue-500">Agendado</Badge>
+                      ) : (
+                         <Badge variant="default" className="bg-green-600 hover:bg-green-700">Publicado</Badge>
+                      )}
+                    </TableCell>
                     <TableCell>{news.mainCategory}</TableCell>
-                    <TableCell>{news.category}</TableCell>
                     <TableCell>{format(news.publishedAt, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</TableCell>
                     <TableCell className="text-right space-x-2">
+                      <Button asChild variant="ghost" size="icon">
+                        <Link href={`/noticias/${news.slug}?preview=1`} target="_blank">
+                          <Eye className="h-4 w-4" />
+                        </Link>
+                      </Button>
                       <Button asChild variant="ghost" size="icon">
                         <Link href={`/admin/materias/edit/${news.id}`}>
                           <FilePen className="h-4 w-4" />
