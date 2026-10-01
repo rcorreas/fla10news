@@ -58,7 +58,7 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
     focusKeyword: formData.get("focusKeyword"),
     secondaryKeywords: formData.get("secondaryKeywords"),
     status: formData.get("status") || "published",
-    publishedAt: formData.get("publishedAt"),
+    publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
@@ -127,7 +127,7 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
     focusKeyword: formData.get("focusKeyword"),
     secondaryKeywords: formData.get("secondaryKeywords"),
     status: formData.get("status") || "published",
-    publishedAt: formData.get("publishedAt"),
+    publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
