@@ -99,9 +99,9 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
 
     return { success: true, message: "Notícia criada com sucesso!" };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating news article:", error);
-    return { success: false, message: "Ocorreu um erro no servidor. Tente novamente." };
+    return { success: false, message: `Ocorreu um erro no servidor: ${error.message}` };
   }
 }
 
@@ -170,9 +170,9 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
 
     return { success: true, message: "Notícia atualizada com sucesso!" };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error updating news article:", error);
-    return { success: false, message: "Ocorreu um erro no servidor ao atualizar. Tente novamente." };
+    return { success: false, message: `Ocorreu um erro ao atualizar: ${error.message}` };
   }
 }
 
