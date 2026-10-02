@@ -79,7 +79,7 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
         publishedAtVal = new Date(`${publishedDateStr}-03:00`);
     }
 
-    const dataToSave = {
+    const dataToSave: any = {
       ...validatedFields.data,
       author: validatedFields.data.author || 'Redação NRN',
       slug: slug,
@@ -87,6 +87,8 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
       views: 0,
       status: validatedFields.data.status || 'published',
     };
+
+    Object.keys(dataToSave).forEach(key => dataToSave[key] === undefined && delete dataToSave[key]);
 
     await addDoc(collection(db, "news"), dataToSave);
 
@@ -157,6 +159,8 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
         dataToUpdate.publishedAt = publishedAtVal;
     }
     
+    Object.keys(dataToUpdate).forEach(key => dataToUpdate[key] === undefined && delete dataToUpdate[key]);
+
     await updateDoc(newsDocRef, dataToUpdate);
     
     revalidatePath("/admin/materias");
