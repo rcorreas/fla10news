@@ -6,7 +6,7 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore";
 
 const GallerySchema = z.object({
-  imageUrl: z.string().url({ message: "Por favor, insira um link válido para a imagem." }),
+  imageUrl: z.preprocess((val) => typeof val === 'string' ? val.replace(/\[\/?img\]/gi, '').trim() : val, z.string().url({ message: "Por favor, insira um link válido para a imagem." })),
   title: z.string().min(3, { message: "O título deve ter pelo menos 3 caracteres." }),
   legenda: z.string().optional(),
   texto: z.string().optional(),

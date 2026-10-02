@@ -8,8 +8,8 @@ import { slugify } from "@/lib/utils";
 
 const AuthorSchema = z.object({
   name: z.string().min(2, { message: "O nome deve ter pelo menos 2 caracteres." }),
-  link: z.string().url({ message: "Por favor, insira um link válido." }).optional().or(z.literal('')),
-  image: z.string().url({ message: "Por favor, insira um link de imagem válido." }).optional().or(z.literal('')),
+  link: z.preprocess((val) => typeof val === 'string' ? val.replace(/\[\/?img\]/gi, '').trim() : val, z.string().url({ message: "Por favor, insira um link válido." })).optional().or(z.literal('')),
+  image: z.preprocess((val) => typeof val === 'string' ? val.replace(/\[\/?img\]/gi, '').trim() : val, z.string().url({ message: "Por favor, insira um link de imagem válido." })).optional().or(z.literal('')),
   description: z.string().optional(),
 });
 
