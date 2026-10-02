@@ -11,6 +11,7 @@ const VideoSchema = z.object({
   category: z.string().min(3, { message: "A categoria deve ter pelo menos 3 caracteres." }),
   duration: z.string().regex(/^\d{1,2}:\d{2}$/, { message: "A duração deve estar no formato MM:SS ou M:SS." }),
   image: z.preprocess((val) => typeof val === 'string' ? val.replace(/\[\/?img\]/gi, '').trim() : val, z.string().url({ message: "Por favor, insira um link de imagem válido." })),
+  videoUrl: z.preprocess((val) => typeof val === 'string' ? val.replace(/\[\/?img\]/gi, '').trim() : val, z.string().url({ message: "Por favor, insira um link de vídeo válido." })).optional().or(z.literal('')),
   dataAiHint: z.string().optional(),
   status: z.enum(['draft', 'published']).optional(),
   publishedAt: z.string().optional(),
