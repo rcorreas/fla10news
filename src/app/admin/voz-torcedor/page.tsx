@@ -19,8 +19,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 
+import { Badge } from "@/components/ui/badge";
+
 // Icons
-import { Loader2, FilePen, Trash2 } from "lucide-react";
+import { Loader2, FilePen, Trash2, Eye } from "lucide-react";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -191,6 +193,7 @@ export default function VozTorcedorPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Título</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Torcedor</TableHead>
                   <TableHead>Data</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
@@ -200,9 +203,23 @@ export default function VozTorcedorPage() {
                 {vozList.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium max-w-xs truncate">{item.title}</TableCell>
+                    <TableCell>
+                      {item.status === 'draft' ? (
+                         <Badge variant="secondary">Rascunho</Badge>
+                      ) : item.publishedAt > new Date() ? (
+                         <Badge variant="outline" className="border-blue-500 text-blue-500">Agendado</Badge>
+                      ) : (
+                         <Badge variant="default" className="bg-green-600 hover:bg-green-700">Publicado</Badge>
+                      )}
+                    </TableCell>
                     <TableCell>{item.authorName}</TableCell>
                     <TableCell>{format(item.publishedAt, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</TableCell>
                     <TableCell className="text-right space-x-2">
+                      <Button asChild variant="ghost" size="icon">
+                        <Link href={`/voz-torcedor/${item.slug}?preview=1`} target="_blank">
+                          <Eye className="h-4 w-4" />
+                        </Link>
+                      </Button>
                       <Button asChild variant="ghost" size="icon">
                         <Link href={`/admin/voz-torcedor/edit/${item.id}`}>
                           <FilePen className="h-4 w-4" />
