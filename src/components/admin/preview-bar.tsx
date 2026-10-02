@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { publishDraftAction } from "@/app/admin/materias/actions";
-
-export function PreviewBar({ articleId, slug, editPath }: { articleId: string, slug: string, editPath: string }) {
+export function PreviewBar({ articleId, slug, editPath, publishAction }: { articleId: string, slug: string, editPath: string, publishAction: (formData: FormData) => void }) {
     return (
         <div className="bg-slate-900 text-white z-50 p-3 flex justify-between items-center shadow-lg relative sticky top-0 w-full mb-4 md:mb-8 flex-wrap gap-2">
             <div className="text-sm font-bold flex items-center gap-2">
@@ -14,7 +12,7 @@ export function PreviewBar({ articleId, slug, editPath }: { articleId: string, s
                 <Button variant="secondary" size="sm" asChild>
                     <Link href={editPath}>Editar Erros</Link>
                 </Button>
-                <form action={publishDraftAction} className="flex gap-2 items-center">
+                <form action={publishAction} className="flex gap-2 items-center">
                     <input type="hidden" name="id" value={articleId} />
                     <input type="hidden" name="slug" value={slug} />
                     <Input type="datetime-local" name="publishedAt" className="h-8 w-auto text-black bg-white" title="Agendar Publicação" />

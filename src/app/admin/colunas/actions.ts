@@ -23,6 +23,8 @@ const ColumnSchema = z.object({
   metaDescription: z.string().optional(),
   focusKeyword: z.string().optional(),
   secondaryKeywords: z.string().optional(),
+  status: z.enum(['draft', 'published']).optional(),
+  publishedAt: z.string().optional(),
 });
 
 function generateSlug(title: string): string {
@@ -50,9 +52,11 @@ export async function createColumn(prevState: any, formData: FormData) {
     dataAiHint: formData.get("dataAiHint"),
     videoUrl: formData.get("videoUrl"),
     metaTitle: formData.get("metaTitle"),
-    metaDescription: formData.get("metaDescription"),
-    focusKeyword: formData.get("focusKeyword"),
-    secondaryKeywords: formData.get("secondaryKeywords"),
+    metaDescription: formData.get("metaDescription")?.toString() || undefined,
+    focusKeyword: formData.get("focusKeyword")?.toString() || undefined,
+    secondaryKeywords: formData.get("secondaryKeywords")?.toString() || undefined,
+    status: formData.get("status")?.toString() || "published",
+    publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
@@ -66,16 +70,25 @@ export async function createColumn(prevState: any, formData: FormData) {
   try {
     const slug = generateSlug(validatedFields.data.title);
 
-    let dataToSave = {
+    let publishedDateStr = validatedFields.data.publishedAt;
+    let publishedAtVal: any = serverTimestamp();
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+    }
+
+    let dataToSave: any = {
       ...validatedFields.data,
       slug: slug,
-      publishedAt: serverTimestamp(),
+      publishedAt: publishedAtVal,
       views: 0,
+      status: validatedFields.data.status || 'published',
     };
 
     if (dataToSave.columnName.trim() === 'Na Pena do Urubu') {
       dataToSave.columnImage = 'https://i.imgur.com/ICtiAp0.png';
     }
+
+    Object.keys(dataToSave).forEach(key => dataToSave[key] === undefined && delete dataToSave[key]);
 
     await addDoc(collection(db, "columns"), dataToSave);
 
@@ -110,9 +123,11 @@ export async function updateColumn(id: string, slug: string, prevState: any, for
     dataAiHint: formData.get("dataAiHint"),
     videoUrl: formData.get("videoUrl"),
     metaTitle: formData.get("metaTitle"),
-    metaDescription: formData.get("metaDescription"),
-    focusKeyword: formData.get("focusKeyword"),
-    secondaryKeywords: formData.get("secondaryKeywords"),
+    metaDescription: formData.get("metaDescription")?.toString() || undefined,
+    focusKeyword: formData.get("focusKeyword")?.toString() || undefined,
+    secondaryKeywords: formData.get("secondaryKeywords")?.toString() || undefined,
+    status: formData.get("status")?.toString() || "published",
+    publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
@@ -126,15 +141,27 @@ export async function updateColumn(id: string, slug: string, prevState: any, for
   try {
     const columnDocRef = doc(db, "columns", id);
     
+    let publishedDateStr = validatedFields.data.publishedAt;
+    let publishedAtVal = undefined;
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+    }
+
     // Note: We don't update the slug on edit to avoid breaking links.
-    let dataToUpdate = {
+    let dataToUpdate: any = {
       ...validatedFields.data,
     };
+
+    if (publishedAtVal) {
+        dataToUpdate.publishedAt = publishedAtVal;
+    }
 
     if (dataToUpdate.columnName.trim() === 'Na Pena do Urubu') {
       dataToUpdate.columnImage = 'https://i.imgur.com/ICtiAp0.png';
     }
     
+    Object.keys(dataToUpdate).forEach(key => dataToUpdate[key] === undefined && delete dataToUpdate[key]);
+
     await updateDoc(columnDocRef, dataToUpdate);
     
     revalidatePath("/admin/colunas");
@@ -167,5 +194,34 @@ export async function deleteColumn(id: string) {
   } catch (error) {
     console.error("Error deleting column:", error);
     return { success: false, message: "Ocorreu um erro ao deletar a coluna." };
+  }
+}
+
+export async function publishDraftActionColumn(formData: FormData) {
+  const id = formData.get("id")?.toString();
+  const slug = formData.get("slug")?.toString();
+  const publishedDateStr = formData.get("publishedAt")?.toString();
+
+  if (!id || !slug) return;
+
+  try {
+      const docRef = doc(db, "columns", id);
+      
+      let publishedAtVal: any = serverTimestamp();
+      if (publishedDateStr && publishedDateStr.trim() !== '') {
+          publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+      }
+
+      await updateDoc(docRef, {
+          status: 'published',
+          publishedAt: publishedAtVal
+      });
+
+      revalidatePath("/admin/colunas");
+      revalidatePath("/colunas");
+      revalidatePath(`/colunas/${slug}`);
+      revalidatePath("/");
+  } catch (error) {
+      console.error("Error publishing column draft", error);
   }
 }

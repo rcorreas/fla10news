@@ -17,6 +17,8 @@ const HistorySchema = z.object({
   videoUrl: z.string().url({ message: "Por favor, insira um link de vídeo válido." }).optional().or(z.literal('')),
   content: z.string().min(50, { message: "A matéria deve ter pelo menos 50 caracteres." }),
   dataAiHint: z.string().optional(),
+  status: z.enum(['draft', 'published']).optional(),
+  publishedAt: z.string().optional(),
 });
 
 function generateSlug(title: string): string {
@@ -38,8 +40,10 @@ export async function createHistoryArticle(prevState: any, formData: FormData) {
     image2: formData.get("image2"),
     imageCredit2: formData.get("imageCredit2"),
     videoUrl: formData.get("videoUrl"),
-    content: formData.get("content"),
-    dataAiHint: formData.get("dataAiHint"),
+    content: formData.get("content")?.toString(),
+    dataAiHint: formData.get("dataAiHint")?.toString() || undefined,
+    status: formData.get("status")?.toString() || "published",
+    publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
@@ -53,11 +57,23 @@ export async function createHistoryArticle(prevState: any, formData: FormData) {
   try {
     const slug = generateSlug(validatedFields.data.title);
 
-    await addDoc(collection(db, "history"), {
+    let publishedDateStr = validatedFields.data.publishedAt;
+    let publishedAtVal: any = serverTimestamp();
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+    }
+
+    const dataToSave: any = {
       ...validatedFields.data,
       slug: slug,
-      publishedAt: serverTimestamp(),
-    });
+      publishedAt: publishedAtVal,
+      views: 0,
+      status: validatedFields.data.status || 'published',
+    };
+
+    Object.keys(dataToSave).forEach(key => dataToSave[key] === undefined && delete dataToSave[key]);
+
+    await addDoc(collection(db, "history"), dataToSave);
 
     revalidatePath("/admin/historia");
     revalidatePath("/");
@@ -80,8 +96,10 @@ export async function updateHistoryArticle(id: string, prevState: any, formData:
     image2: formData.get("image2"),
     imageCredit2: formData.get("imageCredit2"),
     videoUrl: formData.get("videoUrl"),
-    content: formData.get("content"),
-    dataAiHint: formData.get("dataAiHint"),
+    content: formData.get("content")?.toString(),
+    dataAiHint: formData.get("dataAiHint")?.toString() || undefined,
+    status: formData.get("status")?.toString() || "published",
+    publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
@@ -94,7 +112,24 @@ export async function updateHistoryArticle(id: string, prevState: any, formData:
 
   try {
     const historyDocRef = doc(db, "history", id);
-    await updateDoc(historyDocRef, validatedFields.data);
+
+    let publishedDateStr = validatedFields.data.publishedAt;
+    let publishedAtVal = undefined;
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+    }
+
+    const dataToUpdate: any = {
+      ...validatedFields.data,
+    };
+
+    if (publishedAtVal) {
+        dataToUpdate.publishedAt = publishedAtVal;
+    }
+
+    Object.keys(dataToUpdate).forEach(key => dataToUpdate[key] === undefined && delete dataToUpdate[key]);
+
+    await updateDoc(historyDocRef, dataToUpdate);
 
     revalidatePath("/admin/historia");
     revalidatePath("/");
@@ -125,5 +160,34 @@ export async function deleteHistoryArticle(id: string) {
   } catch (error) {
     console.error("Error deleting history article:", error);
     return { success: false, message: "Ocorreu um erro ao deletar o artigo." };
+  }
+}
+
+export async function publishDraftActionHistory(formData: FormData) {
+  const id = formData.get("id")?.toString();
+  const slug = formData.get("slug")?.toString();
+  const publishedDateStr = formData.get("publishedAt")?.toString();
+
+  if (!id || !slug) return;
+
+  try {
+      const docRef = doc(db, "history", id);
+      
+      let publishedAtVal: any = serverTimestamp();
+      if (publishedDateStr && publishedDateStr.trim() !== '') {
+          publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+      }
+
+      await updateDoc(docRef, {
+          status: 'published',
+          publishedAt: publishedAtVal
+      });
+
+      revalidatePath("/admin/historia");
+      revalidatePath("/");
+      revalidatePath("/flahistoria");
+      revalidatePath(`/flahistoria/${slug}`);
+  } catch (error) {
+      console.error("Error publishing history draft", error);
   }
 }

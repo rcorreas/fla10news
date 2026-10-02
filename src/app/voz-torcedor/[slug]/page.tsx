@@ -18,6 +18,8 @@ import { insertVideoIntoContent } from '@/lib/youtube'
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
+import { PreviewBar } from '@/components/admin/preview-bar'
+import { publishDraftActionVozTorcedor } from "@/app/admin/voz-torcedor/actions";
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -69,13 +71,32 @@ import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
 import { incrementDailyViews } from '@/data/analytics'
 
-export default async function VozTorcedorPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function VozTorcedorPage({ 
+  params,
+  searchParams 
+}: { 
+  params: Promise<{ slug: string }>,
+  searchParams: Promise<{ preview?: string }>
+}) {
   const { slug } = await params;
+  const { preview } = await searchParams;
   const voz = await getVozTorcedorBySlug(slug)
   const allVoz = await getVozTorcedores(3); 
   
   if (!voz) {
     notFound()
+  }
+
+  const isDraft = voz.status === 'draft' || voz.publishedAt > new Date();
+
+  if (isDraft && preview !== '1') {
+      return (
+       <div className="container mx-auto py-32 text-center flex flex-col items-center justify-center min-h-[50vh]">
+          <h1 className="text-2xl md:text-3xl font-bold text-muted-foreground">
+             Matéria em construção, aguarde alguns minutos e ela estará disponível online
+          </h1>
+       </div>
+      );
   }
   
   // Increment views
@@ -90,6 +111,10 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
   const parsedContent = voz.content ? insertVideoIntoContent(voz.content, voz.videoUrl) : '';
 
   return (
+    <>
+      {preview === '1' && isDraft && (
+        <PreviewBar articleId={voz.id} slug={voz.slug} editPath={`/admin/voz-torcedor/edit/${voz.id}`} publishAction={publishDraftActionVozTorcedor} />
+      )}
     <div className="container mx-auto max-w-4xl py-12">
       <JsonLd
         data={{
@@ -224,5 +249,6 @@ export default async function VozTorcedorPage({ params }: { params: Promise<{ sl
         </a>
       </div>
     </div>
+    </>
   )
 }

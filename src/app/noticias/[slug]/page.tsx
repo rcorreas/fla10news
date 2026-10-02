@@ -19,6 +19,7 @@ import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 import { PreviewBar } from '@/components/admin/preview-bar'
+import { publishDraftAction } from "@/app/admin/materias/actions";
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -194,7 +195,7 @@ export default async function ArticlePage({
   return (
     <>
       {preview === '1' && isDraft && (
-        <PreviewBar articleId={article.id} slug={article.slug} editPath={`/admin/materias/edit/${article.id}`} />
+        <PreviewBar articleId={article.id} slug={article.slug} editPath={`/admin/materias/edit/${article.id}`} publishAction={publishDraftAction} />
       )}
     <div className="container mx-auto max-w-4xl py-12">
       <JsonLd

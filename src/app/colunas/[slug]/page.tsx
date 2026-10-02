@@ -20,6 +20,8 @@ import { ArticleShareButton } from '@/components/article-share-button'
 import { RichTextRenderer } from '@/components/rich-text-renderer'
 import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
+import { PreviewBar } from '@/components/admin/preview-bar'
+import { publishDraftActionColumn } from "@/app/admin/colunas/actions";
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -103,13 +105,32 @@ export async function generateMetadata(
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
 
-export default async function ColumnPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ColumnPage({ 
+  params,
+  searchParams 
+}: { 
+  params: Promise<{ slug: string }>,
+  searchParams: Promise<{ preview?: string }>
+}) {
   const { slug } = await params;
+  const { preview } = await searchParams;
   const column = await getColumnBySlug(slug)
   const allColumns = await getColumns(3); 
   
   if (!column) {
     notFound()
+  }
+
+  const isDraft = column.status === 'draft' || column.publishedAt > new Date();
+
+  if (isDraft && preview !== '1') {
+      return (
+       <div className="container mx-auto py-32 text-center flex flex-col items-center justify-center min-h-[50vh]">
+          <h1 className="text-2xl md:text-3xl font-bold text-muted-foreground">
+             Matéria em construção, aguarde alguns minutos e ela estará disponível online
+          </h1>
+       </div>
+      );
   }
   
   // Increment dynamic view count in Firebase asynchronously
@@ -183,6 +204,10 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
   const parsedContent = rawContent ? parseContent(rawContent).join('\n') : '';
 
   return (
+    <>
+      {preview === '1' && isDraft && (
+        <PreviewBar articleId={column.id} slug={column.slug} editPath={`/admin/colunas/edit/${column.id}`} publishAction={publishDraftActionColumn} />
+      )}
     <div className="container mx-auto max-w-4xl py-12">
       <JsonLd
         data={[
@@ -393,5 +418,6 @@ export default async function ColumnPage({ params }: { params: Promise<{ slug: s
         <AdBanner width={728} height={90} />
       </div>
     </div>
+    </>
   )
 }

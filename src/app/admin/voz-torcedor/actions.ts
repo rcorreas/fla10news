@@ -16,6 +16,8 @@ const VozTorcedorSchema = z.object({
   metaDescription: z.string().optional(),
   focusKeyword: z.string().optional(),
   secondaryKeywords: z.string().optional(),
+  status: z.enum(['draft', 'published']).optional(),
+  publishedAt: z.string().optional(),
 });
 
 function generateSlug(title: string): string {
@@ -35,10 +37,12 @@ export async function createVozTorcedor(prevState: any, formData: FormData) {
     content: formData.get("content"),
     image: formData.get("image"),
     videoUrl: formData.get("videoUrl"),
-    metaTitle: formData.get("metaTitle"),
-    metaDescription: formData.get("metaDescription"),
-    focusKeyword: formData.get("focusKeyword"),
-    secondaryKeywords: formData.get("secondaryKeywords"),
+    metaTitle: formData.get("metaTitle")?.toString() || undefined,
+    metaDescription: formData.get("metaDescription")?.toString() || undefined,
+    focusKeyword: formData.get("focusKeyword")?.toString() || undefined,
+    secondaryKeywords: formData.get("secondaryKeywords")?.toString() || undefined,
+    status: formData.get("status")?.toString() || "published",
+    publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
@@ -52,12 +56,21 @@ export async function createVozTorcedor(prevState: any, formData: FormData) {
   try {
     const slug = generateSlug(validatedFields.data.title);
 
-    let dataToSave = {
+    let publishedDateStr = validatedFields.data.publishedAt;
+    let publishedAtVal: any = serverTimestamp();
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+    }
+
+    const dataToSave: any = {
       ...validatedFields.data,
       slug: slug,
-      publishedAt: serverTimestamp(),
+      publishedAt: publishedAtVal,
       views: 0,
+      status: validatedFields.data.status || 'published',
     };
+
+    Object.keys(dataToSave).forEach(key => dataToSave[key] === undefined && delete dataToSave[key]);
 
     await addDoc(collection(db, "voz_torcedor"), dataToSave);
 
@@ -85,10 +98,12 @@ export async function updateVozTorcedor(id: string, slug: string, prevState: any
     content: formData.get("content"),
     image: formData.get("image"),
     videoUrl: formData.get("videoUrl"),
-    metaTitle: formData.get("metaTitle"),
-    metaDescription: formData.get("metaDescription"),
-    focusKeyword: formData.get("focusKeyword"),
-    secondaryKeywords: formData.get("secondaryKeywords"),
+    metaTitle: formData.get("metaTitle")?.toString() || undefined,
+    metaDescription: formData.get("metaDescription")?.toString() || undefined,
+    focusKeyword: formData.get("focusKeyword")?.toString() || undefined,
+    secondaryKeywords: formData.get("secondaryKeywords")?.toString() || undefined,
+    status: formData.get("status")?.toString() || "published",
+    publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
@@ -102,9 +117,21 @@ export async function updateVozTorcedor(id: string, slug: string, prevState: any
   try {
     const docRef = doc(db, "voz_torcedor", id);
     
-    let dataToUpdate = {
+    let publishedDateStr = validatedFields.data.publishedAt;
+    let publishedAtVal = undefined;
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+    }
+
+    const dataToUpdate: any = {
       ...validatedFields.data,
     };
+
+    if (publishedAtVal) {
+        dataToUpdate.publishedAt = publishedAtVal;
+    }
+
+    Object.keys(dataToUpdate).forEach(key => dataToUpdate[key] === undefined && delete dataToUpdate[key]);
 
     await updateDoc(docRef, dataToUpdate);
     
@@ -138,5 +165,34 @@ export async function deleteVozTorcedor(id: string) {
   } catch (error) {
     console.error("Error deleting Voz do Torcedor:", error);
     return { success: false, message: "Ocorreu um erro ao deletar." };
+  }
+}
+
+export async function publishDraftActionVozTorcedor(formData: FormData) {
+  const id = formData.get("id")?.toString();
+  const slug = formData.get("slug")?.toString();
+  const publishedDateStr = formData.get("publishedAt")?.toString();
+
+  if (!id || !slug) return;
+
+  try {
+      const docRef = doc(db, "voz_torcedor", id);
+      
+      let publishedAtVal: any = serverTimestamp();
+      if (publishedDateStr && publishedDateStr.trim() !== '') {
+          publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+      }
+
+      await updateDoc(docRef, {
+          status: 'published',
+          publishedAt: publishedAtVal
+      });
+
+      revalidatePath("/admin/voz-torcedor");
+      revalidatePath("/voz-torcedor");
+      revalidatePath(`/voz-torcedor/${slug}`);
+      revalidatePath("/");
+  } catch (error) {
+      console.error("Error publishing Voz Torcedor draft", error);
   }
 }

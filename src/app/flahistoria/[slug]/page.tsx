@@ -19,6 +19,8 @@ import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
 import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
+import { PreviewBar } from '@/components/admin/preview-bar'
+import { publishDraftActionHistory } from "@/app/admin/historia/actions";
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -169,13 +171,32 @@ const parseContent = (content: string): string[] => {
   return [formattedContent];
 };
 
-export default async function HistoryArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function HistoryArticlePage({ 
+  params,
+  searchParams 
+}: { 
+  params: Promise<{ slug: string }>,
+  searchParams: Promise<{ preview?: string }>
+}) {
   const { slug } = await params;
+  const { preview } = await searchParams;
   const article = await getHistoryArticleBySlug(slug)
   const allArticles = await getHistoryArticles(4) // Fetch a few articles for "related" section
 
   if (!article) {
     notFound()
+  }
+
+  const isDraft = article.status === 'draft' || article.publishedAt > new Date();
+
+  if (isDraft && preview !== '1') {
+      return (
+       <div className="container mx-auto py-32 text-center flex flex-col items-center justify-center min-h-[50vh]">
+          <h1 className="text-2xl md:text-3xl font-bold text-muted-foreground">
+             Matéria em construção, aguarde alguns minutos e ela estará disponível online
+          </h1>
+       </div>
+      );
   }
 
   // Increment dynamic view count in Firebase asynchronously (ignore static fallbacks)
@@ -206,6 +227,10 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
 
 
   return (
+    <>
+      {preview === '1' && isDraft && (
+        <PreviewBar articleId={article.id} slug={article.slug} editPath={`/admin/historia/edit/${article.id}`} publishAction={publishDraftActionHistory} />
+      )}
     <div className="container mx-auto max-w-4xl py-12">
       <JsonLd
         data={{
@@ -384,5 +409,6 @@ export default async function HistoryArticlePage({ params }: { params: Promise<{
         </div>
       )}
     </div>
+    </>
   )
 }

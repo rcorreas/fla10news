@@ -14,6 +14,8 @@ import { ShareButton } from '@/components/share-button'
 import { ArticleShareButton } from '@/components/article-share-button'
 import { JsonLd } from '@/components/json-ld'
 import { absoluteUrl, truncateDescription } from '@/lib/site'
+import { PreviewBar } from '@/components/admin/preview-bar'
+import { publishDraftActionVideo } from "@/app/admin/videos/actions";
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -85,14 +87,33 @@ function getYouTubeId(url: string) {
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
 
-export default async function VideoPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function VideoPage({ 
+  params,
+  searchParams 
+}: { 
+  params: Promise<{ slug: string }>,
+  searchParams: Promise<{ preview?: string }>
+}) {
   const { slug } = await params;
+  const { preview } = await searchParams;
   const video = await getVideoBySlug(slug)
   const allVideos = await getVideos(3);
   const otherVideos = allVideos.filter(v => v.slug !== slug).slice(0, 2);
 
   if (!video) {
     notFound()
+  }
+
+  const isDraft = video.status === 'draft' || video.publishedAt > new Date();
+
+  if (isDraft && preview !== '1') {
+      return (
+       <div className="container mx-auto py-32 text-center flex flex-col items-center justify-center min-h-[50vh]">
+          <h1 className="text-2xl md:text-3xl font-bold text-muted-foreground">
+             Matéria em construção, aguarde alguns minutos e ela estará disponível online
+          </h1>
+       </div>
+      );
   }
 
   // Increment dynamic view count in Firebase asynchronously (ignore static fallbacks)
@@ -113,6 +134,10 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
   const videoDescription = truncateDescription(`Assista ao vídeo: ${video.title}`);
 
   return (
+    <>
+      {preview === '1' && isDraft && (
+        <PreviewBar articleId={video.id} slug={video.slug} editPath={`/admin/videos/edit/${video.id}`} publishAction={publishDraftActionVideo} />
+      )}
     <div className="container mx-auto max-w-4xl py-12">
       <JsonLd
         data={{
@@ -231,5 +256,6 @@ export default async function VideoPage({ params }: { params: Promise<{ slug: st
         <AdBanner width={728} height={90} />
       </div>
     </div>
+    </>
   )
 }

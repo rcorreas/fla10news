@@ -11,8 +11,9 @@ const VideoSchema = z.object({
   category: z.string().min(3, { message: "A categoria deve ter pelo menos 3 caracteres." }),
   duration: z.string().regex(/^\d{1,2}:\d{2}$/, { message: "A duração deve estar no formato MM:SS ou M:SS." }),
   image: z.string().url({ message: "Por favor, insira um link de imagem válido." }),
-  videoUrl: z.string().url({ message: "Por favor, insira um link de vídeo válido." }).optional().or(z.literal('')),
   dataAiHint: z.string().optional(),
+  status: z.enum(['draft', 'published']).optional(),
+  publishedAt: z.string().optional(),
 });
 
 function generateSlug(title: string): string {
@@ -30,8 +31,10 @@ export async function createVideo(prevState: any, formData: FormData) {
     category: formData.get("category"),
     duration: formData.get("duration"),
     image: formData.get("image"),
-    videoUrl: formData.get("videoUrl"),
-    dataAiHint: formData.get("dataAiHint"),
+    videoUrl: formData.get("videoUrl")?.toString() || undefined,
+    dataAiHint: formData.get("dataAiHint")?.toString() || undefined,
+    status: formData.get("status")?.toString() || "published",
+    publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
@@ -45,12 +48,23 @@ export async function createVideo(prevState: any, formData: FormData) {
   try {
     const slug = generateSlug(validatedFields.data.title);
 
-    await addDoc(collection(db, "videos"), {
+    let publishedDateStr = validatedFields.data.publishedAt;
+    let publishedAtVal: any = serverTimestamp();
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+    }
+
+    const dataToSave: any = {
       ...validatedFields.data,
       slug: slug,
-      publishedAt: serverTimestamp(),
+      publishedAt: publishedAtVal,
       views: 0,
-    });
+      status: validatedFields.data.status || 'published',
+    };
+
+    Object.keys(dataToSave).forEach(key => dataToSave[key] === undefined && delete dataToSave[key]);
+
+    await addDoc(collection(db, "videos"), dataToSave);
 
     revalidatePath("/admin/videos");
     revalidatePath("/videos");
@@ -70,8 +84,10 @@ export async function updateVideo(id: string, slug: string, prevState: any, form
     category: formData.get("category"),
     duration: formData.get("duration"),
     image: formData.get("image"),
-    videoUrl: formData.get("videoUrl"),
-    dataAiHint: formData.get("dataAiHint"),
+    videoUrl: formData.get("videoUrl")?.toString() || undefined,
+    dataAiHint: formData.get("dataAiHint")?.toString() || undefined,
+    status: formData.get("status")?.toString() || "published",
+    publishedAt: formData.get("publishedAt")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
@@ -84,7 +100,24 @@ export async function updateVideo(id: string, slug: string, prevState: any, form
 
   try {
     const videoDocRef = doc(db, "videos", id);
-    await updateDoc(videoDocRef, validatedFields.data);
+
+    let publishedDateStr = validatedFields.data.publishedAt;
+    let publishedAtVal = undefined;
+    if (publishedDateStr && publishedDateStr.trim() !== '') {
+        publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+    }
+
+    const dataToUpdate: any = {
+      ...validatedFields.data,
+    };
+
+    if (publishedAtVal) {
+        dataToUpdate.publishedAt = publishedAtVal;
+    }
+
+    Object.keys(dataToUpdate).forEach(key => dataToUpdate[key] === undefined && delete dataToUpdate[key]);
+
+    await updateDoc(videoDocRef, dataToUpdate);
     
     revalidatePath("/admin/videos");
     revalidatePath("/videos");
@@ -114,5 +147,34 @@ export async function deleteVideo(id: string) {
   } catch (error) {
     console.error("Error deleting video:", error);
     return { success: false, message: "Ocorreu um erro ao deletar o vídeo." };
+  }
+}
+
+export async function publishDraftActionVideo(formData: FormData) {
+  const id = formData.get("id")?.toString();
+  const slug = formData.get("slug")?.toString();
+  const publishedDateStr = formData.get("publishedAt")?.toString();
+
+  if (!id || !slug) return;
+
+  try {
+      const docRef = doc(db, "videos", id);
+      
+      let publishedAtVal: any = serverTimestamp();
+      if (publishedDateStr && publishedDateStr.trim() !== '') {
+          publishedAtVal = new Date(`${publishedDateStr}-03:00`);
+      }
+
+      await updateDoc(docRef, {
+          status: 'published',
+          publishedAt: publishedAtVal
+      });
+
+      revalidatePath("/admin/videos");
+      revalidatePath("/videos");
+      revalidatePath(`/videos/${slug}`);
+      revalidatePath("/");
+  } catch (error) {
+      console.error("Error publishing video draft", error);
   }
 }

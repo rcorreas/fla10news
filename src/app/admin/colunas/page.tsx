@@ -35,15 +35,16 @@ const initialState: any = {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} className="w-full md:w-auto">
-      {pending ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Publicando...
-        </>
-      ) : (
-        "Publicar Coluna"
-      )}
-    </Button>
+    <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+      <Button type="submit" name="status" value="draft" variant="outline" disabled={pending}>
+        {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+        Salvar Rascunho
+      </Button>
+      <Button type="submit" name="status" value="published" disabled={pending}>
+        {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+        Publicar Imediatamente
+      </Button>
+    </div>
   );
 }
 

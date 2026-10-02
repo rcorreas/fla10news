@@ -16,6 +16,7 @@ export type VozTorcedor = {
     metaDescription?: string;
     focusKeyword?: string;
     secondaryKeywords?: string;
+    status?: 'draft' | 'published';
 };
 
 // Helper function to generate slugs
@@ -46,6 +47,7 @@ const fromFirestore = (doc: any): VozTorcedor => {
         metaDescription: data.metaDescription || '',
         focusKeyword: data.focusKeyword || '',
         secondaryKeywords: data.secondaryKeywords || '',
+        status: data.status || 'published',
     };
 };
 
