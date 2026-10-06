@@ -20,6 +20,8 @@ const navLinks = [
   { href: '/noticias', label: 'Notícias', icon: Newspaper },
   { href: '/colunas', label: 'Colunas', icon: Users },
   { href: '/videos', label: 'Vídeos', icon: Video },
+  { href: '/reportagens', label: 'Reportagens', icon: Newspaper },
+
   { href: '/raio-x', label: 'Raio-X', icon: ScanLine },
   { href: '/galeria', label: 'Galeria', icon: Palette },
   { href: '/voz-torcedor', label: 'A Voz do Torcedor', icon: MessageSquare },

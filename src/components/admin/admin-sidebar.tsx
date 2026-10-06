@@ -20,6 +20,8 @@ const navItems = [
   { href: "/admin/inscritos", label: "Gerenciar Inscritos", icon: Users },
   { href: "/admin/voz-torcedor", label: "Gerenciar A Voz do Torcedor", icon: MessageSquare },
   { href: "/admin/galeria", label: "Gerenciar Galeria", icon: Palette },
+  { href: "/admin/reportagens", label: "Gerenciar Reportagens", icon: Newspaper },
+
   { href: "/admin/raiox", label: "Gerenciar Raio-X", icon: ScanLine },
   { href: "/admin/tirinhas", label: "Gerenciar Tirinhas", icon: Image },
   { href: "/admin/atuacoes", label: "Gerenciar Atuações", icon: Trophy },

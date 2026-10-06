@@ -36,6 +36,7 @@ import { getVozTorcedores } from '@/data/voz-torcedor'
 import { getHistoryArticles } from '@/data/history'
 import { getGalleryItems } from '@/data/gallery'
 import { getRaiox } from '@/data/raiox'
+import { getReportagens } from '@/data/reportagens'
 import { getTirinhas } from '@/data/tirinhas'
 import { MainCarousel } from '@/components/home/main-carousel'
 import { HistoryCoverflow } from '@/components/home/history-coverflow'
@@ -91,6 +92,7 @@ export default async function Home() {
   const allGalleryTotal = await getGalleryItems(1);
   const galleryItems = allGalleryTotal.slice(0, 1);
   const raioxList = await getRaiox(1);
+  const reportagensList = await getReportagens(1);
   const allTirinhas = await getTirinhas(1);
 
   const mainHeadlines = allNews.slice(0, 6);
@@ -273,6 +275,32 @@ export default async function Home() {
             <Image src="/imagem-canal.png" alt="Canal FlaDez no YouTube" width={1200} height={250} className="w-full h-auto object-cover" priority />
           </a>
         </div>
+
+        <section>
+          <SectionHeader title="Reportagens Fla10" subtitle="Reportagens especiais sobre o Mengão." href="/reportagens" icon={Newspaper} />
+          {reportagensList.length > 0 ? (
+            <div className="flex justify-center">
+              <Card key={reportagensList[0].slug} className="w-full max-w-5xl flex flex-col group overflow-hidden transition-all duration-300 hover:shadow-primary-lg hover:-translate-y-1">
+                <CardHeader className="p-0 relative">
+                  <Link href={`/reportagens/${reportagensList[0].slug}`}>
+                    <Image src={reportagensList[0].image} alt={`${reportagensList[0].title} - Reportagens Fla10`} width={1200} height={600} className="w-full object-cover aspect-[4/3] md:aspect-[21/9] transition-transform duration-300 group-hover:scale-105" data-ai-hint={reportagensList[0].dataAiHint} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div className="absolute bottom-6 left-6 right-6">
+                        <Badge className="mb-3">{reportagensList[0].category}</Badge>
+                        <h3 className="text-2xl md:text-4xl font-bold text-white leading-tight font-headline group-hover:text-primary transition-colors">{reportagensList[0].title}</h3>
+                        <p className="text-gray-300 mt-2 line-clamp-2 md:text-lg">{reportagensList[0].excerpt}</p>
+                    </div>
+                  </Link>
+                  <ShareButton title={reportagensList[0].title} slug={reportagensList[0].slug} type="reportagens" />
+                </CardHeader>
+              </Card>
+            </div>
+          ) : (
+             <div className="text-center py-8 text-muted-foreground">
+                <p>Nenhuma reportagem recente para exibir.</p>
+            </div>
+          )}
+        </section>
 
         <section>
           <SectionHeader title="Raio-X Tático" subtitle="As melhores análises táticas do Mengão." href="/raio-x" icon={ScanLine} />
