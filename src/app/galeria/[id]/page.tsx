@@ -11,6 +11,8 @@ import { absoluteUrl } from '@/lib/site';
 import { AdBanner } from '@/components/ad-banner';
 import { AdsKeeperWidget } from '@/components/adskeeper-widget';
 
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   const item = await getGalleryItemById(resolvedParams.id);
