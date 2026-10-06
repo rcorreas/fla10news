@@ -75,7 +75,7 @@ export default async function GalleryItemPage({ params }: { params: Promise<{ id
             alt={item.title} 
             width={1200} 
             height={800} 
-            className="w-full h-full object-cover" 
+            className="w-full h-auto max-h-[80vh] object-contain" 
             priority
           />
         </div>
