@@ -67,13 +67,13 @@ export default async function GalleryItemPage({ params }: { params: Promise<{ id
       </div>
       
       <div className="bg-card rounded-xl overflow-hidden shadow-xl border border-border flex flex-col lg:flex-row">
-        <div className="relative flex-1 flex justify-center items-center bg-black/5 p-4 lg:p-8">
+        <div className="relative flex-1 flex justify-center items-center bg-black/5 overflow-hidden">
           <Image 
             src={item.imageUrl} 
             alt={item.title} 
             width={1200} 
             height={800} 
-            className="w-full h-auto max-h-[80vh] object-contain" 
+            className="w-full h-full object-cover" 
             priority
           />
         </div>
@@ -92,15 +92,13 @@ export default async function GalleryItemPage({ params }: { params: Promise<{ id
 
             {item.legenda && (
               <div className="prose prose-sm dark:prose-invert">
-                <p className="text-base leading-relaxed text-muted-foreground">{item.legenda}</p>
+                <p className="text-base leading-relaxed text-muted-foreground" dangerouslySetInnerHTML={{ __html: item.legenda }}></p>
               </div>
             )}
             
             {item.texto && (
               <div className="prose prose-sm dark:prose-invert max-w-none">
-                <div className="text-base leading-relaxed text-foreground whitespace-pre-wrap">
-                  {item.texto}
-                </div>
+                <div className="text-base leading-relaxed text-foreground whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: item.texto }} />
               </div>
             )}
           </div>
