@@ -302,6 +302,8 @@ export default async function Home() {
           )}
         </section>
 
+        <AdBanner width={728} height={90} />
+
         <section>
           <SectionHeader title="Raio-X Tático" subtitle="As melhores análises táticas do Mengão." href="/raio-x" icon={ScanLine} />
           {raioxList.length > 0 ? (
