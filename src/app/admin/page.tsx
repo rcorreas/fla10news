@@ -99,7 +99,8 @@ export default async function AdminDashboard() {
         .sort((a, b) => new Date(b._date).getTime() - new Date(a._date).getTime())
         .slice(0, 5)
         .map(item => {
-            return { title: item.title, type: item._type, date: item._date, slug: `${item._slugBase}${item.slug || item.id || ''}` }
+            const anyItem = item as any;
+            return { title: item.title, type: item._type, date: item._date, slug: `${item._slugBase}${anyItem.slug || item.id || ''}` }
         });
     
     const mostViewedData = [
