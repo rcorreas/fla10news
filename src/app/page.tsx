@@ -330,6 +330,8 @@ export default async function Home() {
           )}
         </section>
 
+        <AdBanner width={728} height={90} />
+
         <section>
           <SectionHeader title="Fla10 Tirinhas" subtitle="O bom humor rubro-negro." href="/tirinhas" icon={ImageIcon} />
           {allTirinhas.length > 0 ? (
