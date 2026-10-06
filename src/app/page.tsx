@@ -388,6 +388,8 @@ export default async function Home() {
           </div>
         </section>
 
+        <AdBanner width={728} height={90} />
+
         <section>
           <SectionHeader title="Galeria de Arte Rubro-Negra" subtitle="A paixão do Flamengo retratada em imagens marcantes." href="/galeria" icon={Palette} />
           {galleryItems.length > 0 && (
