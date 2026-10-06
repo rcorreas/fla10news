@@ -128,6 +128,13 @@ export default async function VideoPage({
     }
   }
 
+  try {
+    const { incrementDailyViews } = await import('@/data/analytics');
+    await incrementDailyViews();
+  } catch (err) {
+    console.error("Error incrementing daily views:", err);
+  }
+
   const videoId = video.videoUrl ? getYouTubeId(video.videoUrl) : null;
   const videoDate = format(video.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const videoUrl = absoluteUrl(`/videos/${video.slug}`);

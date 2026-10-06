@@ -16,6 +16,7 @@ import { insertVideoIntoContent } from '@/lib/youtube'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 import { db } from '@/lib/firebase'
 import { doc, updateDoc, increment } from 'firebase/firestore'
+import { incrementDailyViews } from '@/data/analytics'
 
 export const revalidate = 3600; // Revalidate at most every hour
 
@@ -90,6 +91,12 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
     }).catch(err => console.error("Error updating tirinha views:", err));
   } catch (err) {
     console.error("Error incrementing tirinha views:", err);
+  }
+
+  try {
+    await incrementDailyViews();
+  } catch (err) {
+    console.error("Error incrementing daily views:", err);
   }
 
   const publishDate = format(tirinha.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });

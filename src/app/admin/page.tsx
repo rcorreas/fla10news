@@ -4,6 +4,10 @@ import { getColumns } from "@/data/columns";
 import { getVideos } from "@/data/videos";
 import { getHistoryArticles } from "@/data/history";
 import { getVozTorcedores } from "@/data/voz-torcedor";
+import { getReportagens } from "@/data/reportagens";
+import { getGalleryItems } from "@/data/gallery";
+import { getRaiox } from "@/data/raiox";
+import { getTirinhas } from "@/data/tirinhas";
 import { getUserCount } from "@/data/users";
 import { getDailyViews } from "@/data/analytics";
 import { StatCard } from "@/components/admin/stat-card";
@@ -12,7 +16,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-import { Newspaper, PenSquare, Video, Eye, Share2, Users, UserPlus, TrendingUp, BarChart, PieChart as PieChartIcon, Goal } from "lucide-react";
+import { Newspaper, PenSquare, Video, Eye, Share2, Users, UserPlus, TrendingUp, BarChart, PieChart as PieChartIcon, Goal, FileText, Image as ImageIcon, Smile, Activity } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 
@@ -22,6 +26,10 @@ export default async function AdminDashboard() {
     const videos = await getVideos();
     const history = await getHistoryArticles();
     const vozTorcedor = await getVozTorcedores();
+    const reportagens = await getReportagens();
+    const gallery = await getGalleryItems();
+    const raiox = await getRaiox();
+    const tirinhas = await getTirinhas();
     const userCount = await getUserCount();
     const dailyViews = await getDailyViews(15);
 
@@ -30,6 +38,10 @@ export default async function AdminDashboard() {
     const totalColumnsViews = columns.reduce((acc, column) => acc + (column.views || 0), 0);
     const totalHistoryViews = history.reduce((acc, article) => acc + (article.views || 0), 0);
     const totalVozTorcedorViews = vozTorcedor.reduce((acc, article) => acc + (article.views || 0), 0);
+    const totalReportagensViews = reportagens.reduce((acc, article) => acc + (article.views || 0), 0);
+    const totalGalleryViews = gallery.reduce((acc, item) => acc + (item.views || 0), 0);
+    const totalRaioxViews = raiox.reduce((acc, article) => acc + (article.views || 0), 0);
+    const totalTirinhasViews = tirinhas.reduce((acc, item) => acc + (item.views || 0), 0);
 
     // Calcula compartilhamentos dinamicamente com base nas visualizações
     const totalNewsShares = news.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.05), 0);
@@ -37,7 +49,11 @@ export default async function AdminDashboard() {
     const totalVideoShares = videos.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.04), 0);
     const totalHistoryShares = history.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.05), 0);
     const totalVozTorcedorShares = vozTorcedor.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.06), 0);
-    const totalContentShares = totalNewsShares + totalColumnsShares + totalVideoShares + totalHistoryShares + totalVozTorcedorShares;
+    const totalReportagensShares = reportagens.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.05), 0);
+    const totalGalleryShares = gallery.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.04), 0);
+    const totalRaioxShares = raiox.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.05), 0);
+    const totalTirinhasShares = tirinhas.reduce((acc, item) => acc + Math.floor((item.views || 0) * 0.07), 0);
+    const totalContentShares = totalNewsShares + totalColumnsShares + totalVideoShares + totalHistoryShares + totalVozTorcedorShares + totalReportagensShares + totalGalleryShares + totalRaioxShares + totalTirinhasShares;
 
     // Destinos de Compartilhamento dinâmicos com base no total de compartilhamentos
     const shareDestinationsData = [
@@ -69,21 +85,21 @@ export default async function AdminDashboard() {
     }));
     const totalFutebolNews = news.filter(n => n.mainCategory === 'Futebol').length;
     
-    const recentContent = [...news, ...columns, ...videos, ...history, ...vozTorcedor]
-        .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    const recentContent = [
+        ...news.map(item => ({ ...item, _type: 'Notícia', _slugBase: '/noticias/', _date: item.publishedAt })),
+        ...columns.map(item => ({ ...item, _type: 'Coluna', _slugBase: '/colunas/', _date: item.publishedAt })),
+        ...videos.map(item => ({ ...item, _type: 'Vídeo', _slugBase: '/videos/', _date: item.publishedAt })),
+        ...history.map(item => ({ ...item, _type: 'História', _slugBase: '/flahistoria/', _date: item.publishedAt })),
+        ...vozTorcedor.map(item => ({ ...item, _type: 'Voz do Torcedor', _slugBase: '/voz-torcedor/', _date: item.publishedAt })),
+        ...reportagens.map(item => ({ ...item, _type: 'Reportagens', _slugBase: '/reportagens/', _date: item.publishedAt })),
+        ...raiox.map(item => ({ ...item, _type: 'Raio-X', _slugBase: '/raiox/', _date: item.publishedAt })),
+        ...tirinhas.map(item => ({ ...item, _type: 'Tirinha', _slugBase: '/tirinhas/', _date: item.publishedAt })),
+        ...gallery.map(item => ({ ...item, _type: 'Galeria', _slugBase: '/galeria/', _date: item.date }))
+    ]
+        .sort((a, b) => new Date(b._date).getTime() - new Date(a._date).getTime())
         .slice(0, 5)
         .map(item => {
-            if ('columnName' in item) {
-                return { title: item.title, type: 'Coluna', date: item.publishedAt, slug: `/colunas/${item.slug}` }
-            } else if ('summary' in item) {
-                return { title: item.title, type: 'Voz do Torcedor', date: item.publishedAt, slug: `/voz-torcedor/${item.slug}` }
-            } else if ('subtitle' in item) {
-                return { title: item.title, type: 'História', date: item.publishedAt, slug: `/flahistoria/${item.slug}` }
-            } else if ('excerpt' in item) {
-                return { title: item.title, type: 'Notícia', date: item.publishedAt, slug: `/noticias/${item.slug}` }
-            } else {
-                 return { title: item.title, type: 'Vídeo', date: item.publishedAt, slug: `/videos/${item.slug}` }
-            }
+            return { title: item.title, type: item._type, date: item._date, slug: `${item._slugBase}${item.slug || item.id || ''}` }
         });
     
     const mostViewedData = [
@@ -92,6 +108,10 @@ export default async function AdminDashboard() {
         { type: "videos", views: totalVideoViews, fill: "hsl(var(--chart-3))" },
         { type: "historia", views: totalHistoryViews, fill: "hsl(var(--chart-4))" },
         { type: "voz do torcedor", views: totalVozTorcedorViews, fill: "hsl(var(--chart-5))" },
+        { type: "reportagens", views: totalReportagensViews, fill: "hsl(var(--chart-6))" },
+        { type: "galeria", views: totalGalleryViews, fill: "hsl(var(--chart-7))" },
+        { type: "raiox", views: totalRaioxViews, fill: "hsl(var(--chart-8))" },
+        { type: "tirinhas", views: totalTirinhasViews, fill: "hsl(var(--chart-9))" },
     ];
 
     const todayString = new Date(new Date().getTime() - 3 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -108,11 +128,15 @@ export default async function AdminDashboard() {
                 <StatCard title="Notícias de Futebol" value={totalFutebolNews} icon={Goal} />
                 <StatCard title="Total de Colunas" value={columns.length} icon={PenSquare} />
                 <StatCard title="Total de Vídeos" value={videos.length} icon={Video} />
-                <StatCard title="Usuários Cadastrados" value={userCount} icon={UserPlus} />
+                 <StatCard title="Total de Reportagens" value={reportagens.length} icon={FileText} />
+                 <StatCard title="Total de Raio-X" value={raiox.length} icon={Activity} />
+                 <StatCard title="Total de Tirinhas" value={tirinhas.length} icon={Smile} />
+                 <StatCard title="Total de Galerias" value={gallery.length} icon={ImageIcon} />
+                 <StatCard title="Usuários Cadastrados" value={userCount} icon={UserPlus} />
             </div>
 
              <div className="grid gap-4 md:grid-cols-2">
-                 <StatCard title="Visualizações Totais" value={(totalVideoViews + totalNewsViews + totalColumnsViews + totalHistoryViews + totalVozTorcedorViews).toLocaleString('pt-BR')} icon={Eye} description="Todos os conteúdos somados" />
+                 <StatCard title="Visualizações Totais" value={(totalVideoViews + totalNewsViews + totalColumnsViews + totalHistoryViews + totalVozTorcedorViews + totalReportagensViews + totalGalleryViews + totalRaioxViews + totalTirinhasViews).toLocaleString('pt-BR')} icon={Eye} description="Todos os conteúdos somados" />
                  <StatCard title="Compartilhamentos" value={totalContentShares.toLocaleString('pt-BR')} icon={Share2} description="Total em todas as plataformas" />
             </div>
 

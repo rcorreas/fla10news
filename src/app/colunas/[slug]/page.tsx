@@ -142,6 +142,13 @@ export default async function ColumnPage({
   } catch (err) {
     console.error("Error incrementing column views:", err);
   }
+
+  try {
+    const { incrementDailyViews } = await import('@/data/analytics');
+    await incrementDailyViews();
+  } catch (err) {
+    console.error("Error incrementing daily views:", err);
+  }
   
   const otherColumns = allColumns.filter(c => c.id !== column.id).slice(0, 2);
   const columnDate = format(column.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });

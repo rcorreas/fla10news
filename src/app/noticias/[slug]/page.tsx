@@ -132,6 +132,13 @@ export default async function ArticlePage({
     console.error("Error incrementing news views:", err);
   }
 
+  try {
+    const { incrementDailyViews } = await import('@/data/analytics');
+    await incrementDailyViews();
+  } catch (err) {
+    console.error("Error incrementing daily views:", err);
+  }
+
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const articleUrl = absoluteUrl(`/noticias/${article.slug}`);
   const articleDescription = truncateDescription(article.excerpt || article.content || '');

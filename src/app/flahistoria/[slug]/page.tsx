@@ -211,6 +211,13 @@ export default async function HistoryArticlePage({
     }
   }
 
+  try {
+    const { incrementDailyViews } = await import('@/data/analytics');
+    await incrementDailyViews();
+  } catch (err) {
+    console.error("Error incrementing daily views:", err);
+  }
+
   const otherArticles = allArticles.filter(a => a.slug !== article.slug).slice(0, 3);
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const articleUrl = absoluteUrl(`/flahistoria/${article.slug}`);
