@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { Facebook, Instagram, Twitter, Youtube, MessageCircle } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Youtube, MessageCircle, Send } from 'lucide-react';
 import Link from 'next/link';
 import { TiktokIcon } from '@/components/tiktok-icon';
 import { AuthProvider } from '@/context/auth-context';
@@ -33,6 +33,9 @@ function SocialBar() {
           </Link>
           <Link href="https://chat.whatsapp.com/ItYaqr7fYQw6zZ6ML2q5HM?mode=gi_t" aria-label="WhatsApp" className="transition-opacity hover:opacity-80" target="_blank" rel="noopener noreferrer">
             <MessageCircle className="h-5 w-5" />
+          </Link>
+          <Link href="https://t.me/+F2EeB1ddMmszYzFh" aria-label="Telegram" className="transition-opacity hover:opacity-80" target="_blank" rel="noopener noreferrer">
+            <Send className="h-5 w-5" />
           </Link>
         </div>
       </div>
