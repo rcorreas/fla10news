@@ -194,7 +194,7 @@ export default function EditMateriasPage() {
             </div>
             <Separator />
             <div className="grid gap-2">
-              <Label htmlFor="fullArticleLink">Link para a reportagens Completa (Opcional)</Label>
+              <Label htmlFor="fullArticleLink">Link para Outras Fontes (Opcional)</Label>
               <Input id="fullArticleLink" name="fullArticleLink" type="url" defaultValue={article.fullArticleLink || ''} placeholder="https://ge.globo.com/..." />
               <p className="text-xs text-muted-foreground">Se preenchido, um botão "Ler reportagens completa" aparecerá no final do artigo.</p>
             </div>

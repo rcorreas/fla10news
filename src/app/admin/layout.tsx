@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { Metadata } from 'next';
 import { AdminClientLayout } from "@/components/admin/admin-client-layout";
 

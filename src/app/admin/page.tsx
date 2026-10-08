@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 
 import { getNews } from "@/data/news";
 import { getColumns } from "@/data/columns";

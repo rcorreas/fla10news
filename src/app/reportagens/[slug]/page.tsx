@@ -299,9 +299,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 href={article.fullArticleLink} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="font-bold text-[#ff073a] hover:text-yellow-400 transition-colors"
+                className="font-bold underline text-[#ff073a] hover:text-yellow-400 transition-colors"
               >
-                Leia mais.
+                Leia também este assunto em outra fonte.
               </Link>
             </div>
         )}
