@@ -14,15 +14,31 @@ export function getYouTubeEmbedHtml(url: string | undefined): string | null {
 </div>`;
 }
 
-export function insertVideoIntoContent(content: string, videoUrl?: string): string {
+export function insertVideoIntoContent(content: string, videoUrl?: string, videoUrl2?: string, videoUrl3?: string): string {
+  let newContent = content;
+
+  if (videoUrl2) {
+      const embedHtml2 = getYouTubeEmbedHtml(videoUrl2);
+      if (embedHtml2 && newContent.toLowerCase().includes('[video2]')) {
+          newContent = newContent.replace(/\[video2\]/gi, `\n\n${embedHtml2}\n\n`);
+      }
+  }
+
+  if (videoUrl3) {
+      const embedHtml3 = getYouTubeEmbedHtml(videoUrl3);
+      if (embedHtml3 && newContent.toLowerCase().includes('[video3]')) {
+          newContent = newContent.replace(/\[video3\]/gi, `\n\n${embedHtml3}\n\n`);
+      }
+  }
+
   const embedHtml = getYouTubeEmbedHtml(videoUrl);
-  if (!embedHtml) return content;
+  if (!embedHtml) return newContent;
 
   // Se o usuário usou a tag [video], substitui ela
-  if (content.toLowerCase().includes('[video]')) {
-    return content.replace(/\[video\]/gi, `\n\n${embedHtml}\n\n`);
+  if (newContent.toLowerCase().includes('[video]')) {
+    return newContent.replace(/\[video\]/gi, `\n\n${embedHtml}\n\n`);
   }
 
   // Se não usou a tag, apenas anexa o vídeo no topo do conteúdo
-  return `${embedHtml}\n\n${content}`;
+  return `${embedHtml}\n\n${newContent}`;
 }

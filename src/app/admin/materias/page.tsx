@@ -197,9 +197,19 @@ export default function MateriasPage() {
             </div>
             <Separator />
             <div className="grid gap-2">
-              <Label htmlFor="videoUrl">Link do Vídeo (YouTube)</Label>
+              <Label htmlFor="videoUrl">Link do Vídeo Principal (YouTube)</Label>
               <Input id="videoUrl" name="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." />
               <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro do conteúdo abaixo onde deseja que ele apareça. Se não usar a tag, ele aparecerá no topo do texto.</p>
+            </div>
+            <div className="grid gap-2 mt-4">
+              <Label htmlFor="videoUrl2">Link do Vídeo 2 (YouTube)</Label>
+              <Input id="videoUrl2" name="videoUrl2" type="url" placeholder="https://www.youtube.com/watch?v=..." />
+              <p className="text-xs text-muted-foreground">Opcional. Digite <strong>[video2]</strong> dentro do conteúdo abaixo para exibir este vídeo.</p>
+            </div>
+            <div className="grid gap-2 mt-4">
+              <Label htmlFor="videoUrl3">Link do Vídeo 3 (YouTube)</Label>
+              <Input id="videoUrl3" name="videoUrl3" type="url" placeholder="https://www.youtube.com/watch?v=..." />
+              <p className="text-xs text-muted-foreground">Opcional. Digite <strong>[video3]</strong> dentro do conteúdo abaixo para exibir este vídeo.</p>
             </div>
             <Separator />
             <div className="space-y-4 bg-muted/50 p-4 rounded-lg">
