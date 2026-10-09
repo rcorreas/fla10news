@@ -194,7 +194,7 @@ export default async function ArticlePage({
       return [processed];
   };
   
-  const rawContent = article.content ? insertVideoIntoContent(article.content, article.videoUrl, (article as any).videoUrl2, (article as any).videoUrl3) : '';
+  const rawContent = article.content ? insertVideoIntoContent(article.content, article.videoUrl, article.videoUrl2, article.videoUrl3) : '';
   const paragraphs = rawContent ? parseContent(rawContent) : [];
   const parsedContent = paragraphs.join('\n');
 

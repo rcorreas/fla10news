@@ -202,12 +202,12 @@ export default function EditMateriasPage() {
             </div>
             <div className="grid gap-2 mt-4">
               <Label htmlFor="videoUrl2">Link do Vídeo 2 (YouTube)</Label>
-              <Input id="videoUrl2" name="videoUrl2" type="url" defaultValue={(article as any).videoUrl2 || ''} placeholder="https://www.youtube.com/watch?v=..." />
+              <Input id="videoUrl2" name="videoUrl2" type="url" defaultValue={article.videoUrl2 || ''} placeholder="https://www.youtube.com/watch?v=..." />
               <p className="text-xs text-muted-foreground">Opcional. Digite <strong>[video2]</strong> dentro do conteúdo abaixo para exibir este vídeo.</p>
             </div>
             <div className="grid gap-2 mt-4">
               <Label htmlFor="videoUrl3">Link do Vídeo 3 (YouTube)</Label>
-              <Input id="videoUrl3" name="videoUrl3" type="url" defaultValue={(article as any).videoUrl3 || ''} placeholder="https://www.youtube.com/watch?v=..." />
+              <Input id="videoUrl3" name="videoUrl3" type="url" defaultValue={article.videoUrl3 || ''} placeholder="https://www.youtube.com/watch?v=..." />
               <p className="text-xs text-muted-foreground">Opcional. Digite <strong>[video3]</strong> dentro do conteúdo abaixo para exibir este vídeo.</p>
             </div>
             <Separator />
