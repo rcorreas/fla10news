@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/footer';
 import { Facebook, Instagram, Twitter, Youtube, MessageCircle, Send } from 'lucide-react';
 import Link from 'next/link';
 import { TiktokIcon } from '@/components/tiktok-icon';
+import { BlueskyIcon } from '@/components/bluesky-icon';
 import { AuthProvider } from '@/context/auth-context';
 import { Toaster } from '../ui/toaster';
 import { ViewTracker } from '@/components/view-tracker';
@@ -27,6 +28,9 @@ function SocialBar() {
           </Link>
           <Link href="https://www.youtube.com/@fladez" aria-label="Youtube" className="transition-opacity hover:opacity-80" target="_blank" rel="noopener noreferrer">
             <Youtube className="h-5 w-5" />
+          </Link>
+          <Link href="https://bsky.app/profile/fla10news.bsky.social" aria-label="Bluesky" className="transition-opacity hover:opacity-80" target="_blank" rel="noopener noreferrer">
+            <BlueskyIcon className="h-5 w-5" />
           </Link>
           <Link href="https://www.tiktok.com/@canalfla10" aria-label="Tiktok" className="transition-opacity hover:opacity-80" target="_blank" rel="noopener noreferrer">
             <TiktokIcon className="h-5 w-5" />
