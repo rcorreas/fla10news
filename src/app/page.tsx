@@ -28,7 +28,6 @@ import { ArrowRight, Users, Video, Newspaper, TrendingUp, Clock, User, Eye, Play
 import { Badge } from '@/components/ui/badge'
 import { AdBanner } from '@/components/ad-banner'
 import { SofascoreWidget } from '@/components/sofascore-widget'
-import { LibertadoresWidget } from '@/components/libertadores-widget'
 import { getNews } from '@/data/news'
 import { getColumns } from '@/data/columns'
 import { getVideos } from '@/data/videos'
@@ -516,7 +515,7 @@ export default async function Home() {
         
         <AdBanner width={300} height={250} />
 
-        <section className="pb-8 border-b border-border">
+        <section className="pb-8">
           <SectionHeader title="Tabela do Brasileirão" subtitle="Acompanhe a classificação do Mengão no campeonato." icon={TrendingUp} />
           <div className="relative mt-8">
             <Image
@@ -534,13 +533,6 @@ export default async function Home() {
               className="block md:hidden object-contain absolute -top-4 left-[3px] z-10"
             />
             <SofascoreWidget />
-          </div>
-        </section>
-
-        <section className="pb-8">
-          <SectionHeader title="Tabela da Libertadores" subtitle="Acompanhe o caminho da Glória Eterna." icon={Trophy} />
-          <div className="relative mt-8">
-            <LibertadoresWidget />
           </div>
         </section>
 
