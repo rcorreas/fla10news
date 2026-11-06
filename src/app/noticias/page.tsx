@@ -3,6 +3,7 @@ import { formatPublishedTime } from '@/lib/utils';
 import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { getNews } from '@/data/news'
@@ -17,10 +18,16 @@ import { PaginationControls } from '@/components/pagination-controls'
 export default async function NoticiasPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
     const { page } = await searchParams;
     const currentPage = parseInt(page || '1', 10);
+    if (Number.isNaN(currentPage) || currentPage < 1) {
+        notFound();
+    }
     const ITEMS_PER_PAGE = 10;
     
     const allNews = await getNews();
     const totalPages = Math.ceil(allNews.length / ITEMS_PER_PAGE);
+    if (currentPage > 1 && totalPages > 0 && currentPage > totalPages) {
+        notFound();
+    }
     
     // Get items for the current page
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;

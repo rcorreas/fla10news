@@ -1,5 +1,5 @@
 
-import { db } from '@/lib/firebase';
+import { db, withTimeout } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore';
 
 export type HistoryArticle = {
@@ -76,7 +76,7 @@ export async function getHistoryArticles(count?: number): Promise<HistoryArticle
             ? query(historyCollection, orderBy('publishedAt', 'desc'), limit(count))
             : query(historyCollection, orderBy('publishedAt', 'desc'));
 
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
             return defaultHistoryArticles.slice(0, count);
         }
@@ -109,7 +109,7 @@ export async function getHistoryArticleById(id: string): Promise<HistoryArticle 
 export async function getHistoryArticleBySlug(slug: string): Promise<HistoryArticle | null> {
     try {
         const q = query(collection(db, "history"), where("slug", "==", slug), limit(1));
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
 
         if (snapshot.empty) {
             // Fallback to static data if not found in Firestore

@@ -1,7 +1,7 @@
 import { Calendar, Clock, ChevronRight } from 'lucide-react';
 import { TeamCrest } from './team-crest';
 import { nextGame as defaultGameData } from '@/data/next-game';
-import { db } from '@/lib/firebase';
+import { db, withTimeout } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
 
@@ -18,7 +18,7 @@ type NextGameData = {
 async function getNextGameData(): Promise<NextGameData> {
     try {
         const docRef = doc(db, "siteConfig", "nextGame");
-        const docSnap = await getDoc(docRef);
+        const docSnap = await withTimeout(getDoc(docRef), 5000);
 
         if (docSnap.exists()) {
             return docSnap.data() as NextGameData;

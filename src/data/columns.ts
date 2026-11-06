@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase';
+import { db, withTimeout } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc, addDoc, serverTimestamp, updateDoc, deleteDoc } from 'firebase/firestore';
 
 export type OpinionColumn = {
@@ -76,7 +76,7 @@ export async function getColumns(count?: number): Promise<OpinionColumn[]> {
             ? query(columnsCollection, orderBy('publishedAt', 'desc'), limit(count))
             : query(columnsCollection, orderBy('publishedAt', 'desc'));
         
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
             return [];
         }
@@ -148,7 +148,7 @@ export async function getColumnById(id: string): Promise<OpinionColumn | null> {
 export async function getColumnBySlug(slug: string): Promise<OpinionColumn | null> {
     try {
         const q = query(collection(db, "columns"), where("slug", "==", slug), limit(1));
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
 
         if (snapshot.empty) {
             return null;

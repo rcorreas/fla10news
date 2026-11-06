@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase';
+import { db, withTimeout } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore';
 
 export type Video = {
@@ -47,7 +47,7 @@ export async function getVideos(count?: number): Promise<Video[]> {
             ? query(videosCollection, orderBy('publishedAt', 'desc'), limit(count))
             : query(videosCollection, orderBy('publishedAt', 'desc'));
 
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
             // Return default static data if the collection is empty
             return defaultVideos.slice(0, count);
@@ -79,7 +79,7 @@ export async function getVideoById(id: string): Promise<Video | null> {
 export async function getVideoBySlug(slug: string): Promise<Video | null> {
     try {
         const q = query(collection(db, "videos"), where("slug", "==", slug), limit(1));
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
 
         if (snapshot.empty) {
             return null;

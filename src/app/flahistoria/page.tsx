@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { getHistoryArticles } from '@/data/history';
 import { format } from 'date-fns';
@@ -25,10 +26,16 @@ export const revalidate = 3600; // Revalida no máximo a cada 1 hora
 export default async function FlaHistoriaPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
     const { page } = await searchParams;
     const currentPage = parseInt(page || '1', 10);
+    if (Number.isNaN(currentPage) || currentPage < 1) {
+        notFound();
+    }
     const ITEMS_PER_PAGE = 10;
 
     const allArticlesRaw = await getHistoryArticles();
     const totalPages = Math.ceil(allArticlesRaw.length / ITEMS_PER_PAGE);
+    if (currentPage > 1 && totalPages > 0 && currentPage > totalPages) {
+        notFound();
+    }
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;

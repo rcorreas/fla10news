@@ -1,6 +1,7 @@
 
 import * as React from 'react';
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getColumns } from "@/data/columns";
 import { Badge } from "@/components/ui/badge";
@@ -18,10 +19,16 @@ import { PaginationControls } from '@/components/pagination-controls';
 export default async function ColunasPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
     const { page } = await searchParams;
     const currentPage = parseInt(page || '1', 10);
+    if (Number.isNaN(currentPage) || currentPage < 1) {
+        notFound();
+    }
     const ITEMS_PER_PAGE = 10;
 
     const allColumnsRaw = await getColumns();
     const totalPages = Math.ceil(allColumnsRaw.length / ITEMS_PER_PAGE);
+    if (currentPage > 1 && totalPages > 0 && currentPage > totalPages) {
+        notFound();
+    }
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;

@@ -134,7 +134,7 @@ export default async function ArticlePage({
 
   try {
     const { incrementDailyViews } = await import('@/data/analytics');
-    await incrementDailyViews();
+    incrementDailyViews().catch(err => console.error("Error incrementing daily views:", err));
   } catch (err) {
     console.error("Error incrementing daily views:", err);
   }

@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase';
+import { db, withTimeout } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 
 export type VozTorcedor = {
@@ -58,7 +58,7 @@ export async function getVozTorcedores(count?: number): Promise<VozTorcedor[]> {
             ? query(vozCollection, orderBy('publishedAt', 'desc'), limit(count))
             : query(vozCollection, orderBy('publishedAt', 'desc'));
         
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
             return [];
         }
@@ -89,7 +89,7 @@ export async function getVozTorcedorById(id: string): Promise<VozTorcedor | null
 export async function getVozTorcedorBySlug(slug: string): Promise<VozTorcedor | null> {
     try {
         const q = query(collection(db, "voz_torcedor"), where("slug", "==", slug), limit(1));
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
 
         if (snapshot.empty) {
             return null;

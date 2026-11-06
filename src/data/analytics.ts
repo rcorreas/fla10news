@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase';
+import { db, withTimeout } from '@/lib/firebase';
 import { collection, doc, setDoc, increment, getDocs, query, orderBy, limit } from 'firebase/firestore';
 
 export type DailyViews = {
@@ -24,10 +24,10 @@ export async function incrementDailyViews(): Promise<void> {
         const dateString = getGMT3DateString();
         const docRef = doc(db, 'dailyViews', dateString);
         
-        await setDoc(docRef, {
+        await withTimeout(setDoc(docRef, {
             date: dateString,
             views: increment(1),
-        }, { merge: true });
+        }, { merge: true }), 5000);
     } catch (error) {
         console.error("Error incrementing daily views:", error);
     }
@@ -39,7 +39,7 @@ export async function getDailyViews(days: number = 30): Promise<DailyViews[]> {
         // We order by document ID (which is YYYY-MM-DD) descending
         const q = query(viewsCollection, orderBy('date', 'desc'), limit(days));
         
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
             return [];
         }

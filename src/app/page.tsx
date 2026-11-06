@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 import * as React from 'react'
 import Image from 'next/image'
@@ -83,16 +83,28 @@ function formatViews(views: number): string {
 }
 
 export default async function Home() {
-  const allNews = await getNews(12);
-  const allColumns = await getColumns(3);
-  const allVideos = await getVideos(6);
-  const historicArticles = await getHistoryArticles(3);
-  const vozTorcedores = await getVozTorcedores(3);
-  const allGalleryTotal = await getGalleryItems(1);
+  const [
+    allNews,
+    allColumns,
+    allVideos,
+    historicArticles,
+    vozTorcedores,
+    allGalleryTotal,
+    raioxList,
+    reportagensList,
+    allTirinhas,
+  ] = await Promise.all([
+    getNews(12),
+    getColumns(3),
+    getVideos(6),
+    getHistoryArticles(3),
+    getVozTorcedores(3),
+    getGalleryItems(1),
+    getRaiox(1),
+    getReportagens(1),
+    getTirinhas(1),
+  ]);
   const galleryItems = allGalleryTotal.slice(0, 1);
-  const raioxList = await getRaiox(1);
-  const reportagensList = await getReportagens(1);
-  const allTirinhas = await getTirinhas(1);
 
   const mainHeadlines = allNews.slice(0, 6);
   const dailyNews = allNews.slice(6, 12); // Now shows 6 articles
@@ -100,10 +112,6 @@ export default async function Home() {
   const homePageVideos = allVideos;
   const latestNews = allNews.length > 0 ? allNews[0] : null;
   const featuredHistoricArticle = historicArticles.length > 0 ? historicArticles[0] : null;
-
-  const nextMatchStats = await getNextMatchStats();
-  const campaignList = await getCampaignStatsList();
-  const recentMatches = await getRecentMatches(3);
 
   const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Sao_Paulo',

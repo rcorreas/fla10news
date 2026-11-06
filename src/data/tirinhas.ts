@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase';
+import { db, withTimeout } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore';
 
 export type TirinhaItem = {
@@ -43,7 +43,7 @@ export async function getTirinhas(count?: number): Promise<TirinhaItem[]> {
             ? query(tirinhasCollection, orderBy('publishedAt', 'desc'), limit(count))
             : query(tirinhasCollection, orderBy('publishedAt', 'desc'));
         
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
             return [];
         }
@@ -74,7 +74,7 @@ export async function getTirinhaById(id: string): Promise<TirinhaItem | null> {
 export async function getTirinhaBySlug(slug: string): Promise<TirinhaItem | null> {
     try {
         const q = query(collection(db, "tirinhas"), where("slug", "==", slug), limit(1));
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
 
         if (snapshot.empty) {
             return null;

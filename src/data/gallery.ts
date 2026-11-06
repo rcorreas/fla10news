@@ -1,4 +1,4 @@
-import { db } from "@/lib/firebase";
+import { db, withTimeout } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy, limit as firebaseLimit, doc, updateDoc, increment, getDoc } from "firebase/firestore";
 
 export interface GalleryItem {
@@ -18,7 +18,7 @@ export async function getGalleryItems(limitCount?: number): Promise<GalleryItem[
       ? query(collection(db, "galeria"), orderBy("createdAt", "desc"), firebaseLimit(limitCount))
       : query(collection(db, "galeria"), orderBy("createdAt", "desc"));
       
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await withTimeout(getDocs(q));
     
     const items = querySnapshot.docs.map((doc) => {
       const data = doc.data();

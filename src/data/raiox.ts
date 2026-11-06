@@ -1,5 +1,5 @@
 
-import { db } from '@/lib/firebase';
+import { db, withTimeout } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore';
 
 export type RaioxArticle = {
@@ -60,7 +60,7 @@ export async function getRaiox(count?: number): Promise<RaioxArticle[]> {
             ? query(raioxCollection, orderBy('publishedAt', 'desc'), limit(count))
             : query(raioxCollection, orderBy('publishedAt', 'desc'));
         
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
             return [];
         }
@@ -113,7 +113,7 @@ export async function getRaioxById(id: string): Promise<RaioxArticle | null> {
 export async function getRaioxBySlug(slug: string): Promise<RaioxArticle | null> {
     try {
         const q = query(collection(db, "raiox"), where("slug", "==", slug), limit(1));
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
 
         if (snapshot.empty) {
             return null;

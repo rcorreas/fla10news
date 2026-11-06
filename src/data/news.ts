@@ -1,5 +1,5 @@
 
-import { db } from '@/lib/firebase';
+import { db, withTimeout } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore';
 
 export type NewsArticle = {
@@ -69,7 +69,7 @@ export async function getNews(count?: number, includeDrafts = false): Promise<Ne
             ? query(newsCollection, orderBy('publishedAt', 'desc'), limit(fetchLimit))
             : query(newsCollection, orderBy('publishedAt', 'desc'));
         
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
             return [];
         }
@@ -130,7 +130,7 @@ export async function getNewsById(id: string): Promise<NewsArticle | null> {
 export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
     try {
         const q = query(collection(db, "news"), where("slug", "==", slug), limit(1));
-        const snapshot = await getDocs(q);
+        const snapshot = await withTimeout(getDocs(q));
 
         if (snapshot.empty) {
             return null;
