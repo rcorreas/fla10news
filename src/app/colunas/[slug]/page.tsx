@@ -103,7 +103,7 @@ export async function generateMetadata(
 
 
 import { db } from '@/lib/firebase'
-import { doc, updateDoc, increment } from 'firebase/firestore'
+import { doc, updateDoc, increment } from 'firebase/firestore/lite'
 
 export default async function ColumnPage({ 
   params,

@@ -15,7 +15,7 @@ import { RichTextRenderer } from '@/components/rich-text-renderer'
 import { insertVideoIntoContent } from '@/lib/youtube'
 import { absoluteUrl, siteName, truncateDescription } from '@/lib/site'
 import { db } from '@/lib/firebase'
-import { doc, updateDoc, increment } from 'firebase/firestore'
+import { doc, updateDoc, increment } from 'firebase/firestore/lite'
 import { incrementDailyViews } from '@/data/analytics'
 
 export const revalidate = 3600; // Revalidate at most every hour

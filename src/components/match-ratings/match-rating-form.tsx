@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import type { MatchRating } from '@/types/match-ratings';
 import { db } from '@/lib/firebase';
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore/lite';
 
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';

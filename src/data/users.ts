@@ -1,6 +1,6 @@
 
 import { db } from '@/lib/firebase';
-import { collection, getDocs, Timestamp, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, Timestamp, query, orderBy } from 'firebase/firestore/lite';
 
 export type UserProfile = {
   id: string; // Firestore document ID

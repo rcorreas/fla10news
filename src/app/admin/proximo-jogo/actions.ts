@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { db } from '@/lib/firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore/lite';
 import { nextGame as gameSchema } from '@/data/next-game';
 import { revalidatePath } from 'next/cache';
 

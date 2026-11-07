@@ -20,9 +20,11 @@ const VALID_CATEGORIES: { [key: string]: string } = {
   'olimpicos': 'Olímpicos'
 };
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   return Object.keys(VALID_CATEGORIES).map((slug) => ({
-    params: { category: slug },
+    category: slug,
   }));
 }
 

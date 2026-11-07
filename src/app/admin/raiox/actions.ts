@@ -4,7 +4,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore/lite";
 
 const NewsSchema = z.object({
   mainCategory: z.string().min(1, { message: "A categoria principal é obrigatória." }),

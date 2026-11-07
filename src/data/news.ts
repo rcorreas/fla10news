@@ -1,6 +1,6 @@
 
 import { db, withTimeout } from '@/lib/firebase';
-import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore/lite';
 
 export type NewsArticle = {
     id: string; // Firestore document ID
@@ -62,8 +62,8 @@ const fromFirestore = (doc: any): NewsArticle => {
 export async function getNews(count?: number, includeDrafts = false): Promise<NewsArticle[]> {
     try {
         const newsCollection = collection(db, 'news');
-        // Buscar um número maior para garantir que teremos suficientes após o filtro local, se count for fornecido
-        const fetchLimit = count ? count * 3 : undefined;
+        // Buscar uma margem extra para garantir itens suficientes após o filtro local de rascunhos/agendados
+        const fetchLimit = count ? Math.min(count + 12, count * 3) : undefined;
         
         const q = fetchLimit 
             ? query(newsCollection, orderBy('publishedAt', 'desc'), limit(fetchLimit))
@@ -90,7 +90,7 @@ export async function getNews(count?: number, includeDrafts = false): Promise<Ne
 
 export async function getNewsByCategory(category: string, includeDrafts = false): Promise<NewsArticle[]> {
     try {
-        const allNews = await getNews(undefined, includeDrafts);
+        const allNews = await getNews(includeDrafts ? undefined : 80, includeDrafts);
         if (!allNews.length) {
             return [];
         }

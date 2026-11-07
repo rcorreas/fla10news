@@ -9,7 +9,7 @@ import { nextGame as defaultGameData } from '@/data/next-game';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { updateNextGame } from './actions';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore/lite';
 import { db } from '@/lib/firebase';
 
 export default function ProximoJogoPage() {

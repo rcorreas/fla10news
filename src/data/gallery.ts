@@ -1,5 +1,5 @@
 import { db, withTimeout } from "@/lib/firebase";
-import { collection, getDocs, query, orderBy, limit as firebaseLimit, doc, updateDoc, increment, getDoc } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit as firebaseLimit, doc, updateDoc, increment, getDoc } from "firebase/firestore/lite";
 
 export interface GalleryItem {
   id: string;

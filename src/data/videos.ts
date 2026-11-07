@@ -1,5 +1,5 @@
 import { db, withTimeout } from '@/lib/firebase';
-import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore/lite';
 
 export type Video = {
     id: string; // Firestore document ID
@@ -49,13 +49,12 @@ export async function getVideos(count?: number): Promise<Video[]> {
 
         const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
-            // Return default static data if the collection is empty
-            return defaultVideos.slice(0, count);
+            return [];
         }
         return snapshot.docs.map(fromFirestore);
     } catch (error) {
         console.error("Error fetching videos:", error);
-        return defaultVideos.slice(0, count);
+        return [];
     }
 }
 

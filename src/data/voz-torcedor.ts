@@ -1,5 +1,5 @@
 import { db, withTimeout } from '@/lib/firebase';
-import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc, updateDoc, increment } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc, updateDoc, increment } from 'firebase/firestore/lite';
 
 export type VozTorcedor = {
     id: string; // Firestore document ID

@@ -1,7 +1,7 @@
 export const nextGame = {
     home: "Flamengo",
-    away: "Cusco",
-    competition: "Brasileirão Série A - Rodada 18",
-    date: "20 de Julho, 2024",
-    time: "16:00",
+    away: "A definir",
+    competition: "Temporada 2026",
+    date: "Em breve",
+    time: "--:--",
 };

@@ -68,7 +68,7 @@ export async function generateMetadata(
 }
 
 import { db } from '@/lib/firebase'
-import { doc, updateDoc, increment } from 'firebase/firestore'
+import { doc, updateDoc, increment } from 'firebase/firestore/lite'
 import { incrementDailyViews } from '@/data/analytics'
 
 export default async function VozTorcedorPage({ 

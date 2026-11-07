@@ -15,6 +15,8 @@ import { PaginationControls } from '@/components/pagination-controls'
 
 
 
+export const revalidate = 60;
+
 export default async function NoticiasPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
     const { page } = await searchParams;
     const currentPage = parseInt(page || '1', 10);
@@ -23,7 +25,7 @@ export default async function NoticiasPage({ searchParams }: { searchParams: Pro
     }
     const ITEMS_PER_PAGE = 10;
     
-    const allNews = await getNews();
+    const allNews = await getNews(120);
     const totalPages = Math.ceil(allNews.length / ITEMS_PER_PAGE);
     if (currentPage > 1 && totalPages > 0 && currentPage > totalPages) {
         notFound();

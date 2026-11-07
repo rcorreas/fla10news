@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy, doc, getDoc, Timestamp, where } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, getDoc, Timestamp, where } from 'firebase/firestore/lite';
 import { slugify } from '@/lib/utils';
 
 export type Author = {

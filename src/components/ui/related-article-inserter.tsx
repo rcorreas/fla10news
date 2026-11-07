@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { BookOpen } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
+import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore/lite';
 
 interface RelatedArticleInserterProps {
   onInsert: (html: string) => void;

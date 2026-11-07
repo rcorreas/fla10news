@@ -1,6 +1,6 @@
 
 import { db, withTimeout } from '@/lib/firebase';
-import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore/lite';
 
 export type ReportagensArticle = {
     id: string; // Firestore document ID

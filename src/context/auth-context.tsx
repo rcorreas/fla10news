@@ -3,7 +3,7 @@
 
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc, onSnapshot, setDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp, updateDoc } from 'firebase/firestore/lite';
 import { auth, db } from '@/lib/firebase';
 
 const SUPERADMIN_EMAILS = ['canalfladez@gmail.com', 'rcorreas@gmail.com'];
@@ -51,10 +51,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
+    let cancelled = false;
     setLoading(true);
     const userDocRef = doc(db, 'users', user.uid);
     
-    const unsubscribeSnapshot = onSnapshot(userDocRef, async (docSnap) => {
+    getDoc(userDocRef).then(async (docSnap) => {
+      if (cancelled) return;
       const isSuperAdminByEmail = !!user.email && SUPERADMIN_EMAILS.includes(user.email);
       
       let finalProfile: UserProfile | null = null;
@@ -118,10 +120,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         finalProfile = { ...newSuperAdminProfile, id: user.uid, createdAt: new Date() };
       }
       
-      setUserProfile(finalProfile);
-      setLoading(false);
+      if (!cancelled) {
+        setUserProfile(finalProfile);
+        setLoading(false);
+      }
 
-    }, (error) => {
+    }).catch((error) => {
+      if (cancelled) return;
       console.error("Error fetching user profile:", error);
       
       const isSuperAdminByEmail = !!user.email && SUPERADMIN_EMAILS.includes(user.email);
@@ -144,7 +149,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     });
 
-    return () => unsubscribeSnapshot();
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   return (

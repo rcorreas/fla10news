@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, doc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, doc, updateDoc, setDoc, deleteDoc } from "firebase/firestore/lite";
 
 const MatchRatingSchema = z.object({
   score: z.string().min(1, { message: "Placar é obrigatório" }),

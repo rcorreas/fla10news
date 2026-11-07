@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy, Timestamp, doc, getDoc, limit, updateDoc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, Timestamp, doc, getDoc, limit, updateDoc, setDoc } from 'firebase/firestore/lite';
 import type { MatchRating, UserVote } from '@/types/match-ratings';
 
 const fromFirestoreMatchRating = (docSnap: any): MatchRating => {

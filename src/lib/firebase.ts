@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
-import { getFirestore, initializeFirestore, type Firestore } from "firebase/firestore";
+import { getFirestore, type Firestore } from "firebase/firestore/lite";
 import { getStorage, type FirebaseStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -23,14 +23,9 @@ if (!getApps().length) {
 
 const auth: Auth = getAuth(app);
 
-let db: Firestore;
-try {
-  // O experimentalForceLongPolling é crucial no Next.js (Server Components/SSR) 
-  // para evitar o erro "upstream request timeout" no Firebase Hosting.
-  db = initializeFirestore(app, { experimentalForceLongPolling: true });
-} catch (e) {
-  db = getFirestore(app);
-}
+// Usa firebase/firestore/lite (HTTP REST stateless via fetch) em vez de gRPC streams,
+// evitando travamentos e conexões presas (ECONNRESET/DEADLINE_EXCEEDED) no Cloud Run SSR.
+const db: Firestore = getFirestore(app);
 
 const storage: FirebaseStorage = getStorage(app);
 

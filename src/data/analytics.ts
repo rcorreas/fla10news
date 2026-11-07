@@ -1,5 +1,5 @@
 import { db, withTimeout } from '@/lib/firebase';
-import { collection, doc, setDoc, increment, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { collection, doc, setDoc, increment, getDocs, query, orderBy, limit } from 'firebase/firestore/lite';
 
 export type DailyViews = {
     date: string;

@@ -4,7 +4,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore/lite";
 
 const ColumnSchema = z.object({
   columnName: z.string().min(3, { message: "O nome da coluna deve ter pelo menos 3 caracteres." }),
