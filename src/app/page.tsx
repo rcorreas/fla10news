@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 }
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 import * as React from 'react'
 import Image from 'next/image'

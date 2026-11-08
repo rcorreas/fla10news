@@ -3,6 +3,36 @@ import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore/lite";
 import { getStorage, type FirebaseStorage } from "firebase/storage";
 
+// Garante que o Next.js Data Cache (.next/cache/fetch-cache) nunca armazene em disco
+// respostas HTTP brutas do Firestore (como erros 429 transitórios), delegando o
+// controle de cache exclusivamente para o cachedQuery em memória.
+if (typeof window === "undefined" && typeof globalThis.fetch === "function") {
+  const originalFetch = globalThis.fetch;
+  if (!(originalFetch as any).__fla10Patched) {
+    const patchedFetch = (input: RequestInfo | URL, init?: RequestInit) => {
+      const url =
+        typeof input === "string"
+          ? input
+          : input instanceof URL
+            ? input.toString()
+            : input?.url || "";
+      if (url.includes("firestore.googleapis.com")) {
+        const nextInit: RequestInit & { next?: { revalidate?: number | false } } = {
+          ...init,
+          cache: "no-store",
+        };
+        if (nextInit.next) {
+          delete nextInit.next;
+        }
+        return originalFetch(input, nextInit);
+      }
+      return originalFetch(input, init);
+    };
+    (patchedFetch as any).__fla10Patched = true;
+    globalThis.fetch = patchedFetch as typeof fetch;
+  }
+}
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
