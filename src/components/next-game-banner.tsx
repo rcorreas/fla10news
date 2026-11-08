@@ -1,7 +1,7 @@
 import { Calendar, Clock, ChevronRight } from 'lucide-react';
 import { TeamCrest } from './team-crest';
 import { nextGame as defaultGameData } from '@/data/next-game';
-import { db, withTimeout } from '@/lib/firebase';
+import { db, withTimeout, cachedQuery } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore/lite';
 import Link from 'next/link';
 
@@ -17,14 +17,19 @@ type NextGameData = {
 
 async function getNextGameData(): Promise<NextGameData> {
     try {
-        const docRef = doc(db, "siteConfig", "nextGame");
-        const docSnap = await withTimeout(getDoc(docRef), 8000);
-
-        if (docSnap.exists()) {
-            return docSnap.data() as NextGameData;
-        } else {
-            return defaultGameData;
-        }
+        const data = await cachedQuery<NextGameData | null>(
+            'siteConfig:nextGame',
+            async () => {
+                const docRef = doc(db, "siteConfig", "nextGame");
+                const docSnap = await withTimeout(getDoc(docRef), 8000);
+                if (docSnap.exists()) {
+                    return docSnap.data() as NextGameData;
+                }
+                return null;
+            },
+            { ttlMs: 300_000, isEmpty: (val) => val === null }
+        );
+        return data ?? defaultGameData;
     } catch (error) {
         console.error("Failed to fetch next game data for banner:", error);
         return defaultGameData;

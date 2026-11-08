@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "@/lib/firebase";
+import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { collection, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore/lite";
 import { revalidatePath } from "next/cache";
 import { slugify } from "@/lib/utils";
@@ -37,6 +37,7 @@ export async function createTirinha(prevState: any, formData: FormData) {
 
     revalidatePath("/admin/tirinhas");
     revalidatePath("/tirinhas");
+    invalidateFirestoreCache();
     revalidatePath("/");
     
     return {
@@ -83,6 +84,7 @@ export async function updateTirinha(prevState: any, formData: FormData) {
     revalidatePath("/admin/tirinhas");
     revalidatePath("/tirinhas");
     revalidatePath(`/tirinhas/${slug}`);
+    invalidateFirestoreCache();
     revalidatePath("/");
 
     return {
@@ -105,6 +107,7 @@ export async function deleteTirinha(id: string) {
     
     revalidatePath("/admin/tirinhas");
     revalidatePath("/tirinhas");
+    invalidateFirestoreCache();
     revalidatePath("/");
 
     return {

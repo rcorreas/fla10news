@@ -3,7 +3,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/firebase";
+import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore/lite";
 
 const VideoSchema = z.object({
@@ -70,6 +70,7 @@ export async function createVideo(prevState: any, formData: FormData) {
     revalidatePath("/admin/videos");
     revalidatePath("/videos");
     revalidatePath(`/videos/${slug}`);
+    invalidateFirestoreCache();
     revalidatePath("/");
 
     return { success: true, message: "Vídeo criado com sucesso!" };
@@ -123,6 +124,7 @@ export async function updateVideo(id: string, slug: string, prevState: any, form
     revalidatePath("/admin/videos");
     revalidatePath("/videos");
     revalidatePath(`/videos/${slug}`);
+    invalidateFirestoreCache();
     revalidatePath("/");
 
     return { success: true, message: "Vídeo atualizado com sucesso!" };
@@ -142,6 +144,7 @@ export async function deleteVideo(id: string) {
 
     revalidatePath("/admin/videos");
     revalidatePath("/videos");
+    invalidateFirestoreCache();
     revalidatePath("/");
     
     return { success: true, message: "Vídeo deletado com sucesso!" };
@@ -174,7 +177,8 @@ export async function publishDraftActionVideo(formData: FormData) {
       revalidatePath("/admin/videos");
       revalidatePath("/videos");
       revalidatePath(`/videos/${slug}`);
-      revalidatePath("/");
+      invalidateFirestoreCache();
+    revalidatePath("/");
   } catch (error) {
       console.error("Error publishing video draft", error);
   }

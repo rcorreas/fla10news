@@ -1,5 +1,5 @@
 
-import { db, withTimeout } from '@/lib/firebase';
+import { db, withTimeout, cachedQuery } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore/lite';
 
 export type HistoryArticle = {
@@ -69,12 +69,35 @@ const fromFirestore = (doc: any): HistoryArticle => {
     };
 };
 
+const SHARED_HISTORY_LIMIT = 50;
+
+async function getCachedHistory(): Promise<HistoryArticle[]> {
+    return cachedQuery(
+        `history:all:${SHARED_HISTORY_LIMIT}`,
+        async () => {
+            const historyCollection = collection(db, 'history');
+            const q = query(historyCollection, orderBy('publishedAt', 'desc'), limit(SHARED_HISTORY_LIMIT));
+            const snapshot = await withTimeout(getDocs(q));
+            if (snapshot.empty) {
+                return [];
+            }
+            return snapshot.docs.map(fromFirestore);
+        },
+        { ttlMs: 300_000 }
+    );
+}
+
 export async function getHistoryArticles(count?: number): Promise<HistoryArticle[]> {
     try {
+        if (!count || count <= SHARED_HISTORY_LIMIT) {
+            const cached = await getCachedHistory();
+            if (cached.length === 0) {
+                return defaultHistoryArticles.slice(0, count);
+            }
+            return count ? cached.slice(0, count) : cached;
+        }
         const historyCollection = collection(db, 'history');
-        const q = count
-            ? query(historyCollection, orderBy('publishedAt', 'desc'), limit(count))
-            : query(historyCollection, orderBy('publishedAt', 'desc'));
+        const q = query(historyCollection, orderBy('publishedAt', 'desc'), limit(count));
 
         const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
@@ -90,7 +113,7 @@ export async function getHistoryArticles(count?: number): Promise<HistoryArticle
 export async function getHistoryArticleById(id: string): Promise<HistoryArticle | null> {
     try {
         const docRef = doc(db, 'history', id);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await withTimeout(getDoc(docRef));
 
         if (docSnap.exists()) {
             return fromFirestore(docSnap);
@@ -108,15 +131,27 @@ export async function getHistoryArticleById(id: string): Promise<HistoryArticle 
 
 export async function getHistoryArticleBySlug(slug: string): Promise<HistoryArticle | null> {
     try {
-        const q = query(collection(db, "history"), where("slug", "==", slug), limit(1));
-        const snapshot = await withTimeout(getDocs(q));
-
-        if (snapshot.empty) {
-            // Fallback to static data if not found in Firestore
-            const staticArticle = defaultHistoryArticles.find(a => a.slug === slug);
-            return staticArticle || null;
+        if (typeof window === 'undefined') {
+            const cachedList = await getCachedHistory();
+            const foundInCache = cachedList.find(a => a.slug === slug);
+            if (foundInCache) {
+                return foundInCache;
+            }
         }
-        return fromFirestore(snapshot.docs[0]);
+        return await cachedQuery(
+            `history:slug:${slug}`,
+            async () => {
+                const q = query(collection(db, "history"), where("slug", "==", slug), limit(1));
+                const snapshot = await withTimeout(getDocs(q));
+
+                if (snapshot.empty) {
+                    const staticArticle = defaultHistoryArticles.find(a => a.slug === slug);
+                    return staticArticle || null;
+                }
+                return fromFirestore(snapshot.docs[0]);
+            },
+            { ttlMs: 300_000, isEmpty: (val) => val === null }
+        );
     } catch (error) {
         console.error(`Error fetching history article by slug ${slug}:`, error);
         const staticArticle = defaultHistoryArticles.find(a => a.slug === slug);
@@ -126,17 +161,10 @@ export async function getHistoryArticleBySlug(slug: string): Promise<HistoryArti
 
 export async function getAllHistorySlugs(): Promise<{ slug: string }[]> {
     try {
-        const snapshot = await getDocs(collection(db, 'history'));
-        const dbSlugs = snapshot.docs.map(doc => ({ slug: doc.data().slug as string })).filter(item => item.slug);
-        const staticSlugs = defaultHistoryArticles.map(a => ({ slug: a.slug }));
-        
-        // Combine and remove duplicates
-        const allSlugs = [...dbSlugs, ...staticSlugs];
-        const uniqueSlugs = Array.from(new Map(allSlugs.map(item => [item['slug'], item])).values());
-        
-        return uniqueSlugs;
+        const allHistory = await getCachedHistory();
+        return allHistory.filter(item => item.slug).map(item => ({ slug: item.slug }));
     } catch (error) {
         console.error("Error fetching all history slugs:", error);
-        return defaultHistoryArticles.map(a => ({ slug: a.slug }));
+        return [];
     }
 }

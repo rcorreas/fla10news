@@ -1,4 +1,4 @@
-import { db, withTimeout } from '@/lib/firebase';
+import { db, withTimeout, cachedQuery } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore/lite';
 
 export type Video = {
@@ -40,12 +40,32 @@ const fromFirestore = (doc: any): Video => {
     };
 };
 
+const SHARED_VIDEOS_LIMIT = 60;
+
+async function getCachedVideos(): Promise<Video[]> {
+    return cachedQuery(
+        `videos:all:${SHARED_VIDEOS_LIMIT}`,
+        async () => {
+            const videosCollection = collection(db, 'videos');
+            const q = query(videosCollection, orderBy('publishedAt', 'desc'), limit(SHARED_VIDEOS_LIMIT));
+            const snapshot = await withTimeout(getDocs(q));
+            if (snapshot.empty) {
+                return [];
+            }
+            return snapshot.docs.map(fromFirestore);
+        },
+        { ttlMs: 180_000 }
+    );
+}
+
 export async function getVideos(count?: number): Promise<Video[]> {
     try {
+        if (!count || count <= SHARED_VIDEOS_LIMIT) {
+            const cached = await getCachedVideos();
+            return count ? cached.slice(0, count) : cached;
+        }
         const videosCollection = collection(db, 'videos');
-        const q = count
-            ? query(videosCollection, orderBy('publishedAt', 'desc'), limit(count))
-            : query(videosCollection, orderBy('publishedAt', 'desc'));
+        const q = query(videosCollection, orderBy('publishedAt', 'desc'), limit(count));
 
         const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
@@ -61,7 +81,7 @@ export async function getVideos(count?: number): Promise<Video[]> {
 export async function getVideoById(id: string): Promise<Video | null> {
     try {
         const docRef = doc(db, 'videos', id);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await withTimeout(getDoc(docRef));
 
         if (docSnap.exists()) {
             return fromFirestore(docSnap);
@@ -77,13 +97,25 @@ export async function getVideoById(id: string): Promise<Video | null> {
 
 export async function getVideoBySlug(slug: string): Promise<Video | null> {
     try {
-        const q = query(collection(db, "videos"), where("slug", "==", slug), limit(1));
-        const snapshot = await withTimeout(getDocs(q));
-
-        if (snapshot.empty) {
-            return null;
+        if (typeof window === 'undefined') {
+            const cachedList = await getCachedVideos();
+            const foundInCache = cachedList.find(v => v.slug === slug);
+            if (foundInCache) {
+                return foundInCache;
+            }
         }
-        return fromFirestore(snapshot.docs[0]);
+        return await cachedQuery(
+            `videos:slug:${slug}`,
+            async () => {
+                const q = query(collection(db, "videos"), where("slug", "==", slug), limit(1));
+                const snapshot = await withTimeout(getDocs(q));
+                if (snapshot.empty) {
+                    return null;
+                }
+                return fromFirestore(snapshot.docs[0]);
+            },
+            { ttlMs: 300_000, isEmpty: (val) => val === null }
+        );
     } catch (error) {
         console.error(`Error fetching video by slug ${slug}:`, error);
         return null;
@@ -92,14 +124,11 @@ export async function getVideoBySlug(slug: string): Promise<Video | null> {
 
 export async function getAllVideoSlugs(): Promise<{ slug: string }[]> {
      try {
-        const snapshot = await getDocs(collection(db, 'videos'));
-        if (snapshot.empty) {
-            return defaultVideos.map(video => ({ slug: video.slug }));
-        }
-        return snapshot.docs.map(doc => ({ slug: doc.data().slug as string })).filter(item => item.slug);
+        const allVideos = await getCachedVideos();
+        return allVideos.filter(item => item.slug).map(item => ({ slug: item.slug }));
     } catch (error) {
         console.error("Error fetching all video slugs:", error);
-        return defaultVideos.map(video => ({ slug: video.slug }));
+        return [];
     }
 }
 

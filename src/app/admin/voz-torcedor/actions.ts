@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/firebase";
+import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore/lite";
 
 const VozTorcedorSchema = z.object({
@@ -77,6 +77,7 @@ export async function createVozTorcedor(prevState: any, formData: FormData) {
     revalidatePath("/admin/voz-torcedor");
     revalidatePath("/voz-torcedor");
     revalidatePath(`/voz-torcedor/${slug}`);
+    invalidateFirestoreCache();
     revalidatePath("/");
 
     return { success: true, message: "A Voz do Torcedor criada com sucesso!" };
@@ -138,6 +139,7 @@ export async function updateVozTorcedor(id: string, slug: string, prevState: any
     revalidatePath("/admin/voz-torcedor");
     revalidatePath("/voz-torcedor");
     revalidatePath(`/voz-torcedor/${slug}`);
+    invalidateFirestoreCache();
     revalidatePath("/");
 
     return { success: true, message: "A Voz do Torcedor atualizada com sucesso!" };
@@ -159,6 +161,7 @@ export async function deleteVozTorcedor(id: string) {
 
     revalidatePath("/admin/voz-torcedor");
     revalidatePath("/voz-torcedor");
+    invalidateFirestoreCache();
     revalidatePath("/");
     
     return { success: true, message: "A Voz do Torcedor deletada com sucesso!" };
@@ -191,7 +194,8 @@ export async function publishDraftActionVozTorcedor(formData: FormData) {
       revalidatePath("/admin/voz-torcedor");
       revalidatePath("/voz-torcedor");
       revalidatePath(`/voz-torcedor/${slug}`);
-      revalidatePath("/");
+      invalidateFirestoreCache();
+    revalidatePath("/");
   } catch (error) {
       console.error("Error publishing Voz Torcedor draft", error);
   }

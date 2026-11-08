@@ -41,4 +41,112 @@ export function withTimeout<T>(promise: Promise<T>, ms = 8000): Promise<T> {
   });
 }
 
+type CacheEntry<T = any> = {
+  value?: T;
+   hasValue: boolean;
+  expiresAt: number;
+  promise?: Promise<T>;
+};
+
+const globalForCache = globalThis as unknown as {
+  __fla10FirestoreCache?: Map<string, CacheEntry>;
+};
+
+function getCacheStore(): Map<string, CacheEntry> {
+  if (!globalForCache.__fla10FirestoreCache) {
+    globalForCache.__fla10FirestoreCache = new Map<string, CacheEntry>();
+  }
+  return globalForCache.__fla10FirestoreCache;
+}
+
+export function invalidateFirestoreCache(prefix?: string): void {
+  const store = getCacheStore();
+  if (!prefix) {
+    store.clear();
+    return;
+  }
+  for (const key of store.keys()) {
+    if (key.startsWith(prefix)) {
+      store.delete(key);
+    }
+  }
+}
+
+/**
+ * Executa uma consulta ao Firestore com:
+ * 1. Deduplicação de chamadas concorrentes (single-flight)
+ * 2. Cache em memória no servidor (TTL padrão de 120s) para proteger a cota diária do Firestore
+ * 3. Preservação do último resultado válido (Last-Known-Good) caso o Firestore retorne erro/timeout/429
+ */
+export async function cachedQuery<T>(
+  key: string,
+  fetcher: () => Promise<T>,
+  options?: {
+    ttlMs?: number;
+    isEmpty?: (val: T) => boolean;
+    bypassCache?: boolean;
+  }
+): Promise<T> {
+  if (typeof window !== "undefined" || options?.bypassCache) {
+    return fetcher();
+  }
+
+  const ttlMs = options?.ttlMs ?? 120_000;
+  const isEmpty = options?.isEmpty ?? ((val: any) => Array.isArray(val) && val.length === 0);
+  const store = getCacheStore();
+  const now = Date.now();
+  const existing = store.get(key);
+
+  if (existing && existing.hasValue && now < existing.expiresAt) {
+    return existing.value as T;
+  }
+
+  if (existing?.promise) {
+    return existing.promise;
+  }
+
+  const promise = (async () => {
+    try {
+      const result = await fetcher();
+      const empty = isEmpty(result);
+
+      if (empty && existing?.hasValue) {
+        // Mantém o último resultado válido se a nova leitura veio vazia (ex: erro 429 ou timeout capturado)
+        store.set(key, {
+          value: existing.value,
+          hasValue: true,
+          expiresAt: Date.now() + 30_000,
+        });
+        return existing.value as T;
+      }
+
+      store.set(key, {
+        value: result,
+        hasValue: !empty,
+        expiresAt: Date.now() + (empty ? 15_000 : ttlMs),
+      });
+      return result;
+    } catch (err) {
+      if (existing?.hasValue) {
+        store.set(key, {
+          value: existing.value,
+          hasValue: true,
+          expiresAt: Date.now() + 30_000,
+        });
+        return existing.value as T;
+      }
+      throw err;
+    }
+  })();
+
+  store.set(key, {
+    value: existing?.value,
+    hasValue: existing?.hasValue ?? false,
+    expiresAt: existing?.expiresAt ?? 0,
+    promise,
+  });
+
+  return promise;
+}
+
 export { app, auth, db, storage };

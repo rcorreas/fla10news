@@ -3,7 +3,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/firebase";
+import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { doc, updateDoc } from "firebase/firestore/lite";
 
 const RoleSchema = z.enum(["user", "admin", "superadmin"]);

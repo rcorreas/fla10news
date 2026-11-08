@@ -7,6 +7,8 @@ import { getAllVozTorcedorSlugs } from '@/data/voz-torcedor';
 import { getAuthors } from '@/data/authors';
 import { absoluteUrl } from '@/lib/site';
 
+export const dynamic = 'force-dynamic';
+
 const staticRoutes = [
   '/',
   '/noticias',

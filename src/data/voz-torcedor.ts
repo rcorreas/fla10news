@@ -1,4 +1,4 @@
-import { db, withTimeout } from '@/lib/firebase';
+import { db, withTimeout, cachedQuery } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc, updateDoc, increment } from 'firebase/firestore/lite';
 
 export type VozTorcedor = {
@@ -51,12 +51,32 @@ const fromFirestore = (doc: any): VozTorcedor => {
     };
 };
 
+const SHARED_VOZ_LIMIT = 60;
+
+async function getCachedVozTorcedores(): Promise<VozTorcedor[]> {
+    return cachedQuery(
+        `voz:all:${SHARED_VOZ_LIMIT}`,
+        async () => {
+            const vozCollection = collection(db, 'voz_torcedor');
+            const q = query(vozCollection, orderBy('publishedAt', 'desc'), limit(SHARED_VOZ_LIMIT));
+            const snapshot = await withTimeout(getDocs(q));
+            if (snapshot.empty) {
+                return [];
+            }
+            return snapshot.docs.map(fromFirestore);
+        },
+        { ttlMs: 180_000 }
+    );
+}
+
 export async function getVozTorcedores(count?: number): Promise<VozTorcedor[]> {
     try {
+        if (!count || count <= SHARED_VOZ_LIMIT) {
+            const cached = await getCachedVozTorcedores();
+            return count ? cached.slice(0, count) : cached;
+        }
         const vozCollection = collection(db, 'voz_torcedor');
-        const q = count 
-            ? query(vozCollection, orderBy('publishedAt', 'desc'), limit(count))
-            : query(vozCollection, orderBy('publishedAt', 'desc'));
+        const q = query(vozCollection, orderBy('publishedAt', 'desc'), limit(count));
         
         const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
@@ -72,7 +92,7 @@ export async function getVozTorcedores(count?: number): Promise<VozTorcedor[]> {
 export async function getVozTorcedorById(id: string): Promise<VozTorcedor | null> {
     try {
         const docRef = doc(db, 'voz_torcedor', id);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await withTimeout(getDoc(docRef));
 
         if (docSnap.exists()) {
             return fromFirestore(docSnap);
@@ -88,13 +108,26 @@ export async function getVozTorcedorById(id: string): Promise<VozTorcedor | null
 
 export async function getVozTorcedorBySlug(slug: string): Promise<VozTorcedor | null> {
     try {
-        const q = query(collection(db, "voz_torcedor"), where("slug", "==", slug), limit(1));
-        const snapshot = await withTimeout(getDocs(q));
-
-        if (snapshot.empty) {
-            return null;
+        if (typeof window === 'undefined') {
+            const cachedList = await getCachedVozTorcedores();
+            const foundInCache = cachedList.find(v => v.slug === slug);
+            if (foundInCache) {
+                return foundInCache;
+            }
         }
-        return fromFirestore(snapshot.docs[0]);
+        return await cachedQuery(
+            `voz:slug:${slug}`,
+            async () => {
+                const q = query(collection(db, "voz_torcedor"), where("slug", "==", slug), limit(1));
+                const snapshot = await withTimeout(getDocs(q));
+
+                if (snapshot.empty) {
+                    return null;
+                }
+                return fromFirestore(snapshot.docs[0]);
+            },
+            { ttlMs: 300_000, isEmpty: (val) => val === null }
+        );
     } catch (error) {
         console.error(`Error fetching Voz do Torcedor by slug ${slug}:`, error);
         return null;
@@ -103,11 +136,8 @@ export async function getVozTorcedorBySlug(slug: string): Promise<VozTorcedor | 
 
 export async function getAllVozTorcedorSlugs(): Promise<{ slug: string }[]> {
     try {
-        const snapshot = await getDocs(collection(db, 'voz_torcedor'));
-        if (snapshot.empty) {
-            return [];
-        }
-        return snapshot.docs.map(doc => ({ slug: doc.data().slug as string })).filter(item => item.slug);
+        const allVoz = await getCachedVozTorcedores();
+        return allVoz.filter(item => item.slug).map(item => ({ slug: item.slug }));
     } catch (error) {
         console.error("Error fetching all Voz do Torcedor slugs:", error);
         return [];

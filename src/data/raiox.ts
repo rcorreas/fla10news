@@ -1,5 +1,5 @@
 
-import { db, withTimeout } from '@/lib/firebase';
+import { db, withTimeout, cachedQuery } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore/lite';
 
 export type RaioxArticle = {
@@ -53,12 +53,32 @@ const fromFirestore = (doc: any): RaioxArticle => {
     };
 };
 
+const SHARED_RAIOX_LIMIT = 50;
+
+async function getCachedRaiox(): Promise<RaioxArticle[]> {
+    return cachedQuery(
+        `raiox:all:${SHARED_RAIOX_LIMIT}`,
+        async () => {
+            const raioxCollection = collection(db, 'raiox');
+            const q = query(raioxCollection, orderBy('publishedAt', 'desc'), limit(SHARED_RAIOX_LIMIT));
+            const snapshot = await withTimeout(getDocs(q));
+            if (snapshot.empty) {
+                return [];
+            }
+            return snapshot.docs.map(fromFirestore);
+        },
+        { ttlMs: 180_000 }
+    );
+}
+
 export async function getRaiox(count?: number): Promise<RaioxArticle[]> {
     try {
+        if (!count || count <= SHARED_RAIOX_LIMIT) {
+            const cached = await getCachedRaiox();
+            return count ? cached.slice(0, count) : cached;
+        }
         const raioxCollection = collection(db, 'raiox');
-        const q = count 
-            ? query(raioxCollection, orderBy('publishedAt', 'desc'), limit(count))
-            : query(raioxCollection, orderBy('publishedAt', 'desc'));
+        const q = query(raioxCollection, orderBy('publishedAt', 'desc'), limit(count));
         
         const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
@@ -73,7 +93,7 @@ export async function getRaiox(count?: number): Promise<RaioxArticle[]> {
 
 export async function getRaioxByCategory(category: string): Promise<RaioxArticle[]> {
     try {
-        const allRaiox = await getRaiox();
+        const allRaiox = await getRaiox(SHARED_RAIOX_LIMIT);
         if (!allRaiox.length) {
             return [];
         }
@@ -96,7 +116,7 @@ export async function getRaioxByCategory(category: string): Promise<RaioxArticle
 export async function getRaioxById(id: string): Promise<RaioxArticle | null> {
     try {
         const docRef = doc(db, 'raiox', id);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await withTimeout(getDoc(docRef));
 
         if (docSnap.exists()) {
             return fromFirestore(docSnap);
@@ -112,13 +132,23 @@ export async function getRaioxById(id: string): Promise<RaioxArticle | null> {
 
 export async function getRaioxBySlug(slug: string): Promise<RaioxArticle | null> {
     try {
-        const q = query(collection(db, "raiox"), where("slug", "==", slug), limit(1));
-        const snapshot = await withTimeout(getDocs(q));
-
-        if (snapshot.empty) {
-            return null;
+        if (typeof window === 'undefined') {
+            const cachedList = await getCachedRaiox();
+            const found = cachedList.find(r => r.slug === slug);
+            if (found) return found;
         }
-        return fromFirestore(snapshot.docs[0]);
+        return await cachedQuery(
+            `raiox:slug:${slug}`,
+            async () => {
+                const q = query(collection(db, "raiox"), where("slug", "==", slug), limit(1));
+                const snapshot = await withTimeout(getDocs(q));
+                if (snapshot.empty) {
+                    return null;
+                }
+                return fromFirestore(snapshot.docs[0]);
+            },
+            { ttlMs: 300_000, isEmpty: (val) => val === null }
+        );
     } catch (error) {
         console.error(`Error fetching news by slug ${slug}:`, error);
         return null;
@@ -127,11 +157,8 @@ export async function getRaioxBySlug(slug: string): Promise<RaioxArticle | null>
 
 export async function getAllRaioxSlugs(): Promise<{ slug: string }[]> {
     try {
-        const snapshot = await getDocs(collection(db, 'raiox'));
-        if (snapshot.empty) {
-            return [];
-        }
-        return snapshot.docs.map(doc => ({ slug: doc.data().slug as string })).filter(item => item.slug);
+        const allRaiox = await getCachedRaiox();
+        return allRaiox.filter(item => item.slug).map(item => ({ slug: item.slug }));
     } catch (error) {
         console.error("Error fetching all news slugs:", error);
         return [];

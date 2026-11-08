@@ -1,4 +1,4 @@
-import { db, withTimeout } from "@/lib/firebase";
+import { db, withTimeout, cachedQuery } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy, limit as firebaseLimit, doc, updateDoc, increment, getDoc } from "firebase/firestore/lite";
 
 export interface GalleryItem {
@@ -12,15 +12,41 @@ export interface GalleryItem {
   views?: number;
 }
 
+const SHARED_GALLERY_LIMIT = 50;
+
+async function getCachedGalleryItems(): Promise<GalleryItem[]> {
+  return cachedQuery(
+    `gallery:all:${SHARED_GALLERY_LIMIT}`,
+    async () => {
+      const q = query(collection(db, "galeria"), orderBy("createdAt", "desc"), firebaseLimit(SHARED_GALLERY_LIMIT));
+      const querySnapshot = await withTimeout(getDocs(q));
+      return querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          imageUrl: data.imageUrl || '',
+          title: data.title || data.caption || '',
+          legenda: data.legenda || '',
+          texto: data.texto || '',
+          artist: data.artist || '',
+          date: data.date || new Date().toISOString().split('T')[0],
+          views: data.views || 0,
+        } as GalleryItem;
+      });
+    },
+    { ttlMs: 180_000 }
+  );
+}
+
 export async function getGalleryItems(limitCount?: number): Promise<GalleryItem[]> {
   try {
-    const q = limitCount 
-      ? query(collection(db, "galeria"), orderBy("createdAt", "desc"), firebaseLimit(limitCount))
-      : query(collection(db, "galeria"), orderBy("createdAt", "desc"));
-      
+    if (!limitCount || limitCount <= SHARED_GALLERY_LIMIT) {
+      const cached = await getCachedGalleryItems();
+      return limitCount ? cached.slice(0, limitCount) : cached;
+    }
+    const q = query(collection(db, "galeria"), orderBy("createdAt", "desc"), firebaseLimit(limitCount));
     const querySnapshot = await withTimeout(getDocs(q));
-    
-    const items = querySnapshot.docs.map((doc) => {
+    return querySnapshot.docs.map((doc) => {
       const data = doc.data();
       return {
         id: doc.id,
@@ -33,8 +59,6 @@ export async function getGalleryItems(limitCount?: number): Promise<GalleryItem[
         views: data.views || 0,
       } as GalleryItem;
     });
-
-    return items;
   } catch (error) {
     console.error("Error fetching gallery items:", error);
     return [];
@@ -43,8 +67,13 @@ export async function getGalleryItems(limitCount?: number): Promise<GalleryItem[
 
 export async function getGalleryItemById(id: string): Promise<GalleryItem | null> {
   try {
+    if (typeof window === 'undefined') {
+      const cachedList = await getCachedGalleryItems();
+      const found = cachedList.find(g => g.id === id);
+      if (found) return found;
+    }
     const docRef = doc(db, 'galeria', id);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await withTimeout(getDoc(docRef));
 
     if (docSnap.exists()) {
       const data = docSnap.data();

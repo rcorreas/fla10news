@@ -4,7 +4,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/firebase";
+import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore/lite";
 
 const NewsSchema = z.object({
@@ -97,6 +97,7 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
     await addDoc(collection(db, "news"), dataToSave);
 
     revalidatePath("/admin/materias");
+    invalidateFirestoreCache();
     revalidatePath("/");
     revalidatePath("/noticias");
     revalidatePath(`/noticias/${slug}`);
@@ -170,6 +171,7 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
     await updateDoc(newsDocRef, dataToUpdate);
     
     revalidatePath("/admin/materias");
+    invalidateFirestoreCache();
     revalidatePath("/");
     revalidatePath("/noticias");
     revalidatePath(`/noticias/${slug}`);
@@ -192,6 +194,7 @@ export async function deleteNewsArticle(id: string) {
     await deleteDoc(newsDocRef);
 
     revalidatePath("/admin/materias");
+    invalidateFirestoreCache();
     revalidatePath("/");
     revalidatePath("/noticias");
     
@@ -222,6 +225,7 @@ export async function publishDraftAction(formData: FormData) {
     });
 
     revalidatePath("/admin/materias");
+    invalidateFirestoreCache();
     revalidatePath("/");
     revalidatePath("/noticias");
     revalidatePath(`/noticias/${slug}`);

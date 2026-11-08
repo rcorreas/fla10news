@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/firebase";
+import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore/lite";
 
 const GallerySchema = z.object({
@@ -43,6 +43,7 @@ export async function createGalleryItem(prevState: any, formData: FormData) {
 
     revalidatePath("/admin/galeria");
     revalidatePath("/galeria");
+    invalidateFirestoreCache();
     revalidatePath("/");
 
     return { success: true, message: "Imagem adicionada à Galeria com sucesso!" };
@@ -86,6 +87,7 @@ export async function updateGalleryItem(id: string, prevState: any, formData: Fo
     
     revalidatePath("/admin/galeria");
     revalidatePath("/galeria");
+    invalidateFirestoreCache();
     revalidatePath("/");
 
     return { success: true, message: "Imagem da Galeria atualizada com sucesso!" };
@@ -107,6 +109,7 @@ export async function deleteGalleryItem(id: string) {
 
     revalidatePath("/admin/galeria");
     revalidatePath("/galeria");
+    invalidateFirestoreCache();
     revalidatePath("/");
     
     return { success: true, message: "Imagem deletada com sucesso!" };

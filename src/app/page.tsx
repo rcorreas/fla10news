@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 import * as React from 'react'
 import Image from 'next/image'
@@ -104,11 +104,6 @@ export default async function Home() {
     getReportagens(1),
     getTirinhas(1),
   ]);
-
-  if (allNews.length === 0) {
-    throw new Error('Failed to load news from Firestore — preventing empty ISR cache');
-  }
-
   const galleryItems = allGalleryTotal.slice(0, 1);
 
   const mainHeadlines = allNews.slice(0, 6);

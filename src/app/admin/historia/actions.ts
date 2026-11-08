@@ -3,7 +3,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/firebase";
+import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore/lite";
 
 const HistorySchema = z.object({
@@ -76,6 +76,7 @@ export async function createHistoryArticle(prevState: any, formData: FormData) {
     await addDoc(collection(db, "history"), dataToSave);
 
     revalidatePath("/admin/historia");
+    invalidateFirestoreCache();
     revalidatePath("/");
     revalidatePath("/flahistoria");
 
@@ -132,6 +133,7 @@ export async function updateHistoryArticle(id: string, prevState: any, formData:
     await updateDoc(historyDocRef, dataToUpdate);
 
     revalidatePath("/admin/historia");
+    invalidateFirestoreCache();
     revalidatePath("/");
     revalidatePath("/flahistoria");
 
@@ -153,6 +155,7 @@ export async function deleteHistoryArticle(id: string) {
     await deleteDoc(historyDocRef);
 
     revalidatePath("/admin/historia");
+    invalidateFirestoreCache();
     revalidatePath("/");
     revalidatePath("/flahistoria");
     
@@ -184,7 +187,8 @@ export async function publishDraftActionHistory(formData: FormData) {
       });
 
       revalidatePath("/admin/historia");
-      revalidatePath("/");
+      invalidateFirestoreCache();
+    revalidatePath("/");
       revalidatePath("/flahistoria");
       revalidatePath(`/flahistoria/${slug}`);
   } catch (error) {

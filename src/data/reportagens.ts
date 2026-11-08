@@ -1,5 +1,5 @@
 
-import { db, withTimeout } from '@/lib/firebase';
+import { db, withTimeout, cachedQuery } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore/lite';
 
 export type ReportagensArticle = {
@@ -53,12 +53,32 @@ const fromFirestore = (doc: any): ReportagensArticle => {
     };
 };
 
+const SHARED_REPORTAGENS_LIMIT = 50;
+
+async function getCachedReportagens(): Promise<ReportagensArticle[]> {
+    return cachedQuery(
+        `reportagens:all:${SHARED_REPORTAGENS_LIMIT}`,
+        async () => {
+            const reportagensCollection = collection(db, 'reportagens');
+            const q = query(reportagensCollection, orderBy('publishedAt', 'desc'), limit(SHARED_REPORTAGENS_LIMIT));
+            const snapshot = await withTimeout(getDocs(q));
+            if (snapshot.empty) {
+                return [];
+            }
+            return snapshot.docs.map(fromFirestore);
+        },
+        { ttlMs: 180_000 }
+    );
+}
+
 export async function getReportagens(count?: number): Promise<ReportagensArticle[]> {
     try {
+        if (!count || count <= SHARED_REPORTAGENS_LIMIT) {
+            const cached = await getCachedReportagens();
+            return count ? cached.slice(0, count) : cached;
+        }
         const reportagensCollection = collection(db, 'reportagens');
-        const q = count 
-            ? query(reportagensCollection, orderBy('publishedAt', 'desc'), limit(count))
-            : query(reportagensCollection, orderBy('publishedAt', 'desc'));
+        const q = query(reportagensCollection, orderBy('publishedAt', 'desc'), limit(count));
         
         const snapshot = await withTimeout(getDocs(q));
         if (snapshot.empty) {
@@ -73,7 +93,7 @@ export async function getReportagens(count?: number): Promise<ReportagensArticle
 
 export async function getReportagensByCategory(category: string): Promise<ReportagensArticle[]> {
     try {
-        const allReportagens = await getReportagens();
+        const allReportagens = await getReportagens(SHARED_REPORTAGENS_LIMIT);
         if (!allReportagens.length) {
             return [];
         }
@@ -96,7 +116,7 @@ export async function getReportagensByCategory(category: string): Promise<Report
 export async function getReportagensById(id: string): Promise<ReportagensArticle | null> {
     try {
         const docRef = doc(db, 'reportagens', id);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await withTimeout(getDoc(docRef));
 
         if (docSnap.exists()) {
             return fromFirestore(docSnap);
@@ -112,13 +132,23 @@ export async function getReportagensById(id: string): Promise<ReportagensArticle
 
 export async function getReportagensBySlug(slug: string): Promise<ReportagensArticle | null> {
     try {
-        const q = query(collection(db, "reportagens"), where("slug", "==", slug), limit(1));
-        const snapshot = await withTimeout(getDocs(q));
-
-        if (snapshot.empty) {
-            return null;
+        if (typeof window === 'undefined') {
+            const cachedList = await getCachedReportagens();
+            const found = cachedList.find(r => r.slug === slug);
+            if (found) return found;
         }
-        return fromFirestore(snapshot.docs[0]);
+        return await cachedQuery(
+            `reportagens:slug:${slug}`,
+            async () => {
+                const q = query(collection(db, "reportagens"), where("slug", "==", slug), limit(1));
+                const snapshot = await withTimeout(getDocs(q));
+                if (snapshot.empty) {
+                    return null;
+                }
+                return fromFirestore(snapshot.docs[0]);
+            },
+            { ttlMs: 300_000, isEmpty: (val) => val === null }
+        );
     } catch (error) {
         console.error(`Error fetching news by slug ${slug}:`, error);
         return null;
@@ -127,11 +157,8 @@ export async function getReportagensBySlug(slug: string): Promise<ReportagensArt
 
 export async function getAllReportagensSlugs(): Promise<{ slug: string }[]> {
     try {
-        const snapshot = await getDocs(collection(db, 'reportagens'));
-        if (snapshot.empty) {
-            return [];
-        }
-        return snapshot.docs.map(doc => ({ slug: doc.data().slug as string })).filter(item => item.slug);
+        const allReportagens = await getCachedReportagens();
+        return allReportagens.filter(item => item.slug).map(item => ({ slug: item.slug }));
     } catch (error) {
         console.error("Error fetching all news slugs:", error);
         return [];

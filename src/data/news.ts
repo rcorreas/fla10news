@@ -1,5 +1,5 @@
 
-import { db, withTimeout } from '@/lib/firebase';
+import { db, withTimeout, cachedQuery } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc } from 'firebase/firestore/lite';
 
 export type NewsArticle = {
@@ -59,10 +59,36 @@ const fromFirestore = (doc: any): NewsArticle => {
     };
 };
 
+const SHARED_NEWS_LIMIT = 100;
+
+async function getCachedPublishedNews(): Promise<NewsArticle[]> {
+    return cachedQuery(
+        `news:published:${SHARED_NEWS_LIMIT}`,
+        async () => {
+            const newsCollection = collection(db, 'news');
+            const q = query(newsCollection, orderBy('publishedAt', 'desc'), limit(SHARED_NEWS_LIMIT + 15));
+            const snapshot = await withTimeout(getDocs(q));
+            if (snapshot.empty) {
+                return [];
+            }
+            const allFetched = snapshot.docs.map(fromFirestore);
+            const now = new Date();
+            return allFetched
+                .filter(news => news.status !== 'draft' && news.publishedAt <= now)
+                .slice(0, SHARED_NEWS_LIMIT);
+        },
+        { ttlMs: 180_000 }
+    );
+}
+
 export async function getNews(count?: number, includeDrafts = false): Promise<NewsArticle[]> {
     try {
+        if (!includeDrafts && (!count || count <= SHARED_NEWS_LIMIT)) {
+            const cached = await getCachedPublishedNews();
+            return count ? cached.slice(0, count) : cached;
+        }
+
         const newsCollection = collection(db, 'news');
-        // Buscar uma margem extra para garantir itens suficientes após o filtro local de rascunhos/agendados
         const fetchLimit = count ? Math.min(count + 12, count * 3) : undefined;
         
         const q = fetchLimit 
@@ -90,7 +116,7 @@ export async function getNews(count?: number, includeDrafts = false): Promise<Ne
 
 export async function getNewsByCategory(category: string, includeDrafts = false): Promise<NewsArticle[]> {
     try {
-        const allNews = await getNews(includeDrafts ? undefined : 80, includeDrafts);
+        const allNews = await getNews(includeDrafts ? undefined : SHARED_NEWS_LIMIT, includeDrafts);
         if (!allNews.length) {
             return [];
         }
@@ -113,7 +139,7 @@ export async function getNewsByCategory(category: string, includeDrafts = false)
 export async function getNewsById(id: string): Promise<NewsArticle | null> {
     try {
         const docRef = doc(db, 'news', id);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await withTimeout(getDoc(docRef));
 
         if (docSnap.exists()) {
             return fromFirestore(docSnap);
@@ -129,13 +155,25 @@ export async function getNewsById(id: string): Promise<NewsArticle | null> {
 
 export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
     try {
-        const q = query(collection(db, "news"), where("slug", "==", slug), limit(1));
-        const snapshot = await withTimeout(getDocs(q));
-
-        if (snapshot.empty) {
-            return null;
+        if (typeof window === 'undefined') {
+            const cachedList = await getCachedPublishedNews();
+            const foundInCache = cachedList.find(n => n.slug === slug);
+            if (foundInCache) {
+                return foundInCache;
+            }
         }
-        return fromFirestore(snapshot.docs[0]);
+        return await cachedQuery(
+            `news:slug:${slug}`,
+            async () => {
+                const q = query(collection(db, "news"), where("slug", "==", slug), limit(1));
+                const snapshot = await withTimeout(getDocs(q));
+                if (snapshot.empty) {
+                    return null;
+                }
+                return fromFirestore(snapshot.docs[0]);
+            },
+            { ttlMs: 300_000, isEmpty: (val) => val === null }
+        );
     } catch (error) {
         console.error(`Error fetching news by slug ${slug}:`, error);
         return null;
@@ -144,11 +182,8 @@ export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
 
 export async function getAllNewsSlugs(): Promise<{ slug: string }[]> {
     try {
-        const snapshot = await getDocs(collection(db, 'news'));
-        if (snapshot.empty) {
-            return [];
-        }
-        return snapshot.docs.map(doc => ({ slug: doc.data().slug as string })).filter(item => item.slug);
+        const allNews = await getCachedPublishedNews();
+        return allNews.filter(item => item.slug).map(item => ({ slug: item.slug }));
     } catch (error) {
         console.error("Error fetching all news slugs:", error);
         return [];
@@ -167,7 +202,7 @@ function generateSlug(name: string): string {
 
 export async function getNewsByAuthorSlug(authorSlug: string, includeDrafts = false): Promise<NewsArticle[]> {
     try {
-        const allNews = await getNews(undefined, includeDrafts);
+        const allNews = await getNews(includeDrafts ? undefined : SHARED_NEWS_LIMIT, includeDrafts);
         return allNews.filter(news => news.author && generateSlug(news.author) === authorSlug);
     } catch (error) {
         console.error(`Error fetching news for author slug ${authorSlug}:`, error);
@@ -177,7 +212,7 @@ export async function getNewsByAuthorSlug(authorSlug: string, includeDrafts = fa
 
 export async function getNewsAuthorDetailsBySlug(authorSlug: string): Promise<{ author: string } | null> {
     try {
-        const allNews = await getNews();
+        const allNews = await getNews(SHARED_NEWS_LIMIT);
         const authorNews = allNews.find(news => news.author && generateSlug(news.author) === authorSlug);
         if (authorNews && authorNews.author) {
             return {
@@ -193,11 +228,8 @@ export async function getNewsAuthorDetailsBySlug(authorSlug: string): Promise<{ 
 
 export async function getAllNewsAuthorSlugs(): Promise<{ slug: string }[]> {
     try {
-        const snapshot = await getDocs(collection(db, 'news'));
-        if (snapshot.empty) {
-            return [];
-        }
-        const authors = new Set(snapshot.docs.map(doc => doc.data().author as string).filter(Boolean));
+        const allNews = await getCachedPublishedNews();
+        const authors = new Set(allNews.map(doc => doc.author as string).filter(Boolean));
         return Array.from(authors).map(author => ({ slug: generateSlug(author) }));
     } catch (error) {
         console.error("Error fetching all news author slugs:", error);

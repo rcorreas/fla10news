@@ -3,7 +3,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/firebase";
+import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore/lite";
 
 const NewsSchema = z.object({
@@ -78,6 +78,7 @@ export async function createRaioxArticle(prevState: any, formData: FormData) {
     await addDoc(collection(db, "raiox"), dataToSave);
 
     revalidatePath("/admin/raiox");
+    invalidateFirestoreCache();
     revalidatePath("/");
     revalidatePath("/raio-x");
     revalidatePath(`/raio-x/${slug}`);
@@ -134,6 +135,7 @@ export async function updateRaioxArticle(id: string, slug: string, prevState: an
     await updateDoc(newsDocRef, dataToUpdate);
     
     revalidatePath("/admin/raiox");
+    invalidateFirestoreCache();
     revalidatePath("/");
     revalidatePath("/raio-x");
     revalidatePath(`/raio-x/${slug}`);
@@ -156,6 +158,7 @@ export async function deleteRaioxArticle(id: string) {
     await deleteDoc(newsDocRef);
 
     revalidatePath("/admin/raiox");
+    invalidateFirestoreCache();
     revalidatePath("/");
     revalidatePath("/raio-x");
     

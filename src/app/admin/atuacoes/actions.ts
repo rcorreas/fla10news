@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/firebase";
+import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, updateDoc, setDoc, deleteDoc } from "firebase/firestore/lite";
 
 const MatchRatingSchema = z.object({

@@ -3,7 +3,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/firebase";
+import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore/lite";
 
 const ColumnSchema = z.object({
@@ -95,6 +95,7 @@ export async function createColumn(prevState: any, formData: FormData) {
     revalidatePath("/admin/colunas");
     revalidatePath("/colunas");
     revalidatePath(`/colunas/${slug}`);
+    invalidateFirestoreCache();
     revalidatePath("/");
 
     return { success: true, message: "Coluna criada com sucesso!" };
@@ -167,6 +168,7 @@ export async function updateColumn(id: string, slug: string, prevState: any, for
     revalidatePath("/admin/colunas");
     revalidatePath("/colunas");
     revalidatePath(`/colunas/${slug}`);
+    invalidateFirestoreCache();
     revalidatePath("/");
 
     return { success: true, message: "Coluna atualizada com sucesso!" };
@@ -188,6 +190,7 @@ export async function deleteColumn(id: string) {
 
     revalidatePath("/admin/colunas");
     revalidatePath("/colunas");
+    invalidateFirestoreCache();
     revalidatePath("/");
     
     return { success: true, message: "Coluna deletada com sucesso!" };
@@ -220,7 +223,8 @@ export async function publishDraftActionColumn(formData: FormData) {
       revalidatePath("/admin/colunas");
       revalidatePath("/colunas");
       revalidatePath(`/colunas/${slug}`);
-      revalidatePath("/");
+      invalidateFirestoreCache();
+    revalidatePath("/");
   } catch (error) {
       console.error("Error publishing column draft", error);
   }
