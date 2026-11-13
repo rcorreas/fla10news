@@ -59,7 +59,28 @@ const fromFirestore = (doc: any): NewsArticle => {
     };
 };
 
-const SHARED_NEWS_LIMIT = 100;
+const RECENT_NEWS_LIMIT = 15;
+const SHARED_NEWS_LIMIT = 120;
+
+async function getCachedRecentNews(): Promise<NewsArticle[]> {
+    return cachedQuery(
+        `news:recent:${RECENT_NEWS_LIMIT}`,
+        async () => {
+            const newsCollection = collection(db, 'news');
+            const q = query(newsCollection, orderBy('publishedAt', 'desc'), limit(RECENT_NEWS_LIMIT + 5));
+            const snapshot = await withTimeout(getDocs(q));
+            if (snapshot.empty) {
+                return [];
+            }
+            const allFetched = snapshot.docs.map(fromFirestore);
+            const now = new Date();
+            return allFetched
+                .filter(news => news.status !== 'draft' && news.publishedAt <= now)
+                .slice(0, RECENT_NEWS_LIMIT);
+        },
+        { ttlMs: 120_000 }
+    );
+}
 
 async function getCachedPublishedNews(): Promise<NewsArticle[]> {
     return cachedQuery(
@@ -83,6 +104,11 @@ async function getCachedPublishedNews(): Promise<NewsArticle[]> {
 
 export async function getNews(count?: number, includeDrafts = false): Promise<NewsArticle[]> {
     try {
+        if (!includeDrafts && count && count <= RECENT_NEWS_LIMIT) {
+            const recent = await getCachedRecentNews();
+            return recent.slice(0, count);
+        }
+
         if (!includeDrafts && (!count || count <= SHARED_NEWS_LIMIT)) {
             const cached = await getCachedPublishedNews();
             return count ? cached.slice(0, count) : cached;
@@ -155,13 +181,6 @@ export async function getNewsById(id: string): Promise<NewsArticle | null> {
 
 export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
     try {
-        if (typeof window === 'undefined') {
-            const cachedList = await getCachedPublishedNews();
-            const foundInCache = cachedList.find(n => n.slug === slug);
-            if (foundInCache) {
-                return foundInCache;
-            }
-        }
         return await cachedQuery(
             `news:slug:${slug}`,
             async () => {

@@ -59,7 +59,7 @@ const db: Firestore = getFirestore(app);
 
 const storage: FirebaseStorage = getStorage(app);
 
-export function withTimeout<T>(promise: Promise<T>, ms = 8000): Promise<T> {
+export function withTimeout<T>(promise: Promise<T>, ms = 15000): Promise<T> {
   let timeoutId: ReturnType<typeof setTimeout>;
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutId = setTimeout(() => {
@@ -73,7 +73,7 @@ export function withTimeout<T>(promise: Promise<T>, ms = 8000): Promise<T> {
 
 type CacheEntry<T = any> = {
   value?: T;
-   hasValue: boolean;
+  hasValue: boolean;
   expiresAt: number;
   promise?: Promise<T>;
 };
@@ -107,6 +107,7 @@ export function invalidateFirestoreCache(prefix?: string): void {
  * 1. Deduplicação de chamadas concorrentes (single-flight)
  * 2. Cache em memória no servidor (TTL padrão de 120s) para proteger a cota diária do Firestore
  * 3. Preservação do último resultado válido (Last-Known-Good) caso o Firestore retorne erro/timeout/429
+ * 4. Limpeza garantida de promises rejeitadas para nunca travar futuras requisições
  */
 export async function cachedQuery<T>(
   key: string,
@@ -135,9 +136,21 @@ export async function cachedQuery<T>(
     return existing.promise;
   }
 
-  const promise = (async () => {
+  let promise: Promise<T> | undefined;
+  promise = (async () => {
     try {
-      const result = await fetcher();
+      let result: T;
+      try {
+        result = await fetcher();
+      } catch (firstErr) {
+        if (!existing?.hasValue) {
+          // Retenta 1 vez imediatamente se for cold start sem cache anterior
+          result = await fetcher();
+        } else {
+          throw firstErr;
+        }
+      }
+
       const empty = isEmpty(result);
 
       if (empty && existing?.hasValue) {
@@ -165,7 +178,14 @@ export async function cachedQuery<T>(
         });
         return existing.value as T;
       }
+      // Remove a entrada com promise rejeitada para que a próxima requisição tente novamente do zero
+      store.delete(key);
       throw err;
+    } finally {
+      const current = store.get(key);
+      if (current && current.promise === promise) {
+        delete current.promise;
+      }
     }
   })();
 
