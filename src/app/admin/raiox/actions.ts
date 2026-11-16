@@ -1,6 +1,7 @@
 
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -37,6 +38,8 @@ function generateSlug(title: string): string {
 }
 
 export async function createRaioxArticle(prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const validatedFields = NewsSchema.safeParse({
@@ -96,6 +99,8 @@ export async function createRaioxArticle(prevState: any, formData: FormData) {
 
 export async function updateRaioxArticle(id: string, slug: string, prevState: any, formData: FormData) {
 
+  await exigirAdmin();
+
   await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID da matéria é inválido." };
@@ -154,6 +159,8 @@ export async function updateRaioxArticle(id: string, slug: string, prevState: an
 }
 
 export async function deleteRaioxArticle(id: string) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   if (!id) {

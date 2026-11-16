@@ -1,5 +1,6 @@
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -15,6 +16,8 @@ const AuthorSchema = z.object({
 });
 
 export async function createAuthor(prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const validatedFields = AuthorSchema.safeParse({
@@ -57,6 +60,8 @@ export async function createAuthor(prevState: any, formData: FormData) {
 }
 
 export async function updateAuthor(id: string, prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   if (!id) {
@@ -103,6 +108,8 @@ export async function updateAuthor(id: string, prevState: any, formData: FormDat
 }
 
 export async function deleteAuthor(id: string) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   if (!id) {

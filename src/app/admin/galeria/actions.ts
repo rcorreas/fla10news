@@ -1,5 +1,6 @@
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -16,6 +17,8 @@ const GallerySchema = z.object({
 });
 
 export async function createGalleryItem(prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const validatedFields = GallerySchema.safeParse({
@@ -57,6 +60,8 @@ export async function createGalleryItem(prevState: any, formData: FormData) {
 }
 
 export async function updateGalleryItem(id: string, prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   if (!id) {
@@ -104,6 +109,8 @@ export async function updateGalleryItem(id: string, prevState: any, formData: Fo
 }
 
 export async function deleteGalleryItem(id: string) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   if (!id) {

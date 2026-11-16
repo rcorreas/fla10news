@@ -1,6 +1,7 @@
 
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -28,6 +29,8 @@ function generateSlug(title: string): string {
 }
 
 export async function createVideo(prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const validatedFields = VideoSchema.safeParse({
@@ -85,6 +88,8 @@ export async function createVideo(prevState: any, formData: FormData) {
 
 export async function updateVideo(id: string, slug: string, prevState: any, formData: FormData) {
 
+  await exigirAdmin();
+
   await garantirSessaoServidor();
   const validatedFields = VideoSchema.safeParse({
     title: formData.get("title"),
@@ -141,6 +146,8 @@ export async function updateVideo(id: string, slug: string, prevState: any, form
 
 export async function deleteVideo(id: string) {
 
+  await exigirAdmin();
+
   await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID do vídeo é inválido." };
@@ -162,6 +169,8 @@ export async function deleteVideo(id: string) {
 }
 
 export async function publishDraftActionVideo(formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const id = formData.get("id")?.toString();

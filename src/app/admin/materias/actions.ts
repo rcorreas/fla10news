@@ -1,6 +1,7 @@
 
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -42,6 +43,8 @@ function generateSlug(title: string): string {
 }
 
 export async function createNewsArticle(prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const validatedFields = NewsSchema.safeParse({
@@ -114,6 +117,8 @@ export async function createNewsArticle(prevState: any, formData: FormData) {
 }
 
 export async function updateNewsArticle(id: string, slug: string, prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   if (!id) {
@@ -191,6 +196,8 @@ export async function updateNewsArticle(id: string, slug: string, prevState: any
 
 export async function deleteNewsArticle(id: string) {
 
+  await exigirAdmin();
+
   await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID da matéria é inválido." };
@@ -213,6 +220,8 @@ export async function deleteNewsArticle(id: string) {
 }
 
 export async function publishDraftAction(formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const id = formData.get("id") as string;

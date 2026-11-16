@@ -1,5 +1,6 @@
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { db, invalidateFirestoreCache } from "@/lib/firebase";
 import { collection, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore/lite";
@@ -7,6 +8,8 @@ import { revalidatePath } from "next/cache";
 import { slugify } from "@/lib/utils";
 
 export async function createTirinha(prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   try {
@@ -58,6 +61,8 @@ export async function createTirinha(prevState: any, formData: FormData) {
 
 export async function updateTirinha(prevState: any, formData: FormData) {
 
+  await exigirAdmin();
+
   await garantirSessaoServidor();
   try {
     const id = formData.get("id") as string;
@@ -106,6 +111,8 @@ export async function updateTirinha(prevState: any, formData: FormData) {
 }
 
 export async function deleteTirinha(id: string) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   try {

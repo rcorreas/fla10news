@@ -1,6 +1,7 @@
 
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -39,6 +40,8 @@ function generateSlug(title: string): string {
 }
 
 export async function createColumn(prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const validatedFields = ColumnSchema.safeParse({
@@ -109,6 +112,8 @@ export async function createColumn(prevState: any, formData: FormData) {
 }
 
 export async function updateColumn(id: string, slug: string, prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   if (!id) {
@@ -186,6 +191,8 @@ export async function updateColumn(id: string, slug: string, prevState: any, for
 
 export async function deleteColumn(id: string) {
 
+  await exigirAdmin();
+
   await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID da coluna é inválido." };
@@ -208,6 +215,8 @@ export async function deleteColumn(id: string) {
 }
 
 export async function publishDraftActionColumn(formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const id = formData.get("id")?.toString();

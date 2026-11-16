@@ -2,7 +2,7 @@
 "use client";
 
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged, onIdTokenChanged, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore/lite';
 import { auth, db } from '@/lib/firebase';
 
@@ -43,6 +43,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     });
     return () => unsubscribeAuth();
+  }, []);
+
+  // Mantém o cookie que autoriza as server actions do painel. O Firebase
+  // renova o token sozinho e o evento dispara a cada renovação.
+  useEffect(() => {
+    const cancelar = onIdTokenChanged(auth, async (conta) => {
+      const base = `path=/; samesite=lax${location.protocol === 'https:' ? '; secure' : ''}`;
+      if (!conta) {
+        document.cookie = `rv_sessao=; max-age=0; ${base}`;
+        return;
+      }
+      try {
+        const token = await conta.getIdToken();
+        document.cookie = `rv_sessao=${token}; max-age=3300; ${base}`;
+      } catch (erro) {
+        console.warn('Não foi possível sincronizar a sessão do painel:', erro);
+      }
+    });
+    return () => cancelar();
   }, []);
 
   useEffect(() => {

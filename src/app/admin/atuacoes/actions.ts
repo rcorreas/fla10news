@@ -1,5 +1,6 @@
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -16,6 +17,8 @@ const MatchRatingSchema = z.object({
 });
 
 export async function createMatchRating(prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const validatedFields = MatchRatingSchema.safeParse({
@@ -78,6 +81,8 @@ export async function createMatchRating(prevState: any, formData: FormData) {
 
 export async function closeMatchRating(id: string) {
 
+  await exigirAdmin();
+
   await garantirSessaoServidor();
   if (!id) return { success: false, message: "ID inválido." };
   try {
@@ -93,6 +98,8 @@ export async function closeMatchRating(id: string) {
 
 export async function deleteMatchRating(id: string) {
 
+  await exigirAdmin();
+
   await garantirSessaoServidor();
   if (!id) return { success: false, message: "ID inválido." };
   try {
@@ -107,6 +114,8 @@ export async function deleteMatchRating(id: string) {
 }
 
 export async function updateMatchRating(id: string, prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const validatedFields = MatchRatingSchema.safeParse({

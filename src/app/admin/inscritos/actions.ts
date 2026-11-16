@@ -1,6 +1,7 @@
 
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -10,6 +11,8 @@ import { doc, updateDoc } from "firebase/firestore/lite";
 const RoleSchema = z.enum(["user", "admin", "superadmin"]);
 
 export async function updateUserRole(userId: string, newRole: 'user' | 'admin' | 'superadmin') {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   if (!userId) {
@@ -39,6 +42,8 @@ export async function updateUserRole(userId: string, newRole: 'user' | 'admin' |
 }
 
 export async function toggleUserBlockStatus(userId: string, isCurrentlyBlocked: boolean) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
     if (!userId) {

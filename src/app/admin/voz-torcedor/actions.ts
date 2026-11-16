@@ -1,5 +1,6 @@
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -31,6 +32,8 @@ function generateSlug(title: string): string {
 }
 
 export async function createVozTorcedor(prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const validatedFields = VozTorcedorSchema.safeParse({
@@ -91,6 +94,8 @@ export async function createVozTorcedor(prevState: any, formData: FormData) {
 }
 
 export async function updateVozTorcedor(id: string, slug: string, prevState: any, formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   if (!id) {
@@ -157,6 +162,8 @@ export async function updateVozTorcedor(id: string, slug: string, prevState: any
 
 export async function deleteVozTorcedor(id: string) {
 
+  await exigirAdmin();
+
   await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID é inválido." };
@@ -179,6 +186,8 @@ export async function deleteVozTorcedor(id: string) {
 }
 
 export async function publishDraftActionVozTorcedor(formData: FormData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
   const id = formData.get("id")?.toString();

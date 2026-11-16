@@ -1,5 +1,6 @@
 "use server";
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { exigirAdmin } from '@/lib/autorizacao';
 
 import { z } from 'zod';
 import { db, invalidateFirestoreCache } from '@/lib/firebase';
@@ -18,6 +19,8 @@ const NextGameSchema = z.object({
 });
 
 export async function updateNextGame(data: NextGameData) {
+
+  await exigirAdmin();
 
   await garantirSessaoServidor();
     const validatedFields = NextGameSchema.safeParse(data);
