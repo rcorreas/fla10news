@@ -44,3 +44,8 @@ env:
     availability:
       - BUILD
       - RUNTIME
+  # Token do pipeline "redação virtual" (rota POST /api/publicacoes).
+  - variable: PUBLICACOES_TOKEN
+    secret: PUBLICACOES_TOKEN
+    availability:
+      - RUNTIME
