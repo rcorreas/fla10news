@@ -1,40 +1,119 @@
+import { lookup } from 'node:dns/promises';
+import { isIP } from 'node:net';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const imageUrl = searchParams.get('url');
+const TIMEOUT_MS = 8000;
+const MAX_REDIRECIONAMENTOS = 3;
 
-  if (!imageUrl) {
+function ipPrivado(endereco: string): boolean {
+  if (isIP(endereco) === 4) {
+    const [a, b] = endereco.split('.').map(Number);
+    return (
+      a === 0 || a === 10 || a === 127 ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 168) ||
+      (a === 100 && b >= 64 && b <= 127)
+    );
+  }
+  if (isIP(endereco) === 6) {
+    const normalizado = endereco.toLowerCase();
+    return (
+      normalizado === '::1' ||
+      normalizado === '::' ||
+      normalizado.startsWith('fc') ||
+      normalizado.startsWith('fd') ||
+      normalizado.startsWith('fe80') ||
+      normalizado.startsWith('::ffff:')
+    );
+  }
+  return false;
+}
+
+/**
+ * O proxy é público, então precisa recusar destinos internos (metadata do
+ * provedor, localhost, rede privada) e esquemas que não sejam https.
+ */
+async function urlPermitida(bruto: string): Promise<URL> {
+  let url: URL;
+  try {
+    url = new URL(bruto);
+  } catch {
+    throw new Error('URL inválida.');
+  }
+
+  if (url.protocol !== 'https:') throw new Error('Apenas https é permitido.');
+  if (url.username || url.password) throw new Error('URL com credenciais não é permitida.');
+
+  const enderecos = isIP(url.hostname.replace(/^\[|\]$/g, ''))
+    ? [{ address: url.hostname.replace(/^\[|\]$/g, '') }]
+    : await lookup(url.hostname, { all: true });
+
+  if (!enderecos.length) throw new Error('Host não encontrado.');
+  if (enderecos.some((item) => ipPrivado(item.address))) {
+    throw new Error('Destino não permitido.');
+  }
+
+  return url;
+}
+
+async function buscar(url: URL): Promise<Response> {
+  let atual = url;
+
+  for (let salto = 0; salto <= MAX_REDIRECIONAMENTOS; salto++) {
+    const resposta = await fetch(atual, {
+      redirect: 'manual',
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+      },
+    });
+
+    const redirecionamento = resposta.headers.get('location');
+    if (resposta.status >= 300 && resposta.status < 400 && redirecionamento) {
+      atual = await urlPermitida(new URL(redirecionamento, atual).toString());
+      continue;
+    }
+
+    return resposta;
+  }
+
+  throw new Error('Redirecionamentos demais.');
+}
+
+export async function GET(request: Request) {
+  const bruto = new URL(request.url).searchParams.get('url');
+  if (!bruto) {
     return new NextResponse('Missing url parameter', { status: 400 });
   }
 
   try {
-    const targetUrl = imageUrl;
+    const url = await urlPermitida(bruto);
+    const resposta = await buscar(url);
 
-    const response = await fetch(targetUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
-        'Referer': 'https://imgur.com/'
-      },
-    });
-
-    if (!response.ok) {
-        return new NextResponse('Error fetching image from origin', { status: response.status });
+    if (!resposta.ok) {
+      return new NextResponse('Error fetching image from origin', { status: 502 });
     }
 
-    return new Response(response.body, {
-      status: response.status,
-      headers: {
-        'Content-Type': response.headers.get('content-type') || 'image/jpeg',
-        'Cache-Control': 'public, max-age=31536000, immutable',
-      }
-    });
+    const tipo = resposta.headers.get('content-type') || '';
+    if (!tipo.startsWith('image/')) {
+      return new NextResponse('Destino não é uma imagem', { status: 415 });
+    }
 
-  } catch (error: any) {
-    console.error('Error proxying image:', error);
-    return new NextResponse('Error fetching image: ' + error.message, { status: 500 });
+    return new Response(resposta.body, {
+      status: 200,
+      headers: {
+        'Content-Type': tipo,
+        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Content-Security-Policy': "default-src 'none'",
+      },
+    });
+  } catch (erro) {
+    const mensagem = erro instanceof Error ? erro.message : 'Erro desconhecido';
+    console.error('Error proxying image:', mensagem);
+    return new NextResponse('Error fetching image: ' + mensagem, { status: 400 });
   }
 }
