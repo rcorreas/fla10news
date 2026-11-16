@@ -1,4 +1,5 @@
 "use server";
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import { z } from 'zod';
 import { db, invalidateFirestoreCache } from '@/lib/firebase';
@@ -17,6 +18,8 @@ const NextGameSchema = z.object({
 });
 
 export async function updateNextGame(data: NextGameData) {
+
+  await garantirSessaoServidor();
     const validatedFields = NextGameSchema.safeParse(data);
 
     if (!validatedFields.success) {

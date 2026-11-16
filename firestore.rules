@@ -1,31 +1,58 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Função auxiliar para verificar se é admin
+
+    function perfil() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
     function isAdmin() {
-      return request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'superadmin'];
+      return isSignedIn() && perfil().get('role', 'user') in ['admin', 'superadmin'];
     }
 
-    // Regra específica para a coleção de usuários: usuários podem editar o próprio perfil, e admins podem editar qualquer um
+    // Perfis: leitura só do próprio usuário (ou admin); ninguém consegue
+    // promover a si mesmo nem se desbloquear.
     match /users/{userId} {
-      allow read: if true; 
-      allow write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+
+      allow create: if isAdmin() || (
+        isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.get('role', 'user') == 'user'
+        && request.resource.data.get('isBlocked', false) == false
+      );
+
+      allow update: if isAdmin() || (
+        isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.get('role', 'user') == resource.data.get('role', 'user')
+        && request.resource.data.get('isBlocked', false) == resource.data.get('isBlocked', false)
+      );
+
+      allow delete: if isAdmin();
     }
 
-    // match_ratings e votos dos usuários
+    // Avaliações de jogo: leitura pública, escrita de conteúdo só por admin,
+    // e cada torcedor grava apenas o próprio voto.
     match /match_ratings/{matchId} {
       allow read: if true;
       allow write: if isAdmin();
-      
+
       match /user_votes/{userId} {
         allow read: if true;
-        allow write: if request.auth != null && request.auth.uid == userId;
+        allow create, update: if isSignedIn()
+                              && request.auth.uid == userId
+                              && request.resource.data.userId == userId;
+        allow delete: if isAdmin();
       }
     }
 
-    // Para todo o resto do banco (notícias, colunas, categorias, etc)
-    // Leitura é pública, mas escrita é estritamente restrita a administradores.
+    // Todo o resto (notícias, colunas, galeria, analytics, etc.):
+    // leitura pública, escrita apenas por administradores autenticados.
     match /{document=**} {
       allow read: if true;
       allow write: if isAdmin();

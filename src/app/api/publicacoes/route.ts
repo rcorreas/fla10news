@@ -15,6 +15,7 @@ import {
   where,
 } from 'firebase/firestore/lite';
 import { db, invalidateFirestoreCache } from '@/lib/firebase';
+import { garantirSessaoServidor } from '@/lib/server-session';
 import { absoluteUrl } from '@/lib/site';
 
 /**
@@ -190,6 +191,7 @@ export async function POST(request: Request) {
   }
 
   try {
+    await garantirSessaoServidor();
     const referencia = doc(db, 'news', payload.pautaId);
     const atual = await getDoc(referencia);
     const dadosAtuais = atual.exists() ? atual.data() : null;

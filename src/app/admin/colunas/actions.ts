@@ -1,5 +1,6 @@
 
 "use server";
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -38,6 +39,8 @@ function generateSlug(title: string): string {
 }
 
 export async function createColumn(prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = ColumnSchema.safeParse({
     columnName: formData.get("columnName"),
     title: formData.get("title"),
@@ -106,6 +109,8 @@ export async function createColumn(prevState: any, formData: FormData) {
 }
 
 export async function updateColumn(id: string, slug: string, prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID da coluna é inválido." };
   }
@@ -180,6 +185,8 @@ export async function updateColumn(id: string, slug: string, prevState: any, for
 }
 
 export async function deleteColumn(id: string) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID da coluna é inválido." };
   }
@@ -201,6 +208,8 @@ export async function deleteColumn(id: string) {
 }
 
 export async function publishDraftActionColumn(formData: FormData) {
+
+  await garantirSessaoServidor();
   const id = formData.get("id")?.toString();
   const slug = formData.get("slug")?.toString();
   const publishedDateStr = formData.get("publishedAt")?.toString();

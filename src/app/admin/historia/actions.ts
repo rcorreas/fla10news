@@ -1,5 +1,6 @@
 
 "use server";
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -31,6 +32,8 @@ function generateSlug(title: string): string {
 }
 
 export async function createHistoryArticle(prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = HistorySchema.safeParse({
     title: formData.get("title"),
     subtitle: formData.get("subtitle"),
@@ -88,6 +91,8 @@ export async function createHistoryArticle(prevState: any, formData: FormData) {
 }
 
 export async function updateHistoryArticle(id: string, prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = HistorySchema.safeParse({
     title: formData.get("title"),
     subtitle: formData.get("subtitle"),
@@ -146,6 +151,8 @@ export async function updateHistoryArticle(id: string, prevState: any, formData:
 }
 
 export async function deleteHistoryArticle(id: string) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID do artigo é inválido." };
   }
@@ -167,6 +174,8 @@ export async function deleteHistoryArticle(id: string) {
 }
 
 export async function publishDraftActionHistory(formData: FormData) {
+
+  await garantirSessaoServidor();
   const id = formData.get("id")?.toString();
   const slug = formData.get("slug")?.toString();
   const publishedDateStr = formData.get("publishedAt")?.toString();

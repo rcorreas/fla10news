@@ -1,4 +1,5 @@
 import { db, withTimeout } from '@/lib/firebase';
+import { garantirSessaoServidor } from '@/lib/server-session';
 import { collection, doc, setDoc, increment, getDocs, query, orderBy, limit } from 'firebase/firestore/lite';
 
 export type DailyViews = {
@@ -23,7 +24,8 @@ export async function incrementDailyViews(): Promise<void> {
     try {
         const dateString = getGMT3DateString();
         const docRef = doc(db, 'dailyViews', dateString);
-        
+
+        await garantirSessaoServidor();
         await withTimeout(setDoc(docRef, {
             date: dateString,
             views: increment(1),

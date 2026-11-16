@@ -3,7 +3,7 @@
 
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp, updateDoc } from 'firebase/firestore/lite';
+import { doc, getDoc } from 'firebase/firestore/lite';
 import { auth, db } from '@/lib/firebase';
 
 const SUPERADMIN_EMAILS = ['canalfladez@gmail.com', 'rcorreas@gmail.com'];
@@ -87,37 +87,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           isBlocked: dbProfile.isBlocked || false,
         };
 
-        // If they are a superadmin by email, override the role and ensure DB is consistent.
+        // Superadmins definidos por e-mail recebem o papel só em memória: o
+        // Firestore não aceita mais que o próprio usuário altere `role`.
         if (isSuperAdminByEmail) {
           finalProfile.role = 'superadmin';
-          if (dbProfile.role !== 'superadmin') {
-            try {
-              await updateDoc(userDocRef, { role: 'superadmin' });
-            } catch (err) {
-              console.warn("Could not update superadmin role in DB:", err);
-            }
-          }
         }
-        
+
       } else if (isSuperAdminByEmail) {
-        // Doc doesn't exist, but user is a superadmin. Create the document.
-        const newSuperAdminProfile = {
+        // Doc não existe, mas o e-mail é de superadmin: perfil só em memória.
+        finalProfile = {
+          id: user.uid,
           email: user.email,
-          role: 'superadmin' as const,
-          createdAt: serverTimestamp(),
+          role: 'superadmin',
+          createdAt: null,
           isBlocked: false,
-          firstName: user.email.split('@')[0], // Default name
+          firstName: user.email.split('@')[0],
           lastName: '',
           username: user.email.split('@')[0],
           photoURL: null,
           dob: null,
         };
-        try {
-          await setDoc(userDocRef, newSuperAdminProfile);
-        } catch (err) {
-          console.warn("Could not create superadmin profile in DB:", err);
-        }
-        finalProfile = { ...newSuperAdminProfile, id: user.uid, createdAt: new Date() };
       }
       
       if (!cancelled) {

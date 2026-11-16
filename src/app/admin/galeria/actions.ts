@@ -1,4 +1,5 @@
 "use server";
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -15,6 +16,8 @@ const GallerySchema = z.object({
 });
 
 export async function createGalleryItem(prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = GallerySchema.safeParse({
     imageUrl: formData.get("imageUrl"),
     title: formData.get("title"),
@@ -54,6 +57,8 @@ export async function createGalleryItem(prevState: any, formData: FormData) {
 }
 
 export async function updateGalleryItem(id: string, prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID é inválido." };
   }
@@ -99,6 +104,8 @@ export async function updateGalleryItem(id: string, prevState: any, formData: Fo
 }
 
 export async function deleteGalleryItem(id: string) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID é inválido." };
   }

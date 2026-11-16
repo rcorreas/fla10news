@@ -1,3 +1,4 @@
+import { garantirSessaoServidor } from '@/lib/server-session';
 import { formatPublishedTime, getSocialMetaImageUrl } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
@@ -86,6 +87,7 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
   // Increment dynamic view count in Firebase asynchronously
   try {
     const docRef = doc(db, 'tirinhas', tirinha.id);
+    await garantirSessaoServidor();
     updateDoc(docRef, {
       views: increment(1)
     }).catch(err => console.error("Error updating tirinha views:", err));

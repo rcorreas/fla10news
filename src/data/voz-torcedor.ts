@@ -1,4 +1,5 @@
 import { db, withTimeout, cachedQuery } from '@/lib/firebase';
+import { garantirSessaoServidor } from '@/lib/server-session';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp, doc, getDoc, updateDoc, increment } from 'firebase/firestore/lite';
 
 export type VozTorcedor = {
@@ -147,6 +148,7 @@ export async function getAllVozTorcedorSlugs(): Promise<{ slug: string }[]> {
 export async function incrementVozTorcedorViews(id: string): Promise<void> {
     try {
         const docRef = doc(db, 'voz_torcedor', id);
+        await garantirSessaoServidor();
         await updateDoc(docRef, {
             views: increment(1)
         });

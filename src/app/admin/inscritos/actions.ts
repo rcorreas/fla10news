@@ -1,5 +1,6 @@
 
 "use server";
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -9,6 +10,8 @@ import { doc, updateDoc } from "firebase/firestore/lite";
 const RoleSchema = z.enum(["user", "admin", "superadmin"]);
 
 export async function updateUserRole(userId: string, newRole: 'user' | 'admin' | 'superadmin') {
+
+  await garantirSessaoServidor();
   if (!userId) {
     return { success: false, message: "ID do usuário é inválido." };
   }
@@ -36,6 +39,8 @@ export async function updateUserRole(userId: string, newRole: 'user' | 'admin' |
 }
 
 export async function toggleUserBlockStatus(userId: string, isCurrentlyBlocked: boolean) {
+
+  await garantirSessaoServidor();
     if (!userId) {
         return { success: false, message: "ID do usuário é inválido." };
     }

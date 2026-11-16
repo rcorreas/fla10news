@@ -1,4 +1,5 @@
 "use server";
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -15,6 +16,8 @@ const MatchRatingSchema = z.object({
 });
 
 export async function createMatchRating(prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = MatchRatingSchema.safeParse({
     score: formData.get("score"),
     competition: formData.get("competition"),
@@ -74,6 +77,8 @@ export async function createMatchRating(prevState: any, formData: FormData) {
 }
 
 export async function closeMatchRating(id: string) {
+
+  await garantirSessaoServidor();
   if (!id) return { success: false, message: "ID inválido." };
   try {
     const docRef = doc(db, "match_ratings", id);
@@ -87,6 +92,8 @@ export async function closeMatchRating(id: string) {
 }
 
 export async function deleteMatchRating(id: string) {
+
+  await garantirSessaoServidor();
   if (!id) return { success: false, message: "ID inválido." };
   try {
     const docRef = doc(db, "match_ratings", id);
@@ -100,6 +107,8 @@ export async function deleteMatchRating(id: string) {
 }
 
 export async function updateMatchRating(id: string, prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = MatchRatingSchema.safeParse({
     score: formData.get("score"),
     competition: formData.get("competition"),

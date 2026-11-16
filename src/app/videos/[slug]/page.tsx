@@ -1,3 +1,4 @@
+import { garantirSessaoServidor } from '@/lib/server-session';
 import { formatPublishedTime, formatDurationISO , getSocialMetaImageUrl } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
@@ -120,6 +121,7 @@ export default async function VideoPage({
   if (video.id && !video.id.startsWith('static')) {
     try {
       const videoRef = doc(db, 'videos', video.id);
+      await garantirSessaoServidor();
       updateDoc(videoRef, {
         views: increment(1)
       }).catch(err => console.error("Error updating video views:", err));

@@ -1,5 +1,6 @@
 
 "use server";
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -27,6 +28,8 @@ function generateSlug(title: string): string {
 }
 
 export async function createVideo(prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = VideoSchema.safeParse({
     title: formData.get("title"),
     category: formData.get("category"),
@@ -81,6 +84,8 @@ export async function createVideo(prevState: any, formData: FormData) {
 }
 
 export async function updateVideo(id: string, slug: string, prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = VideoSchema.safeParse({
     title: formData.get("title"),
     category: formData.get("category"),
@@ -135,6 +140,8 @@ export async function updateVideo(id: string, slug: string, prevState: any, form
 }
 
 export async function deleteVideo(id: string) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID do vídeo é inválido." };
   }
@@ -155,6 +162,8 @@ export async function deleteVideo(id: string) {
 }
 
 export async function publishDraftActionVideo(formData: FormData) {
+
+  await garantirSessaoServidor();
   const id = formData.get("id")?.toString();
   const slug = formData.get("slug")?.toString();
   const publishedDateStr = formData.get("publishedAt")?.toString();

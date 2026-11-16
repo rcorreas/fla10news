@@ -9,7 +9,7 @@ import { getReportagens } from "@/data/reportagens";
 import { getGalleryItems } from "@/data/gallery";
 import { getRaiox } from "@/data/raiox";
 import { getTirinhas } from "@/data/tirinhas";
-import { getUserCount } from "@/data/users";
+import { getUserCount } from "@/data/users-admin";
 import { getDailyViews } from "@/data/analytics";
 import { StatCard } from "@/components/admin/stat-card";
 import { ContentViewsChart, ShareDestinationsChart, MostViewedContentChart, DailyViewsChart } from "@/components/admin/charts";

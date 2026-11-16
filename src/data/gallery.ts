@@ -1,4 +1,5 @@
 import { db, withTimeout, cachedQuery } from "@/lib/firebase";
+import { garantirSessaoServidor } from '@/lib/server-session';
 import { collection, getDocs, query, orderBy, limit as firebaseLimit, doc, updateDoc, increment, getDoc } from "firebase/firestore/lite";
 
 export interface GalleryItem {
@@ -98,6 +99,7 @@ export async function getGalleryItemById(id: string): Promise<GalleryItem | null
 export async function incrementGalleryItemViews(id: string): Promise<void> {
   try {
     const docRef = doc(db, 'galeria', id);
+    await garantirSessaoServidor();
     await updateDoc(docRef, {
       views: increment(1)
     });

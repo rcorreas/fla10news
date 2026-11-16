@@ -1,3 +1,4 @@
+import { garantirSessaoServidor } from '@/lib/server-session';
 import { getSocialMetaImageUrl } from '@/lib/utils';
 
 import Image from 'next/image'
@@ -203,6 +204,7 @@ export default async function HistoryArticlePage({
   if (article.id && !article.id.startsWith('static')) {
     try {
       const articleRef = doc(db, 'history', article.id);
+      await garantirSessaoServidor();
       updateDoc(articleRef, {
         views: increment(1)
       }).catch(err => console.error("Error updating history article views:", err));

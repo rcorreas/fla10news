@@ -1,4 +1,5 @@
 "use server";
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -30,6 +31,8 @@ function generateSlug(title: string): string {
 }
 
 export async function createVozTorcedor(prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = VozTorcedorSchema.safeParse({
     authorName: formData.get("authorName"),
     title: formData.get("title"),
@@ -88,6 +91,8 @@ export async function createVozTorcedor(prevState: any, formData: FormData) {
 }
 
 export async function updateVozTorcedor(id: string, slug: string, prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID é inválido." };
   }
@@ -151,6 +156,8 @@ export async function updateVozTorcedor(id: string, slug: string, prevState: any
 }
 
 export async function deleteVozTorcedor(id: string) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID é inválido." };
   }
@@ -172,6 +179,8 @@ export async function deleteVozTorcedor(id: string) {
 }
 
 export async function publishDraftActionVozTorcedor(formData: FormData) {
+
+  await garantirSessaoServidor();
   const id = formData.get("id")?.toString();
   const slug = formData.get("slug")?.toString();
   const publishedDateStr = formData.get("publishedAt")?.toString();

@@ -1,5 +1,6 @@
 
 "use server";
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -36,6 +37,8 @@ function generateSlug(title: string): string {
 }
 
 export async function createReportagensArticle(prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = NewsSchema.safeParse({
     mainCategory: formData.get("mainCategory"),
     title: formData.get("title"),
@@ -92,6 +95,8 @@ export async function createReportagensArticle(prevState: any, formData: FormDat
 }
 
 export async function updateReportagensArticle(id: string, slug: string, prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID da matéria é inválido." };
   }
@@ -149,6 +154,8 @@ export async function updateReportagensArticle(id: string, slug: string, prevSta
 }
 
 export async function deleteReportagensArticle(id: string) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID da matéria é inválido." };
   }

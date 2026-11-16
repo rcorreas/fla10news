@@ -1,3 +1,4 @@
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -136,6 +137,7 @@ export default async function ColumnPage({
   // Increment dynamic view count in Firebase asynchronously
   try {
     const columnRef = doc(db, 'columns', column.id);
+    await garantirSessaoServidor();
     updateDoc(columnRef, {
       views: increment(1)
     }).catch(err => console.error("Error updating column views:", err));

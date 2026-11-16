@@ -49,3 +49,12 @@ env:
     secret: PUBLICACOES_TOKEN
     availability:
       - RUNTIME
+  # Usuário de serviço que autentica as escritas no Firestore.
+  - variable: PIPELINE_EMAIL
+    value: redacao-virtual@fla10.news
+    availability:
+      - RUNTIME
+  - variable: PIPELINE_PASSWORD
+    secret: PIPELINE_PASSWORD
+    availability:
+      - RUNTIME

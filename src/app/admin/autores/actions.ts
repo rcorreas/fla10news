@@ -1,4 +1,5 @@
 "use server";
+import { garantirSessaoServidor } from '@/lib/server-session';
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -14,6 +15,8 @@ const AuthorSchema = z.object({
 });
 
 export async function createAuthor(prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   const validatedFields = AuthorSchema.safeParse({
     name: formData.get("name"),
     link: formData.get("link"),
@@ -54,6 +57,8 @@ export async function createAuthor(prevState: any, formData: FormData) {
 }
 
 export async function updateAuthor(id: string, prevState: any, formData: FormData) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID do autor é inválido." };
   }
@@ -98,6 +103,8 @@ export async function updateAuthor(id: string, prevState: any, formData: FormDat
 }
 
 export async function deleteAuthor(id: string) {
+
+  await garantirSessaoServidor();
   if (!id) {
     return { success: false, message: "ID do autor é inválido." };
   }

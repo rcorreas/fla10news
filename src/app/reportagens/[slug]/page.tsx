@@ -1,3 +1,4 @@
+import { garantirSessaoServidor } from '@/lib/server-session';
 import { formatPublishedTime, slugify , getSocialMetaImageUrl } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
@@ -100,6 +101,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   // Increment dynamic view count in Firebase asynchronously
   try {
     const reportagensRef = doc(db, 'reportagens', article.id);
+    await garantirSessaoServidor();
     updateDoc(reportagensRef, {
       views: increment(1)
     }).catch(err => console.error("Error updating reportagens views:", err));

@@ -42,15 +42,3 @@ export async function getUsers(): Promise<UserProfile[]> {
         return [];
     }
 }
-
-
-export async function getUserCount(): Promise<number> {
-    try {
-        const usersCollection = collection(db, 'users');
-        const snapshot = await getDocs(usersCollection);
-        return snapshot.size;
-    } catch (error) {
-        console.error("Error fetching user count:", error);
-        return 0; // Return 0 in case of an error
-    }
-}
