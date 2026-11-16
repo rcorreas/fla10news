@@ -53,8 +53,9 @@ service cloud.firestore {
 
     // Todo o resto (notícias, colunas, galeria, analytics, etc.):
     // leitura pública, escrita apenas por administradores autenticados.
-    match /{document=**} {
-      allow read: if true;
+    // A coleção `users` fica de fora: só é lida pelo próprio usuário ou admin.
+    match /{collection}/{rest=**} {
+      allow read: if collection != 'users';
       allow write: if isAdmin();
     }
   }
