@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
+        // Capas externas entram por /api/proxy-image (host fixo do próprio site).
+        protocol: 'https',
+        hostname: 'fla10.news',
+        port: '',
+        pathname: '/api/proxy-image',
+      },
+      {
         protocol: 'https',
         hostname: 'placehold.co',
         port: '',

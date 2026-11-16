@@ -81,6 +81,26 @@ const CATEGORIA_POR_ESPORTE: Record<string, string> = {
 /** Imagem local usada quando o pipeline ainda não indicou uma capa. */
 const IMAGEM_PADRAO = '/imagem-canal.png';
 
+/**
+ * O `next/image` só otimiza hosts declarados em `next.config.ts`, e a capa vem
+ * de qualquer fonte do dossiê. Por isso a imagem externa passa pelo nosso
+ * proxy (que valida https e recusa destinos internos) em vez de abrir o
+ * otimizador para a internet inteira.
+ */
+function imagemDeCapa(url: string | null | undefined): string {
+  const externa = url?.trim();
+  if (!externa) return IMAGEM_PADRAO;
+  if (externa.startsWith('/')) return externa;
+
+  try {
+    const destino = new URL(externa);
+    if (destino.protocol !== 'https:') return IMAGEM_PADRAO;
+    return absoluteUrl(`/api/proxy-image?url=${encodeURIComponent(destino.toString())}`);
+  } catch {
+    return IMAGEM_PADRAO;
+  }
+}
+
 function normalizar(valor: string): string {
   return valor
     .normalize('NFD')
@@ -226,7 +246,7 @@ export async function POST(request: Request) {
 
     const { mainCategory, category } = mapearEditoria(payload.editoria, payload.titulo);
     const rascunho = payload.publicar === false;
-    const imagem = payload.imagemUrl?.trim() || IMAGEM_PADRAO;
+    const imagem = imagemDeCapa(payload.imagemUrl);
     const palavrasSecundarias = payload.seo.palavrasChaveSecundarias
       .map((p) => p.trim())
       .filter(Boolean)
