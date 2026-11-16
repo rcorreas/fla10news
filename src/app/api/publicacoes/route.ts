@@ -158,7 +158,7 @@ export async function GET(request: Request) {
   if (!autorizado(request)) {
     return NextResponse.json({ erro: 'Não autorizado.' }, { status: 401 });
   }
-  return NextResponse.json({ ok: true, servico: 'publicacoes', versao: 1 });
+  return NextResponse.json({ ok: true, servico: 'publicacoes', versao: 2, escritaAutenticada: true });
 }
 
 export async function POST(request: Request) {
