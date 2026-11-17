@@ -180,23 +180,20 @@ export async function getNewsById(id: string): Promise<NewsArticle | null> {
 }
 
 export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
-    try {
-        return await cachedQuery(
-            `news:slug:${slug}`,
-            async () => {
-                const q = query(collection(db, "news"), where("slug", "==", slug), limit(1));
-                const snapshot = await withTimeout(getDocs(q));
-                if (snapshot.empty) {
-                    return null;
-                }
-                return fromFirestore(snapshot.docs[0]);
-            },
-            { ttlMs: 300_000, isEmpty: (val) => val === null }
-        );
-    } catch (error) {
-        console.error(`Error fetching news by slug ${slug}:`, error);
-        return null;
-    }
+    return cachedQuery(
+        `news:slug:${slug}`,
+        async () => {
+            const q = query(collection(db, "news"), where("slug", "==", slug), limit(1));
+            const snapshot = await withTimeout(getDocs(q));
+            if (snapshot.empty) {
+                return null;
+            }
+            return fromFirestore(snapshot.docs[0]);
+        },
+        // `null` aqui é resposta definitiva (matéria removida/inexistente), não
+        // falha transitória: não pode manter o último valor em cache.
+        { ttlMs: 300_000, isEmpty: (val) => (val === null ? 'definitivo' : false) }
+    );
 }
 
 export async function getAllNewsSlugs(): Promise<{ slug: string }[]> {

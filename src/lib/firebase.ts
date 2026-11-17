@@ -114,7 +114,12 @@ export async function cachedQuery<T>(
   fetcher: () => Promise<T>,
   options?: {
     ttlMs?: number;
-    isEmpty?: (val: T) => boolean;
+    /**
+     * Resultado vazio. `'definitivo'` significa "não existe" (ex.: documento
+     * apagado) e não deve reaproveitar o último valor: senão uma matéria
+     * removida continuaria no ar para sempre.
+     */
+    isEmpty?: (val: T) => boolean | 'definitivo';
     bypassCache?: boolean;
   }
 ): Promise<T> {
@@ -151,9 +156,11 @@ export async function cachedQuery<T>(
         }
       }
 
-      const empty = isEmpty(result);
+      const vazio = isEmpty(result);
+      const definitivo = vazio === 'definitivo';
+      const empty = Boolean(vazio);
 
-      if (empty && existing?.hasValue) {
+      if (empty && existing?.hasValue && !definitivo) {
         // Mantém o último resultado válido se a nova leitura veio vazia (ex: erro 429 ou timeout capturado)
         store.set(key, {
           value: existing.value,
