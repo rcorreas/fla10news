@@ -59,7 +59,7 @@ async function urlPermitida(bruto: string): Promise<URL> {
   return url;
 }
 
-async function buscar(url: URL): Promise<Response> {
+async function buscar(url: URL, aceitarJpeg = false): Promise<Response> {
   let atual = url;
 
   for (let salto = 0; salto <= MAX_REDIRECIONAMENTOS; salto++) {
@@ -68,7 +68,11 @@ async function buscar(url: URL): Promise<Response> {
       signal: AbortSignal.timeout(TIMEOUT_MS),
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        // AVIF é menor para exibição, mas WhatsApp/Facebook não aceitam bem em
+        // og:image. `formato=jpeg` pede a versão compatível ao servidor de origem.
+        Accept: aceitarJpeg
+          ? 'image/jpeg,image/png,image/*;q=0.8,*/*;q=0.5'
+          : 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
       },
     });
 
@@ -85,14 +89,15 @@ async function buscar(url: URL): Promise<Response> {
 }
 
 export async function GET(request: Request) {
-  const bruto = new URL(request.url).searchParams.get('url');
+  const parametros = new URL(request.url).searchParams;
+  const bruto = parametros.get('url');
   if (!bruto) {
     return new NextResponse('Missing url parameter', { status: 400 });
   }
 
   try {
     const url = await urlPermitida(bruto);
-    const resposta = await buscar(url);
+    const resposta = await buscar(url, parametros.get('formato') === 'jpeg');
 
     if (!resposta.ok) {
       return new NextResponse('Error fetching image from origin', { status: 502 });

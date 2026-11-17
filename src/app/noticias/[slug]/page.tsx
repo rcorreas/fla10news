@@ -84,7 +84,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: metaTitle,
       description: desc,
-      images: [article.image || ""],
+      images: [getSocialMetaImageUrl(article.image)],
     },
   }
 }
@@ -214,7 +214,7 @@ export default async function ArticlePage({
             '@type': 'NewsArticle',
             headline: article.title,
             description: articleDescription,
-            image: [article.image],
+            image: [getSocialMetaImageUrl(article.image)],
             datePublished: article.publishedAt.toISOString(),
             dateModified: article.publishedAt.toISOString(),
             author: {

@@ -67,5 +67,9 @@ export function getSocialMetaImageUrl(url: string | undefined | null): string {
     // Append #.jpg so WhatsApp's scraper recognizes it as an image URL
     return `https://external-content.duckduckgo.com/iu/?u=${encodeURIComponent(url)}#.jpg`;
   }
+  // O proxy entrega AVIF para exibição; scrapers sociais precisam de JPEG.
+  if (url.includes('/api/proxy-image?') && !/[?&]formato=jpeg/.test(url)) {
+    return `${url}&formato=jpeg`;
+  }
   return url;
 }
