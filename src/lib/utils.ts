@@ -60,16 +60,42 @@ export function formatDurationISO(duration: string): string {
   return `PT${duration}S`;
 }
 
+export function toImgurSocialThumbnail(url: string): string {
+  // Converte imagens originais do Imgur (frequentemente PNGs de 1.4MB a 3.5MB que o WhatsApp recusa)
+  // para o thumbnail nativo 'h.jpg' (1024px JPEG, ~80-170KB) gerado pelo próprio Imgur.
+  return url.replace(
+    /^https?:\/\/(?:i\.)?imgur\.com\/([a-zA-Z0-9]{7})\.(?:png|jpg|jpeg|webp)(\?.*)?$/i,
+    'https://i.imgur.com/$1h.jpg'
+  );
+}
+
 export function getSocialMetaImageUrl(url: string | undefined | null): string {
-  if (!url) return '';
-  if (url.includes('imgur.com')) {
-    // Proxy Imgur images through DuckDuckGo to bypass hotlinking protection and avoid 429 errors from wsrv.nl
-    // Append #.jpg so WhatsApp's scraper recognizes it as an image URL
-    return `https://external-content.duckduckgo.com/iu/?u=${encodeURIComponent(url)}#.jpg`;
+  if (!url) return absoluteUrl('/imagem-canal.png');
+
+  let cleanUrl = url.trim();
+  if (!cleanUrl) return absoluteUrl('/imagem-canal.png');
+
+  // Se já for uma URL apontando para /api/proxy-image (relativa ou absoluta), extrai a URL original interna
+  if (cleanUrl.includes('/api/proxy-image')) {
+    try {
+      const parsed = new URL(cleanUrl, 'https://fla10.news');
+      const inner = parsed.searchParams.get('url');
+      if (inner) {
+        cleanUrl = inner;
+      }
+    } catch {
+      // mantém cleanUrl caso o parse falhe
+    }
   }
-  // O proxy entrega AVIF para exibição; scrapers sociais precisam de JPEG.
-  if (url.includes('/api/proxy-image?') && !/[?&]formato=jpeg/.test(url)) {
-    return `${url}&formato=jpeg`;
+
+  // Caminhos locais relativos (ex: /imagem-canal.png)
+  if (cleanUrl.startsWith('/')) {
+    return absoluteUrl(cleanUrl);
   }
-  return url;
+
+  const optimizedUrl = toImgurSocialThumbnail(cleanUrl);
+
+  // Serve sempre pelo domínio próprio (fla10.news/api/proxy-image) com Content-Length explícito e JPEG leve,
+  // evitando o bloqueio de robots.txt (Disallow: /*?) do external-content.duckduckgo.com e o bloqueio de IP do Imgur.
+  return `${absoluteUrl('/api/proxy-image')}?url=${encodeURIComponent(optimizedUrl)}&formato=jpeg&ext=.jpg`;
 }

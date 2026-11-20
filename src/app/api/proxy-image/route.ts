@@ -59,21 +59,51 @@ async function urlPermitida(bruto: string): Promise<URL> {
   return url;
 }
 
+function otimizarUrlImgurParaJpeg(url: URL): URL {
+  if (!url.hostname.toLowerCase().endsWith('imgur.com')) {
+    return url;
+  }
+  const match = url.pathname.match(/^\/([a-zA-Z0-9]{7})\.(?:png|jpg|jpeg|webp)$/i);
+  if (match) {
+    return new URL(`https://i.imgur.com/${match[1]}h.jpg`);
+  }
+  return url;
+}
+
 async function buscar(url: URL, aceitarJpeg = false): Promise<Response> {
-  let atual = url;
+  let atual = aceitarJpeg ? otimizarUrlImgurParaJpeg(url) : url;
+  const cabecalhos = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    // AVIF é menor para exibição, mas WhatsApp/Facebook não aceitam bem em
+    // og:image. `formato=jpeg` pede a versão compatível ao servidor de origem.
+    Accept: aceitarJpeg
+      ? 'image/jpeg,image/png,image/*;q=0.8,*/*;q=0.5'
+      : 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+  };
+
+  // Imgur frequentemente bloqueia/limita IPs de data centers (Cloud Run) com 403/429.
+  // Fazemos a busca server-to-server pelo cache do DuckDuckGo e entregamos no nosso próprio domínio
+  // (onde o robots.txt do fla10.news permite todos os crawlers sociais e com Content-Length explícito).
+  if (atual.hostname.toLowerCase().endsWith('imgur.com')) {
+    try {
+      const ddgUrl = new URL(`https://external-content.duckduckgo.com/iu/?u=${encodeURIComponent(atual.toString())}`);
+      const ddgResp = await fetch(ddgUrl, {
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+        headers: cabecalhos,
+      });
+      if (ddgResp.ok && (ddgResp.headers.get('content-type') || '').startsWith('image/')) {
+        return ddgResp;
+      }
+    } catch {
+      // Se falhar, tenta conexão direta ao Imgur abaixo
+    }
+  }
 
   for (let salto = 0; salto <= MAX_REDIRECIONAMENTOS; salto++) {
     const resposta = await fetch(atual, {
       redirect: 'manual',
       signal: AbortSignal.timeout(TIMEOUT_MS),
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        // AVIF é menor para exibição, mas WhatsApp/Facebook não aceitam bem em
-        // og:image. `formato=jpeg` pede a versão compatível ao servidor de origem.
-        Accept: aceitarJpeg
-          ? 'image/jpeg,image/png,image/*;q=0.8,*/*;q=0.5'
-          : 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
-      },
+      headers: cabecalhos,
     });
 
     const redirecionamento = resposta.headers.get('location');
@@ -108,11 +138,15 @@ export async function GET(request: Request) {
       return new NextResponse('Destino não é uma imagem', { status: 415 });
     }
 
-    return new Response(resposta.body, {
+    const buffer = await resposta.arrayBuffer();
+
+    return new Response(buffer, {
       status: 200,
       headers: {
         'Content-Type': tipo,
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Content-Length': String(buffer.byteLength),
+        'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, immutable',
+        'Access-Control-Allow-Origin': '*',
         'Content-Security-Policy': "default-src 'none'",
       },
     });

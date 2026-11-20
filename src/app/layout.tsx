@@ -31,6 +31,20 @@ export const metadata: Metadata = {
     siteName,
     locale: 'pt_BR',
     type: 'website',
+    images: [
+      {
+        url: absoluteUrl('/imagem-canal.png'),
+        width: 1200,
+        height: 250,
+        alt: siteName,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteName,
+    description: 'Seu portal diário de notícias sobre o Clube de Regatas do Flamengo.',
+    images: [absoluteUrl('/imagem-canal.png')],
   },
 };
 

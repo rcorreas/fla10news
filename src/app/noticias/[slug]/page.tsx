@@ -56,6 +56,7 @@ export async function generateMetadata(
   const desc = article.metaDescription || truncateDescription(article.excerpt || article.content || '');
   const url = absoluteUrl(`/noticias/${article.slug}`);
   const metaTitle = article.metaTitle || article.title;
+  const socialImageUrl = getSocialMetaImageUrl(article.image);
 
   return {
     title: metaTitle,
@@ -70,9 +71,11 @@ export async function generateMetadata(
       url,
       images: [
         {
-          url: getSocialMetaImageUrl(article.image),
+          url: socialImageUrl,
+          secureUrl: socialImageUrl,
           width: 1200,
           height: 630,
+          type: 'image/jpeg',
           alt: metaTitle,
         }
       ],
@@ -84,7 +87,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: metaTitle,
       description: desc,
-      images: [getSocialMetaImageUrl(article.image)],
+      images: [socialImageUrl],
     },
   }
 }

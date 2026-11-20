@@ -47,7 +47,7 @@ export async function generateMetadata(
 
   const desc = truncateDescription(article.subtitle || article.content || '');
   const url = absoluteUrl(`/flahistoria/${article.slug}`);
-  
+  const socialImageUrl = getSocialMetaImageUrl(article.image);
 
   return {
     title: article.title,
@@ -59,7 +59,16 @@ export async function generateMetadata(
       title: article.title,
       description: desc,
       url,
-      images: [getSocialMetaImageUrl(article.image)],
+      images: [
+        {
+          url: socialImageUrl,
+          secureUrl: socialImageUrl,
+          width: 1200,
+          height: 630,
+          type: 'image/jpeg',
+          alt: article.title,
+        }
+      ],
       type: 'article',
       publishedTime: article.publishedAt.toISOString(),
       authors: [article.author],
@@ -68,7 +77,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: article.title,
       description: desc,
-      images: [article.image || ""],
+      images: [socialImageUrl],
     },
   }
 }

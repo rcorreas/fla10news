@@ -25,6 +25,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   
 
+  const socialImageUrl = getSocialMetaImageUrl(item.imageUrl);
+
   return {
     title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
     description: item.legenda || item.title,
@@ -32,14 +34,23 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
       description: item.legenda || item.title,
       url: absoluteUrl(`/galeria/${item.id}`),
-      images: [getSocialMetaImageUrl(item.imageUrl)],
+      images: [
+        {
+          url: socialImageUrl,
+          secureUrl: socialImageUrl,
+          width: 1200,
+          height: 630,
+          type: 'image/jpeg',
+          alt: item.title,
+        }
+      ],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title: `${item.title.substring(0, 50)}... | Galeria FLA10 News`,
       description: item.legenda || item.title,
-      images: [item.imageUrl || ""],
+      images: [socialImageUrl],
     },
   };
 }

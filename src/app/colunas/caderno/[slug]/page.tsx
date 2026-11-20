@@ -44,20 +44,30 @@ export async function generateMetadata(
 
   
 
+  const socialImageUrl = getSocialMetaImageUrl(imageUrl);
+
   return {
     title: columnName,
     description: desc,
     openGraph: {
       title: columnName,
       description: desc,
-      images: [getSocialMetaImageUrl(imageUrl)],
+      images: [
+        {
+          url: socialImageUrl,
+          secureUrl: socialImageUrl,
+          width: 1200,
+          height: 630,
+          alt: columnName,
+        }
+      ],
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
       title: columnName,
       description: desc,
-      images: [imageUrl || ""],
+      images: [socialImageUrl],
     },
   }
 }

@@ -60,9 +60,9 @@ export async function generateMetadata(
   const desc = column.metaDescription || truncateDescription(column.excerpt || column.content || '');
   const url = absoluteUrl(`/colunas/${column.slug}`);
   const metaTitle = column.metaTitle || column.title;
-  let imageUrl = column.columnImage || 'https://placehold.co/1200x675.png'; // default fallback if no image
+  let imageUrl = column.columnImage || '';
 
-  if (!column.columnImage) {
+  if (!imageUrl) {
       if (column.columnName === "É Mengão na veia!!!") {
           imageUrl = "https://i.postimg.cc/YCT3F8nY/Chat-GPT-Image-9-de-jul-de-2025-23-06-12-removebg-preview.png";
       } else if (column.columnName === "Cesta de Três") {
@@ -71,10 +71,12 @@ export async function generateMetadata(
           imageUrl = "https://i.imgur.com/Ivq88KP.png";
       } else if (column.columnName === "Na Pena do Urubu") {
           imageUrl = "https://i.imgur.com/ICtiAp0.png";
+      } else {
+          imageUrl = column.authorImage || '/imagem-canal.png';
       }
   }
 
-  
+  const socialImageUrl = getSocialMetaImageUrl(imageUrl);
 
   return {
     title: metaTitle,
@@ -87,7 +89,15 @@ export async function generateMetadata(
       title: metaTitle,
       description: desc,
       url,
-      images: [getSocialMetaImageUrl(imageUrl)],
+      images: [
+        {
+          url: socialImageUrl,
+          secureUrl: socialImageUrl,
+          width: 1200,
+          height: 630,
+          alt: metaTitle,
+        }
+      ],
       type: 'article',
       publishedTime: column.publishedAt.toISOString(),
       authors: [column.author],
@@ -96,7 +106,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: metaTitle,
       description: desc,
-      images: [imageUrl || ""],
+      images: [socialImageUrl],
     },
   }
 }

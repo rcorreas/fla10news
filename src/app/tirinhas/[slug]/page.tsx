@@ -43,6 +43,7 @@ export async function generateMetadata(
 
   const desc = truncateDescription(tirinha.description || 'Confira esta tirinha do Fla10.');
   const url = absoluteUrl(`/tirinhas/${tirinha.slug}`);
+  const socialImageUrl = getSocialMetaImageUrl(tirinha.imageHome || tirinha.image);
 
   return {
     title: tirinha.title,
@@ -56,9 +57,11 @@ export async function generateMetadata(
       url,
       images: [
         {
-          url: getSocialMetaImageUrl(tirinha.imageHome),
+          url: socialImageUrl,
+          secureUrl: socialImageUrl,
           width: 1200,
           height: 630,
+          type: 'image/jpeg',
           alt: tirinha.title,
         }
       ],
@@ -69,7 +72,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: tirinha.title,
       description: desc,
-      images: [tirinha.imageHome || ""],
+      images: [socialImageUrl],
     },
   }
 }

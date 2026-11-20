@@ -43,7 +43,7 @@ export async function generateMetadata(
 
   const desc = `Assista ao vídeo: ${video.title}`;
   const url = absoluteUrl(`/videos/${video.slug}`);
-  
+  const socialImageUrl = getSocialMetaImageUrl(video.image);
 
   return {
     title: video.title,
@@ -55,14 +55,23 @@ export async function generateMetadata(
       title: video.title,
       description: desc,
       url,
-      images: [getSocialMetaImageUrl(video.image)],
+      images: [
+        {
+          url: socialImageUrl,
+          secureUrl: socialImageUrl,
+          width: 1200,
+          height: 630,
+          type: 'image/jpeg',
+          alt: video.title,
+        }
+      ],
       type: 'video.other',
     },
     twitter: {
       card: 'summary_large_image',
       title: video.title,
       description: desc,
-      images: [video.image || ""],
+      images: [socialImageUrl],
     },
   }
 }

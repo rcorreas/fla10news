@@ -37,7 +37,8 @@ export async function generateMetadata(
   }
 
   const desc = voz.metaDescription || truncateDescription(voz.summary || voz.content || '');
-  const imageUrl = 'https://i.imgur.com/ESMmQcc.png';
+  const imageUrl = voz.image || 'https://i.imgur.com/ESMmQcc.png';
+  const socialImageUrl = getSocialMetaImageUrl(imageUrl);
   const url = absoluteUrl(`/voz-torcedor/${voz.slug}`);
   const metaTitle = voz.metaTitle || voz.title;
   
@@ -53,7 +54,16 @@ export async function generateMetadata(
       title: metaTitle,
       description: desc,
       url,
-      images: [getSocialMetaImageUrl(imageUrl)],
+      images: [
+        {
+          url: socialImageUrl,
+          secureUrl: socialImageUrl,
+          width: 1200,
+          height: 630,
+          type: 'image/jpeg',
+          alt: metaTitle,
+        }
+      ],
       type: 'article',
       publishedTime: voz.publishedAt.toISOString(),
       authors: [voz.authorName],
@@ -62,7 +72,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: metaTitle,
       description: desc,
-      images: [imageUrl || ""],
+      images: [socialImageUrl],
     },
   }
 }
