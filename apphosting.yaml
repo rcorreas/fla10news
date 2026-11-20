@@ -58,3 +58,24 @@ env:
     secret: PIPELINE_PASSWORD
     availability:
       - RUNTIME
+  # Cloudflare R2 Object Storage (Opção 3: 10 GB grátis + tráfego ilimitado gratuito)
+  - variable: R2_ACCOUNT_ID
+    value: "5f78b027b49053ecc8a8e12493e34d6d"
+    availability:
+      - RUNTIME
+  - variable: R2_ACCESS_KEY_ID
+    value: "75ba3526dc1885c17020f4eb53672a5d"
+    availability:
+      - RUNTIME
+  - variable: R2_SECRET_ACCESS_KEY
+    secret: R2_SECRET_ACCESS_KEY
+    availability:
+      - RUNTIME
+  - variable: R2_BUCKET_NAME
+    value: fla10news-media
+    availability:
+      - RUNTIME
+  - variable: R2_PUBLIC_URL
+    value: https://pub-167c4450682142efad61462f5827f16f.r2.dev
+    availability:
+      - RUNTIME
