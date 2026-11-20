@@ -2,6 +2,10 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  // Garante que <meta property="og:image"> e demais metadados sejam sempre
+  // renderizados dentro de <head> (sem streaming no final do <body>), para que
+  // crawlers como Facebook, WhatsApp e Telegram encontrem a miniatura sempre.
+  htmlLimitedBots: /.*/,
   images: {
     remotePatterns: [
       {
