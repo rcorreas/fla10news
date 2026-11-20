@@ -3,9 +3,9 @@ import * as React from 'react';
 import { useRef } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Bold, Italic, Underline, CornerDownRight, ImageIcon, Highlighter, Minus, Heading3, Link2, Upload, Loader2 } from 'lucide-react';
+import { Bold, Italic, Underline, CornerDownRight, ImageIcon, Highlighter, Minus, Heading3, Link2, Upload } from 'lucide-react';
 import { RelatedArticleInserter } from './related-article-inserter';
-import { compressAndUploadImage } from '@/lib/image-upload-client';
+import { ImageUploadModal } from './image-upload-modal';
 
 interface TextareaWithFormattingProps extends React.ComponentProps<typeof Textarea> {}
 
@@ -13,8 +13,7 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
   (props, forwardedRef) => {
     const internalRef = useRef<HTMLTextAreaElement>(null);
     const textareaRef = (forwardedRef as any) || internalRef;
-    const inlineFileInputRef = useRef<HTMLInputElement>(null);
-    const [uploadingInline, setUploadingInline] = React.useState(false);
+    const [uploadModalOpen, setUploadModalOpen] = React.useState(false);
 
     const insertText = (before: string, after: string = '') => {
       const textarea = textareaRef.current;
@@ -83,7 +82,7 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
 
     return (
       <div className="space-y-2 w-full relative">
-        <div className="flex items-center gap-1 mb-2 p-1 border rounded-md bg-muted/40 w-fit">
+        <div className="flex flex-wrap items-center gap-1 mb-2 p-1 border rounded-md bg-muted/40 w-fit">
           <Button 
               type="button" 
               variant="ghost" 
@@ -185,44 +184,16 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
             <span className="text-xs">Vídeo</span>
           </Button>
           <div className="w-px h-4 bg-border mx-1" />
-          <input
-            ref={inlineFileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
-              const credit = prompt("Créditos/legenda da imagem (ou deixe em branco):") || "";
-              setUploadingInline(true);
-              try {
-                const result = await compressAndUploadImage(file, { folder: 'materias' });
-                if (credit.trim() !== '') {
-                  insertText(`\n\n[img credit="${credit.trim()}"]${result.url}[/img]\n\n`);
-                } else {
-                  insertText(`\n\n[img]${result.url}[/img]\n\n`);
-                }
-              } catch (err) {
-                alert(err instanceof Error ? err.message : 'Erro ao enviar imagem');
-              } finally {
-                setUploadingInline(false);
-                if (inlineFileInputRef.current) {
-                  inlineFileInputRef.current.value = '';
-                }
-              }
-            }}
-          />
           <Button
               type="button"
               variant="ghost"
               size="sm"
-              disabled={uploadingInline}
-              onClick={() => inlineFileInputRef.current?.click()}
-              title="Subir Foto do Computador/Celular para o meio do texto"
+              onClick={() => setUploadModalOpen(true)}
+              title="Subir Foto do Computador/Celular (arrastar ou procurar)"
               className="h-8 flex gap-1 px-2 text-primary font-semibold"
           >
-            {uploadingInline ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-            <span className="text-xs">{uploadingInline ? 'Enviando...' : 'Subir Foto'}</span>
+            <Upload className="h-4 w-4" />
+            <span className="text-xs">Subir Foto</span>
           </Button>
           <Button 
               type="button" 
@@ -247,6 +218,20 @@ export const TextareaWithFormatting = React.forwardRef<HTMLTextAreaElement, Text
           </Button>
         </div>
         <Textarea ref={textareaRef} {...props} />
+        <ImageUploadModal
+          open={uploadModalOpen}
+          onOpenChange={setUploadModalOpen}
+          folder="materias"
+          withCredit={true}
+          title="Inserir Foto no Corpo da Matéria"
+          onUploaded={(result, credit) => {
+            if (credit && credit.trim() !== '') {
+              insertText(`\n\n[img credit="${credit.trim()}"]${result.url}[/img]\n\n`);
+            } else {
+              insertText(`\n\n[img]${result.url}[/img]\n\n`);
+            }
+          }}
+        />
       </div>
     );
   }
