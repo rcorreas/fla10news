@@ -93,6 +93,16 @@ export function getSocialMetaImageUrl(url: string | undefined | null): string {
     return absoluteUrl(cleanUrl);
   }
 
+  // Imagens já otimizadas em JPEG no nosso bucket Google Cloud Storage ou Cloudflare R2
+  // já possuem Content-Length explícito, robots.txt liberado e tamanho < 200KB.
+  if (
+    /\.(?:jpg|jpeg)$/i.test(cleanUrl) &&
+    (cleanUrl.startsWith('https://storage.googleapis.com/fla10news-media/') ||
+      cleanUrl.includes('.r2.dev/'))
+  ) {
+    return cleanUrl;
+  }
+
   const optimizedUrl = toImgurSocialThumbnail(cleanUrl);
 
   // Serve sempre pelo domínio próprio (fla10.news/api/proxy-image) com Content-Length explícito e JPEG leve,
