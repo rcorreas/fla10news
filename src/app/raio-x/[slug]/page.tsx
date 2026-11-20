@@ -102,22 +102,23 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     notFound()
   }
 
-  // Increment dynamic view count in Firebase asynchronously
-  try {
-    const raioxRef = doc(db, 'raiox', article.id);
-    await garantirSessaoServidor();
-    updateDoc(raioxRef, {
-      views: increment(1)
-    }).catch(err => console.error("Error updating raiox views:", err));
-  } catch (err) {
-    console.error("Error incrementing raiox views:", err);
-  }
-
-  try {
-    await incrementDailyViews();
-  } catch (err) {
-    console.error("Error incrementing daily views:", err);
-  }
+  // Increment dynamic view count in Firebase asynchronously (non-blocking for SSR)
+  void (async () => {
+    try {
+      const raioxRef = doc(db, 'raiox', article.id);
+      await garantirSessaoServidor();
+      await updateDoc(raioxRef, {
+        views: increment(1)
+      });
+    } catch (err) {
+      console.error("Error incrementing raiox views:", err);
+    }
+    try {
+      await incrementDailyViews();
+    } catch (err) {
+      console.error("Error incrementing daily views:", err);
+    }
+  })();
 
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const articleUrl = absoluteUrl(`/raio-x/${article.slug}`);

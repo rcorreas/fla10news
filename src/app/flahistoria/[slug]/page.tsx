@@ -209,25 +209,26 @@ export default async function HistoryArticlePage({
       );
   }
 
-  // Increment dynamic view count in Firebase asynchronously (ignore static fallbacks)
-  if (article.id && !article.id.startsWith('static')) {
-    try {
-      const articleRef = doc(db, 'history', article.id);
-      await garantirSessaoServidor();
-      updateDoc(articleRef, {
-        views: increment(1)
-      }).catch(err => console.error("Error updating history article views:", err));
-    } catch (err) {
-      console.error("Error incrementing history article views:", err);
+  // Increment dynamic view count in Firebase asynchronously (non-blocking for SSR, ignore static fallbacks)
+  void (async () => {
+    if (article.id && !article.id.startsWith('static')) {
+      try {
+        const articleRef = doc(db, 'history', article.id);
+        await garantirSessaoServidor();
+        await updateDoc(articleRef, {
+          views: increment(1)
+        });
+      } catch (err) {
+        console.error("Error incrementing history article views:", err);
+      }
     }
-  }
-
-  try {
-    const { incrementDailyViews } = await import('@/data/analytics');
-    await incrementDailyViews();
-  } catch (err) {
-    console.error("Error incrementing daily views:", err);
-  }
+    try {
+      const { incrementDailyViews } = await import('@/data/analytics');
+      await incrementDailyViews();
+    } catch (err) {
+      console.error("Error incrementing daily views:", err);
+    }
+  })();
 
   const otherArticles = allArticles.filter(a => a.slug !== article.slug).slice(0, 3);
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });

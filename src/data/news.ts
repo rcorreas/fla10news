@@ -190,9 +190,9 @@ export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
             }
             return fromFirestore(snapshot.docs[0]);
         },
-        // `null` aqui é resposta definitiva (matéria removida/inexistente), não
-        // falha transitória: não pode manter o último valor em cache.
-        { ttlMs: 300_000, isEmpty: (val) => (val === null ? 'definitivo' : false) }
+        // `null` ou rascunho não devem ficar em cache (evita que uma instância
+        // mantenha o rascunho em memória após a publicação em outra instância).
+        { ttlMs: 300_000, isEmpty: (val) => (val === null || val.status === 'draft' ? 'definitivo' : false) }
     );
 }
 

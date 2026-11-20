@@ -150,7 +150,7 @@ export async function getHistoryArticleBySlug(slug: string): Promise<HistoryArti
                 }
                 return fromFirestore(snapshot.docs[0]);
             },
-            { ttlMs: 300_000, isEmpty: (val) => val === null }
+            { ttlMs: 300_000, isEmpty: (val) => val === null || val.status === 'draft' }
         );
     } catch (error) {
         console.error(`Error fetching history article by slug ${slug}:`, error);

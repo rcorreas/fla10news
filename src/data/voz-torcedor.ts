@@ -127,7 +127,7 @@ export async function getVozTorcedorBySlug(slug: string): Promise<VozTorcedor | 
                 }
                 return fromFirestore(snapshot.docs[0]);
             },
-            { ttlMs: 300_000, isEmpty: (val) => val === null }
+            { ttlMs: 300_000, isEmpty: (val) => val === null || val.status === 'draft' }
         );
     } catch (error) {
         console.error(`Error fetching Voz do Torcedor by slug ${slug}:`, error);

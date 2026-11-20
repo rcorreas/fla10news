@@ -126,25 +126,26 @@ export default async function VideoPage({
       );
   }
 
-  // Increment dynamic view count in Firebase asynchronously (ignore static fallbacks)
-  if (video.id && !video.id.startsWith('static')) {
-    try {
-      const videoRef = doc(db, 'videos', video.id);
-      await garantirSessaoServidor();
-      updateDoc(videoRef, {
-        views: increment(1)
-      }).catch(err => console.error("Error updating video views:", err));
-    } catch (err) {
-      console.error("Error incrementing video views:", err);
+  // Increment dynamic view count in Firebase asynchronously (non-blocking for SSR, ignore static fallbacks)
+  void (async () => {
+    if (video.id && !video.id.startsWith('static')) {
+      try {
+        const videoRef = doc(db, 'videos', video.id);
+        await garantirSessaoServidor();
+        await updateDoc(videoRef, {
+          views: increment(1)
+        });
+      } catch (err) {
+        console.error("Error incrementing video views:", err);
+      }
     }
-  }
-
-  try {
-    const { incrementDailyViews } = await import('@/data/analytics');
-    await incrementDailyViews();
-  } catch (err) {
-    console.error("Error incrementing daily views:", err);
-  }
+    try {
+      const { incrementDailyViews } = await import('@/data/analytics');
+      await incrementDailyViews();
+    } catch (err) {
+      console.error("Error incrementing daily views:", err);
+    }
+  })();
 
   const videoId = video.videoUrl ? getYouTubeId(video.videoUrl) : null;
   const videoDate = format(video.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });

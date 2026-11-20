@@ -45,14 +45,7 @@ export async function generateMetadata(
     }
   }
 
-  const isDraft = article.status === 'draft' || article.publishedAt > new Date();
-  if (isDraft) {
-     return {
-        title: 'Matéria em construção',
-        robots: { index: false, follow: false },
-     }
-  }
-
+  const isDraft = article.status === 'draft' || article.publishedAt.getTime() > Date.now() + 60_000;
   const desc = article.metaDescription || truncateDescription(article.excerpt || article.content || '');
   const url = absoluteUrl(`/noticias/${article.slug}`);
   const metaTitle = article.metaTitle || article.title;
@@ -62,6 +55,7 @@ export async function generateMetadata(
     title: metaTitle,
     description: desc,
     keywords: [article.focusKeyword || '', ...(article.secondaryKeywords || '').split(',').map(k => k.trim())].filter(Boolean),
+    robots: isDraft ? { index: false, follow: false } : undefined,
     alternates: {
       canonical: url,
     },
@@ -69,6 +63,8 @@ export async function generateMetadata(
       title: metaTitle,
       description: desc,
       url,
+      siteName,
+      locale: 'pt_BR',
       images: [
         {
           url: socialImageUrl,
@@ -114,7 +110,7 @@ export default async function ArticlePage({
     notFound()
   }
 
-  const isDraft = article.status === 'draft' || article.publishedAt > new Date();
+  const isDraft = article.status === 'draft' || article.publishedAt.getTime() > Date.now() + 60_000;
 
   if (isDraft && preview !== '1') {
       return (
@@ -126,23 +122,24 @@ export default async function ArticlePage({
       );
   }
 
-  // Increment dynamic view count in Firebase asynchronously
-  try {
-    const articleRef = doc(db, 'news', article.id);
-    await garantirSessaoServidor();
-    updateDoc(articleRef, {
-      views: increment(1)
-    }).catch(err => console.error("Error updating news views:", err));
-  } catch (err) {
-    console.error("Error incrementing news views:", err);
-  }
-
-  try {
-    const { incrementDailyViews } = await import('@/data/analytics');
-    incrementDailyViews().catch(err => console.error("Error incrementing daily views:", err));
-  } catch (err) {
-    console.error("Error incrementing daily views:", err);
-  }
+  // Increment dynamic view count in Firebase asynchronously without blocking HTML response for social crawlers
+  void (async () => {
+    try {
+      const articleRef = doc(db, 'news', article.id);
+      await garantirSessaoServidor();
+      await updateDoc(articleRef, {
+        views: increment(1)
+      });
+    } catch (err) {
+      console.error("Error incrementing news views:", err);
+    }
+    try {
+      const { incrementDailyViews } = await import('@/data/analytics');
+      await incrementDailyViews();
+    } catch (err) {
+      console.error("Error incrementing daily views:", err);
+    }
+  })();
 
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const articleUrl = absoluteUrl(`/noticias/${article.slug}`);

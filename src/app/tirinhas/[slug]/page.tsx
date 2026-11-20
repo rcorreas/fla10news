@@ -87,22 +87,23 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
     notFound()
   }
 
-  // Increment dynamic view count in Firebase asynchronously
-  try {
-    const docRef = doc(db, 'tirinhas', tirinha.id);
-    await garantirSessaoServidor();
-    updateDoc(docRef, {
-      views: increment(1)
-    }).catch(err => console.error("Error updating tirinha views:", err));
-  } catch (err) {
-    console.error("Error incrementing tirinha views:", err);
-  }
-
-  try {
-    await incrementDailyViews();
-  } catch (err) {
-    console.error("Error incrementing daily views:", err);
-  }
+  // Increment dynamic view count in Firebase asynchronously (non-blocking for SSR)
+  void (async () => {
+    try {
+      const docRef = doc(db, 'tirinhas', tirinha.id);
+      await garantirSessaoServidor();
+      await updateDoc(docRef, {
+        views: increment(1)
+      });
+    } catch (err) {
+      console.error("Error incrementing tirinha views:", err);
+    }
+    try {
+      await incrementDailyViews();
+    } catch (err) {
+      console.error("Error incrementing daily views:", err);
+    }
+  })();
 
   const publishDate = format(tirinha.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const pageUrl = absoluteUrl(`/tirinhas/${tirinha.slug}`);

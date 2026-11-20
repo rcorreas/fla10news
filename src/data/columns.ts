@@ -183,7 +183,7 @@ export async function getColumnBySlug(slug: string): Promise<OpinionColumn | nul
                 }
                 return fromFirestore(snapshot.docs[0]);
             },
-            { ttlMs: 300_000, isEmpty: (val) => val === null }
+            { ttlMs: 300_000, isEmpty: (val) => val === null || val.status === 'draft' }
         );
     } catch (error) {
         console.error(`Error fetching column by slug ${slug}:`, error);

@@ -114,7 +114,7 @@ export async function getVideoBySlug(slug: string): Promise<Video | null> {
                 }
                 return fromFirestore(snapshot.docs[0]);
             },
-            { ttlMs: 300_000, isEmpty: (val) => val === null }
+            { ttlMs: 300_000, isEmpty: (val) => val === null || val.status === 'draft' }
         );
     } catch (error) {
         console.error(`Error fetching video by slug ${slug}:`, error);

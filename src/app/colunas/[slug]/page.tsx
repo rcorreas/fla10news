@@ -144,23 +144,24 @@ export default async function ColumnPage({
       );
   }
   
-  // Increment dynamic view count in Firebase asynchronously
-  try {
-    const columnRef = doc(db, 'columns', column.id);
-    await garantirSessaoServidor();
-    updateDoc(columnRef, {
-      views: increment(1)
-    }).catch(err => console.error("Error updating column views:", err));
-  } catch (err) {
-    console.error("Error incrementing column views:", err);
-  }
-
-  try {
-    const { incrementDailyViews } = await import('@/data/analytics');
-    await incrementDailyViews();
-  } catch (err) {
-    console.error("Error incrementing daily views:", err);
-  }
+  // Increment dynamic view count in Firebase asynchronously (non-blocking for SSR)
+  void (async () => {
+    try {
+      const columnRef = doc(db, 'columns', column.id);
+      await garantirSessaoServidor();
+      await updateDoc(columnRef, {
+        views: increment(1)
+      });
+    } catch (err) {
+      console.error("Error incrementing column views:", err);
+    }
+    try {
+      const { incrementDailyViews } = await import('@/data/analytics');
+      await incrementDailyViews();
+    } catch (err) {
+      console.error("Error incrementing daily views:", err);
+    }
+  })();
   
   const otherColumns = allColumns.filter(c => c.id !== column.id).slice(0, 2);
   const columnDate = format(column.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });

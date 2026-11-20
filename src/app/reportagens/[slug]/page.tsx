@@ -102,22 +102,23 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     notFound()
   }
 
-  // Increment dynamic view count in Firebase asynchronously
-  try {
-    const reportagensRef = doc(db, 'reportagens', article.id);
-    await garantirSessaoServidor();
-    updateDoc(reportagensRef, {
-      views: increment(1)
-    }).catch(err => console.error("Error updating reportagens views:", err));
-  } catch (err) {
-    console.error("Error incrementing reportagens views:", err);
-  }
-
-  try {
-    await incrementDailyViews();
-  } catch (err) {
-    console.error("Error incrementing daily views:", err);
-  }
+  // Increment dynamic view count in Firebase asynchronously (non-blocking for SSR)
+  void (async () => {
+    try {
+      const reportagensRef = doc(db, 'reportagens', article.id);
+      await garantirSessaoServidor();
+      await updateDoc(reportagensRef, {
+        views: increment(1)
+      });
+    } catch (err) {
+      console.error("Error incrementing reportagens views:", err);
+    }
+    try {
+      await incrementDailyViews();
+    } catch (err) {
+      console.error("Error incrementing daily views:", err);
+    }
+  })();
 
   const articleDate = format(article.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   const articleUrl = absoluteUrl(`/reportagens/${article.slug}`);

@@ -109,9 +109,11 @@ export default async function VozTorcedorPage({
       );
   }
   
-  // Increment views
-  await incrementVozTorcedorViews(voz.id);
-  await incrementDailyViews();
+  // Increment views asynchronously (non-blocking for SSR)
+  void Promise.allSettled([
+    incrementVozTorcedorViews(voz.id),
+    incrementDailyViews(),
+  ]);
   
   const otherVoz = allVoz.filter(v => v.id !== voz.id).slice(0, 2);
   const dataPublicacao = format(voz.publishedAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
