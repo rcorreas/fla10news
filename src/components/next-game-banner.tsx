@@ -27,7 +27,7 @@ async function getNextGameData(): Promise<NextGameData> {
                 }
                 return null;
             },
-            { ttlMs: 300_000, isEmpty: (val) => val === null }
+            { ttlMs: 30_000, isEmpty: (val) => val === null }
         );
         return data ?? defaultGameData;
     } catch (error) {

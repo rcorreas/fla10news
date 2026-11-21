@@ -37,6 +37,8 @@ export async function updateNextGame(data: NextGameData) {
         const configDocRef = doc(db, 'siteConfig', 'nextGame');
         await setDoc(configDocRef, validatedFields.data, { merge: true });
 
+        invalidateFirestoreCache('siteConfig:nextGame');
+
         // Revalida a página principal e o layout para atualizar o banner do próximo jogo
         revalidatePath('/', 'layout');
 
