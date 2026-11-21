@@ -38,6 +38,8 @@ const teamCrests: Record<string, string> = {
   "Independiente del Valle": "https://i.imgur.com/iQQ32wC.png",
   "Ind. del Valle (Ecu)": "https://i.imgur.com/iQQ32wC.png",
   "Ind. del Valle": "https://i.imgur.com/iQQ32wC.png",
+  "Coritiba": "https://i.imgur.com/0YPgMw8.png",
+  "Coritiba FC": "https://i.imgur.com/0YPgMw8.png",
 };
 
 
