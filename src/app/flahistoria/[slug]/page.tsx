@@ -399,6 +399,10 @@ export default async function HistoryArticlePage({
         articleTitle={article.title}
       />
 
+      <div className="mt-12">
+        <AdBanner width={728} height={90} />
+      </div>
+
       {otherArticles.length > 0 && (
         <section className="mt-16 pt-12 border-t">
           <h2 className="font-headline text-3xl font-bold mb-8 text-primary">Outros Momentos Históricos</h2>
@@ -432,12 +436,6 @@ export default async function HistoryArticlePage({
             ))}
           </div>
         </section>
-      )}
-
-      {otherArticles.length > 0 && (
-        <div className="mt-12">
-          <AdBanner width={728} height={90} />
-        </div>
       )}
     </div>
     </>
