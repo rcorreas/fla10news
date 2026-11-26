@@ -386,6 +386,10 @@ export default async function ArticlePage({
         />
       )}
 
+      <div className="mt-12">
+        <AdBanner width={728} height={90} />
+      </div>
+
       {otherNews.length > 0 && (
         <section className="mt-12 pt-8 border-t">
           <h2 className="text-3xl font-headline font-bold mb-6">Últimas Notícias</h2>
@@ -423,10 +427,6 @@ export default async function ArticlePage({
           </div>
         </section>
       )}
-
-      <div className="mt-12">
-        <AdBanner width={728} height={90} />
-      </div>
     </div>
     </>
   )
