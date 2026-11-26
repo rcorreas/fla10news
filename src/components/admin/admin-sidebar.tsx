@@ -18,6 +18,7 @@ const navItems = [
   { href: "/admin/videos", label: "Gerenciar Vídeos", icon: Video },
   { href: "/admin/historia", label: "Gerenciar História", icon: Trophy },
   { href: "/admin/inscritos", label: "Gerenciar Inscritos", icon: Users },
+  { href: "/admin/comentarios", label: "Gerenciar Comentários", icon: MessageSquare },
   { href: "/admin/voz-torcedor", label: "Gerenciar A Voz do Torcedor", icon: MessageSquare },
   { href: "/admin/galeria", label: "Gerenciar Galeria", icon: Palette },
   { href: "/admin/reportagens", label: "Gerenciar Reportagens", icon: Newspaper },

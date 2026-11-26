@@ -1,4 +1,5 @@
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { CommentsSection } from '@/components/comments-section';
 import { formatPublishedTime, getSocialMetaImageUrl } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
@@ -224,6 +225,15 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
             <AdsKeeperWidget widgetId="2046585" />
         </div>
       </article>
+
+      <div className="container mx-auto max-w-4xl">
+        <CommentsSection
+          articleType="tirinhas"
+          articleId={tirinha.id}
+          articleSlug={tirinha.slug}
+          articleTitle={tirinha.title}
+        />
+      </div>
 
       {otherTirinhas.length > 0 && (
         <section className="container mx-auto mt-12 pt-8 border-t pb-12">

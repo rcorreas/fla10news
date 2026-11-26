@@ -1,4 +1,5 @@
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { CommentsSection } from '@/components/comments-section';
 import { formatPublishedTime, formatDurationISO , getSocialMetaImageUrl } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
@@ -227,6 +228,13 @@ export default async function VideoPage({
             <AdBanner width={728} height={90} />
         </div>
       </article>
+
+      <CommentsSection
+        articleType="videos"
+        articleId={video.id}
+        articleSlug={video.slug}
+        articleTitle={video.title}
+      />
 
       {otherVideos.length > 0 && (
         <section className="mt-12 pt-8 border-t">

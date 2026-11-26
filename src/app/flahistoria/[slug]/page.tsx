@@ -1,4 +1,5 @@
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { CommentsSection } from '@/components/comments-section';
 import { getSocialMetaImageUrl } from '@/lib/utils';
 
 import Image from 'next/image'
@@ -390,6 +391,13 @@ export default async function HistoryArticlePage({
             <AdsKeeperWidget widgetId="2046585" />
         </div>
       </article>
+
+      <CommentsSection
+        articleType="flahistoria"
+        articleId={article.id}
+        articleSlug={article.slug}
+        articleTitle={article.title}
+      />
 
       {otherArticles.length > 0 && (
         <section className="mt-16 pt-12 border-t">

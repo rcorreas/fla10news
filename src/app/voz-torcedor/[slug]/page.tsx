@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { CommentsSection } from '@/components/comments-section'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
@@ -224,6 +225,13 @@ export default async function VozTorcedorPage({
             <AdsKeeperWidget widgetId="2046585" />
         </div>
       </article>
+
+      <CommentsSection
+        articleType="voz-torcedor"
+        articleId={voz.id}
+        articleSlug={voz.slug}
+        articleTitle={voz.title}
+      />
 
       {otherVoz.length > 0 && (
         <section className="mt-12 pt-8 border-t">

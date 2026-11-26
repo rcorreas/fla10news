@@ -1,4 +1,5 @@
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { CommentsSection } from '@/components/comments-section';
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -391,6 +392,13 @@ export default async function ColumnPage({
             <AdsKeeperWidget widgetId="2046585" />
         </div>
       </article>
+
+      <CommentsSection
+        articleType="colunas"
+        articleId={column.id}
+        articleSlug={column.slug}
+        articleTitle={column.title}
+      />
 
       {otherColumns.length > 0 && (
         <section className="mt-12 pt-8 border-t">

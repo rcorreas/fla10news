@@ -1,4 +1,5 @@
 import { garantirSessaoServidor } from '@/lib/server-session';
+import { CommentsSection } from '@/components/comments-section';
 import { formatPublishedTime, slugify , getSocialMetaImageUrl } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
@@ -318,6 +319,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <AdsKeeperWidget widgetId="2046585" />
         </div>
       </article>
+
+      <CommentsSection
+        articleType="raio-x"
+        articleId={article.id}
+        articleSlug={article.slug}
+        articleTitle={article.title}
+      />
 
       {otherNews.length > 0 && (
         <section className="mt-12 pt-8 border-t">
