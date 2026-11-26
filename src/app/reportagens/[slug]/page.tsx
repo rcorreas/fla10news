@@ -296,6 +296,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                       <Image src="https://i.imgur.com/xZYv2gr.png" alt="Publicidade" width={728} height={90} className="w-full h-auto rounded-lg shadow-md border border-border" />
                     </a>
                   </div>
+                  <CommentsSection
+                    articleType="reportagens"
+                    articleId={article.id}
+                    articleSlug={article.slug}
+                    articleTitle={article.title}
+                  />
               </div>
           )}
         </div>
@@ -320,12 +326,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         </div>
       </article>
 
-      <CommentsSection
-        articleType="reportagens"
-        articleId={article.id}
-        articleSlug={article.slug}
-        articleTitle={article.title}
-      />
+      {!article.image2 && (
+        <CommentsSection
+          articleType="reportagens"
+          articleId={article.id}
+          articleSlug={article.slug}
+          articleTitle={article.title}
+        />
+      )}
 
       {otherNews.length > 0 && (
         <section className="mt-12 pt-8 border-t">
