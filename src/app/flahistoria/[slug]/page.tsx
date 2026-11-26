@@ -45,18 +45,22 @@ export async function generateMetadata(
     }
   }
 
-  const desc = truncateDescription(article.subtitle || article.content || '');
+  const isDraft = article.status === 'draft' || article.publishedAt.getTime() > Date.now() + 60_000;
+  const desc = article.metaDescription || truncateDescription(article.subtitle || article.content || '');
   const url = absoluteUrl(`/flahistoria/${article.slug}`);
+  const metaTitle = article.metaTitle || article.title;
   const socialImageUrl = getSocialMetaImageUrl(article.image);
 
   return {
-    title: article.title,
+    title: metaTitle,
     description: desc,
+    keywords: [article.focusKeyword || '', ...(article.secondaryKeywords || '').split(',').map(k => k.trim())].filter(Boolean),
+    robots: isDraft ? { index: false, follow: false } : undefined,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: article.title,
+      title: metaTitle,
       description: desc,
       url,
       images: [
@@ -66,7 +70,7 @@ export async function generateMetadata(
           width: 1200,
           height: 630,
           type: 'image/jpeg',
-          alt: article.title,
+          alt: metaTitle,
         }
       ],
       type: 'article',
@@ -75,7 +79,7 @@ export async function generateMetadata(
     },
     twitter: {
       card: 'summary_large_image',
-      title: article.title,
+      title: metaTitle,
       description: desc,
       images: [socialImageUrl],
     },

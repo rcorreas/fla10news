@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TextareaWithFormatting } from "@/components/ui/textarea-with-formatting";
+import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -159,16 +160,43 @@ export default function EditHistoriaPage() {
                 <Input id="videoUrl" name="videoUrl" type="url" defaultValue={article.videoUrl || ''} placeholder="https://www.youtube.com/watch?v=..." />
                 <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro do conteúdo abaixo.</p>
             </div>
+            <Separator />
+            <div className="space-y-4 bg-muted/50 p-4 rounded-lg">
+              <h3 className="font-medium text-lg">SEO (Google)</h3>
+              <p className="text-sm text-muted-foreground">Campos opcionais. Se deixados em branco, o sistema usará o título e o subtítulo do artigo.</p>
+              <div className="grid gap-2">
+                <Label htmlFor="metaTitle">Meta Title (Título no Google)</Label>
+                <Input id="metaTitle" name="metaTitle" defaultValue={article.metaTitle || ''} placeholder="Ex: Mundial de 1981: O Dia em que o Mundo se Curvou ao Flamengo | Fla10" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="metaDescription">Meta Description (Resumo no Google)</Label>
+                <Textarea id="metaDescription" name="metaDescription" defaultValue={article.metaDescription || ''} placeholder="Resumo otimizado para aparecer nos resultados de busca..." className="min-h-[80px]" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="focusKeyword">Palavra-chave Principal</Label>
+                <Input id="focusKeyword" name="focusKeyword" defaultValue={article.focusKeyword || ''} placeholder="Ex: Flamengo Mundial 1981" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="secondaryKeywords">Palavras-chave Secundárias</Label>
+                <Input id="secondaryKeywords" name="secondaryKeywords" defaultValue={article.secondaryKeywords || ''} placeholder="Ex: Zico, Tóquio, Liverpool, história do Flamengo" />
+              </div>
+            </div>
+            <Separator />
             <div className="grid gap-2">
                 <Label htmlFor="content">Matéria Completa</Label>
                 <TextareaWithFormatting id="content" name="content" defaultValue={article.content} className="min-h-[300px]" required />
             </div>
           </CardContent>
-          <CardFooter className="flex justify-between">
+          <CardFooter className="flex justify-between items-center">
             <SubmitButton />
-            <Button variant="outline" asChild>
-                <Link href="/admin/historia">Cancelar</Link>
-            </Button>
+            <div className="flex gap-4">
+              <Button variant="ghost" asChild>
+                <Link href={`/flahistoria/${article.slug}?preview=1`} target="_blank">Ver Preview</Link>
+              </Button>
+              <Button variant="outline" asChild>
+                  <Link href="/admin/historia">Cancelar</Link>
+              </Button>
+            </div>
           </CardFooter>
         </form>
       </Card>

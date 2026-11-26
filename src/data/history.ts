@@ -18,6 +18,10 @@ export type HistoryArticle = {
     dataAiHint?: string;
     views: number;
     status?: 'draft' | 'published';
+    metaTitle?: string;
+    metaDescription?: string;
+    focusKeyword?: string;
+    secondaryKeywords?: string;
 };
 
 // Helper to create a date in the past
@@ -66,6 +70,10 @@ const fromFirestore = (doc: any): HistoryArticle => {
         dataAiHint: data.dataAiHint || 'historic event',
         views: data.views || 0,
         status: data.status || 'published',
+        metaTitle: data.metaTitle,
+        metaDescription: data.metaDescription,
+        focusKeyword: data.focusKeyword,
+        secondaryKeywords: data.secondaryKeywords,
     };
 };
 

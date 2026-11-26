@@ -21,6 +21,10 @@ const HistorySchema = z.object({
   dataAiHint: z.string().optional(),
   status: z.enum(['draft', 'published']).optional(),
   publishedAt: z.string().optional(),
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+  focusKeyword: z.string().optional(),
+  secondaryKeywords: z.string().optional(),
 });
 
 function generateSlug(title: string): string {
@@ -50,6 +54,10 @@ export async function createHistoryArticle(prevState: any, formData: FormData) {
     dataAiHint: formData.get("dataAiHint")?.toString() || undefined,
     status: formData.get("status")?.toString() || "published",
     publishedAt: formData.get("publishedAt")?.toString() || undefined,
+    metaTitle: formData.get("metaTitle")?.toString() || undefined,
+    metaDescription: formData.get("metaDescription")?.toString() || undefined,
+    focusKeyword: formData.get("focusKeyword")?.toString() || undefined,
+    secondaryKeywords: formData.get("secondaryKeywords")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {
@@ -111,6 +119,10 @@ export async function updateHistoryArticle(id: string, prevState: any, formData:
     dataAiHint: formData.get("dataAiHint")?.toString() || undefined,
     status: formData.get("status")?.toString() || "published",
     publishedAt: formData.get("publishedAt")?.toString() || undefined,
+    metaTitle: formData.get("metaTitle")?.toString() || undefined,
+    metaDescription: formData.get("metaDescription")?.toString() || undefined,
+    focusKeyword: formData.get("focusKeyword")?.toString() || undefined,
+    secondaryKeywords: formData.get("secondaryKeywords")?.toString() || undefined,
   });
 
   if (!validatedFields.success) {

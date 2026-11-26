@@ -14,13 +14,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TextareaWithFormatting } from "@/components/ui/textarea-with-formatting";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 
 // Icons
-import { Loader2, FilePen, Trash2 } from "lucide-react";
+import { Loader2, FilePen, Trash2, Eye } from "lucide-react";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -160,6 +162,28 @@ export default function HistoriaPage() {
                 <Input id="videoUrl" name="videoUrl" type="url" placeholder="https://youtube.com/watch?v=..." />
                 <p className="text-xs text-muted-foreground">Opcional. Para escolher a posição exata do vídeo no texto, digite <strong>[video]</strong> dentro do conteúdo abaixo.</p>
             </div>
+            <Separator />
+            <div className="space-y-4 bg-muted/50 p-4 rounded-lg">
+              <h3 className="font-medium text-lg">SEO (Google)</h3>
+              <p className="text-sm text-muted-foreground">Campos opcionais. Se deixados em branco, o sistema usará o título e o subtítulo do artigo.</p>
+              <div className="grid gap-2">
+                <Label htmlFor="metaTitle">Meta Title (Título no Google)</Label>
+                <Input id="metaTitle" name="metaTitle" placeholder="Ex: Mundial de 1981: O Dia em que o Mundo se Curvou ao Flamengo | Fla10" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="metaDescription">Meta Description (Resumo no Google)</Label>
+                <Textarea id="metaDescription" name="metaDescription" placeholder="Resumo otimizado para aparecer nos resultados de busca..." className="min-h-[80px]" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="focusKeyword">Palavra-chave Principal</Label>
+                <Input id="focusKeyword" name="focusKeyword" placeholder="Ex: Flamengo Mundial 1981" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="secondaryKeywords">Palavras-chave Secundárias</Label>
+                <Input id="secondaryKeywords" name="secondaryKeywords" placeholder="Ex: Zico, Tóquio, Liverpool, história do Flamengo" />
+              </div>
+            </div>
+            <Separator />
             <div className="grid gap-2">
                 <Label htmlFor="content">Matéria Completa</Label>
                 <TextareaWithFormatting id="content" name="content" placeholder="Escreva o artigo completo aqui." className="min-h-[300px]" required />
@@ -188,6 +212,7 @@ export default function HistoriaPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Título</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Autor</TableHead>
                   <TableHead>Data</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
@@ -197,9 +222,23 @@ export default function HistoriaPage() {
                 {articles.map((article) => (
                   <TableRow key={article.id}>
                     <TableCell className="font-medium max-w-xs truncate">{article.title}</TableCell>
+                    <TableCell>
+                      {article.status === 'draft' ? (
+                        <Badge variant="secondary">Rascunho</Badge>
+                      ) : article.publishedAt > new Date() ? (
+                        <Badge variant="outline" className="border-blue-500 text-blue-500">Agendado</Badge>
+                      ) : (
+                        <Badge variant="default" className="bg-green-600 hover:bg-green-700">Publicado</Badge>
+                      )}
+                    </TableCell>
                     <TableCell>{article.author}</TableCell>
                     <TableCell>{format(article.publishedAt, "dd/MM/yyyy", { locale: ptBR })}</TableCell>
                     <TableCell className="text-right space-x-2">
+                      <Button asChild variant="ghost" size="icon" title="Visualizar / Rascunho">
+                        <Link href={`/flahistoria/${article.slug}?preview=1`} target="_blank">
+                          <Eye className="h-4 w-4" />
+                        </Link>
+                      </Button>
                       <Button asChild variant="ghost" size="icon">
                         <Link href={`/admin/historia/edit/${article.id}`}>
                           <FilePen className="h-4 w-4" />
