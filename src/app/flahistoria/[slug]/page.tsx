@@ -10,7 +10,7 @@ import type { Metadata, ResolvingMetadata } from 'next'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { AdBanner } from '@/components/ad-banner'
-import { Clock, PlayCircle, Trophy, Eye } from 'lucide-react'
+import { Clock, PlayCircle, Trophy, Eye, MessageSquare } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ShareButton } from '@/components/share-button'
@@ -319,6 +319,10 @@ export default async function HistoryArticlePage({
               <Eye className="h-4 w-4" />
               <span>{formatViews(article.views)} visualizações</span>
             </div>
+            <a href="#comentarios" className="flex items-center gap-1.5 hover:text-[#FF073A] transition-colors">
+              <MessageSquare className="h-4 w-4" />
+              <span>{article.commentsCount || 0} {(article.commentsCount || 0) === 1 ? 'comentário' : 'comentários'}</span>
+            </a>
             <span>Por {article.author}</span>
           </div>
         </header>

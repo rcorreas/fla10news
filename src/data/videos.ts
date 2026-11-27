@@ -11,6 +11,7 @@ export type Video = {
     publishedAt: Date;
     category: string;
     views: number;
+    commentsCount?: number;
     videoUrl?: string;
     metaTitle?: string;
     metaDescription?: string;
@@ -31,6 +32,7 @@ const fromFirestore = (doc: any): Video => {
         publishedAt: data.publishedAt instanceof Timestamp ? data.publishedAt.toDate() : new Date(),
         category: data.category || 'Geral',
         views: data.views || 0,
+        commentsCount: typeof data.commentsCount === 'number' ? data.commentsCount : 0,
         videoUrl: data.videoUrl || '',
         metaTitle: data.metaTitle || '',
         metaDescription: data.metaDescription || '',

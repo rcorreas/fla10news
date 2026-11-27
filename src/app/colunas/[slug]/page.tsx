@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { AdBanner } from '@/components/ad-banner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Clock, Eye } from 'lucide-react'
+import { Clock, Eye, MessageSquare } from 'lucide-react'
 import { slugify, formatPublishedTime , getSocialMetaImageUrl } from '@/lib/utils';
 import { ShareButton } from '@/components/share-button'
 import { insertVideoIntoContent } from '@/lib/youtube'
@@ -364,6 +364,10 @@ export default async function ColumnPage({
                     <Eye className="h-4 w-4" />
                     <span>{column.views || 0} acessos</span>
                 </div>
+                <a href="#comentarios" className="flex items-center gap-1.5 hover:text-[#FF073A] transition-colors">
+                    <MessageSquare className="h-4 w-4" />
+                    <span>{column.commentsCount || 0} {(column.commentsCount || 0) === 1 ? 'comentário' : 'comentários'}</span>
+                </a>
               </div>
             </div>
           </div>

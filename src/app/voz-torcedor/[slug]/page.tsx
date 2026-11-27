@@ -186,6 +186,10 @@ export default async function VozTorcedorPage({
                     <Eye className="h-4 w-4" />
                     <span>{voz.views || 0} acessos</span>
                 </div>
+                <a href="#comentarios" className="flex items-center gap-1.5 hover:text-[#FF073A] transition-colors">
+                    <MessageSquare className="h-4 w-4" />
+                    <span>{voz.commentsCount || 0} {(voz.commentsCount || 0) === 1 ? 'comentário' : 'comentários'}</span>
+                </a>
               </div>
             </div>
           </div>

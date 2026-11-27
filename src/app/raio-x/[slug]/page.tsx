@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
-import { Clock, Eye } from 'lucide-react'
+import { Clock, Eye, MessageSquare } from 'lucide-react'
 import { getRaioxBySlug, getAllRaioxSlugs, getRaiox } from '@/data/raiox'
 import type { Metadata, ResolvingMetadata } from 'next'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
@@ -229,9 +229,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <div>
                 <span>Por <Link href={`/autor/${slugify(article.author || 'Redacao NRN')}`} className="hover:underline hover:text-[#FF073A] transition-colors">{article.author || 'Redação NRN'}</Link></span> &bull; <span>{articleDate}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-                <Eye className="h-4 w-4" />
-                <span>{article.views || 0} acessos</span>
+            <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                    <Eye className="h-4 w-4" />
+                    <span>{article.views || 0} acessos</span>
+                </div>
+                <a href="#comentarios" className="flex items-center gap-1.5 hover:text-[#FF073A] transition-colors">
+                    <MessageSquare className="h-4 w-4" />
+                    <span>{article.commentsCount || 0} {(article.commentsCount || 0) === 1 ? 'comentário' : 'comentários'}</span>
+                </a>
             </div>
           </div>
         </header>

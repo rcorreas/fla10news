@@ -9,7 +9,7 @@ import { getVideoBySlug, getAllVideoSlugs, getVideos } from '@/data/videos'
 import type { Metadata, ResolvingMetadata } from 'next'
 import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Clock, Eye, PlayCircle } from 'lucide-react'
+import { Clock, Eye, MessageSquare, PlayCircle } from 'lucide-react'
 import { AdBanner } from '@/components/ad-banner'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ShareButton } from '@/components/share-button'
@@ -192,6 +192,10 @@ export default async function VideoPage({
                 <Eye className="h-4 w-4" />
                 <span>{formatViews(video.views)} visualizações</span>
             </div>
+             <a href="#comentarios" className="flex items-center gap-1.5 hover:text-[#FF073A] transition-colors">
+                <MessageSquare className="h-4 w-4" />
+                <span>{video.commentsCount || 0} {(video.commentsCount || 0) === 1 ? 'comentário' : 'comentários'}</span>
+            </a>
           </div>
         </header>
         

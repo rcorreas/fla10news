@@ -17,6 +17,7 @@ export type HistoryArticle = {
     content: string;
     dataAiHint?: string;
     views: number;
+    commentsCount?: number;
     status?: 'draft' | 'published';
     metaTitle?: string;
     metaDescription?: string;
@@ -69,6 +70,7 @@ const fromFirestore = (doc: any): HistoryArticle => {
         content: data.content || '',
         dataAiHint: data.dataAiHint || 'historic event',
         views: data.views || 0,
+        commentsCount: typeof data.commentsCount === 'number' ? data.commentsCount : 0,
         status: data.status || 'published',
         metaTitle: data.metaTitle,
         metaDescription: data.metaDescription,

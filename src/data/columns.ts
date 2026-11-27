@@ -17,6 +17,7 @@ export type OpinionColumn = {
     category: string;
     content: string;
     views: number;
+    commentsCount?: number;
     videoUrl?: string;
     metaTitle?: string;
     metaDescription?: string;
@@ -60,6 +61,7 @@ const fromFirestore = (doc: any): OpinionColumn => {
         category: data.category || 'Opinião',
         content: data.content || '',
         views: data.views || 0,
+        commentsCount: typeof data.commentsCount === 'number' ? data.commentsCount : 0,
         videoUrl: data.videoUrl || '',
         metaTitle: data.metaTitle || '',
         metaDescription: data.metaDescription || '',

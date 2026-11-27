@@ -18,6 +18,7 @@ export type ReportagensArticle = {
     content?: string;
     author?: string;
     views: number;
+    commentsCount?: number;
     fullArticleLink?: string;
     metaTitle?: string;
     metaDescription?: string;
@@ -44,6 +45,7 @@ const fromFirestore = (doc: any): ReportagensArticle => {
         content: data.content || '',
         author: data.author || 'Redação NRN',
         views: data.views || 0,
+        commentsCount: typeof data.commentsCount === 'number' ? data.commentsCount : 0,
         fullArticleLink: data.fullArticleLink || '',
         metaTitle: data.metaTitle || '',
         metaDescription: data.metaDescription || '',

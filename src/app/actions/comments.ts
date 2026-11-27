@@ -31,6 +31,35 @@ import {
 const COOLDOWN_MS = 45_000; // 45s entre comentários do mesmo usuário (anti-flood)
 const MAX_REPORTS_BEFORE_HIDE = 3;
 
+const COLLECTION_BY_TYPE: Record<CommentArticleType, string> = {
+  noticias: 'news',
+  colunas: 'columns',
+  reportagens: 'reportagens',
+  'raio-x': 'raiox',
+  tirinhas: 'tirinhas',
+  'voz-torcedor': 'voz_torcedor',
+  flahistoria: 'history',
+  videos: 'videos',
+};
+
+async function adjustArticleCommentsCount(
+  articleType: CommentArticleType,
+  articleId: string,
+  delta: number
+): Promise<void> {
+  const collectionName = COLLECTION_BY_TYPE[articleType];
+  if (!collectionName || !articleId || delta === 0) return;
+  try {
+    await withTimeout(
+      updateDoc(doc(db, collectionName, articleId), {
+        commentsCount: increment(delta),
+      })
+    );
+  } catch (err) {
+    console.error(`Error updating commentsCount for ${collectionName}/${articleId}:`, err);
+  }
+}
+
 const globalRateLimit = globalThis as unknown as {
   __fla10CommentCooldown?: Map<string, number>;
 };
@@ -124,6 +153,7 @@ export async function createCommentAction(input: {
     cooldownMap.set(user.uid, now);
     if (cooldownMap.size > 2000) cooldownMap.clear();
 
+    await adjustArticleCommentsCount(input.articleType, input.articleId, 1);
     invalidateFirestoreCache(`comments:${articleKey}`);
 
     return {
@@ -232,6 +262,10 @@ export async function reportCommentAction(
       })
     );
 
+    if (shouldHide && data.status !== 'hidden') {
+      await adjustArticleCommentsCount(articleType, articleId, -1);
+    }
+
     const articleKey = buildArticleKey(articleType, articleId);
     invalidateFirestoreCache(`comments:${articleKey}`);
 
@@ -260,7 +294,14 @@ export async function deleteCommentAction(
     await exigirAdmin();
     await garantirSessaoServidor();
 
-    await withTimeout(deleteDoc(doc(db, 'comments', commentId)));
+    const commentRef = doc(db, 'comments', commentId);
+    const snap = await withTimeout(getDoc(commentRef));
+    const wasApproved = snap.exists() && snap.data()?.status !== 'hidden';
+
+    await withTimeout(deleteDoc(commentRef));
+    if (wasApproved) {
+      await adjustArticleCommentsCount(articleType, articleId, -1);
+    }
     const articleKey = buildArticleKey(articleType, articleId);
     invalidateFirestoreCache(`comments:${articleKey}`);
 
@@ -301,7 +342,18 @@ export async function setCommentStatusAdminAction(
     await exigirAdmin();
     await garantirSessaoServidor();
 
-    await withTimeout(updateDoc(doc(db, 'comments', commentId), { status }));
+    const commentRef = doc(db, 'comments', commentId);
+    const snap = await withTimeout(getDoc(commentRef));
+    const prevData = snap.exists() ? snap.data() : null;
+
+    await withTimeout(updateDoc(commentRef, { status }));
+    if (prevData && prevData.status !== status) {
+      await adjustArticleCommentsCount(
+        prevData.articleType,
+        prevData.articleId,
+        status === 'approved' ? 1 : -1
+      );
+    }
     invalidateFirestoreCache(`comments:${articleKey}`);
 
     return {
@@ -326,8 +378,15 @@ export async function blockCommentAuthorAdminAction(
     await exigirAdmin();
     await garantirSessaoServidor();
 
+    const commentRef = doc(db, 'comments', commentId);
+    const snap = await withTimeout(getDoc(commentRef));
+    const prevData = snap.exists() ? snap.data() : null;
+
     await withTimeout(updateDoc(doc(db, 'users', uid), { isBlocked: true }));
-    await withTimeout(updateDoc(doc(db, 'comments', commentId), { status: 'hidden' }));
+    await withTimeout(updateDoc(commentRef, { status: 'hidden' }));
+    if (prevData && prevData.status !== 'hidden') {
+      await adjustArticleCommentsCount(prevData.articleType, prevData.articleId, -1);
+    }
     invalidateFirestoreCache(`comments:${articleKey}`);
 
     return { success: true, message: 'Usuário bloqueado e comentário ocultado.' };

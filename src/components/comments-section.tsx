@@ -235,7 +235,7 @@ export function CommentsSection({
 
   if (!isOpen) {
     return (
-      <section className="mt-10 pt-8 border-t flex flex-col items-center">
+      <section id="comentarios" className="mt-10 pt-8 border-t flex flex-col items-center">
         <Button
           type="button"
           size="lg"

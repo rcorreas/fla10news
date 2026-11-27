@@ -18,6 +18,7 @@ export type NewsArticle = {
     content?: string;
     author?: string;
     views: number;
+    commentsCount?: number;
     fullArticleLink?: string;
     videoUrl?: string;
     videoUrl2?: string;
@@ -47,6 +48,7 @@ const fromFirestore = (doc: any): NewsArticle => {
         content: data.content || '',
         author: data.author || 'Redação NRN',
         views: data.views || 0,
+        commentsCount: typeof data.commentsCount === 'number' ? data.commentsCount : 0,
         fullArticleLink: data.fullArticleLink || '',
         videoUrl: data.videoUrl || '',
         videoUrl2: data.videoUrl2 || '',

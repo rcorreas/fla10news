@@ -4,7 +4,7 @@ import { formatPublishedTime, getSocialMetaImageUrl } from '@/lib/utils';
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Clock, Eye } from 'lucide-react'
+import { Clock, Eye, MessageSquare } from 'lucide-react'
 import { getTirinhaBySlug, getAllTirinhasSlugs, getTirinhas } from '@/data/tirinhas'
 import type { Metadata, ResolvingMetadata } from 'next'
 import { format } from 'date-fns'
@@ -155,6 +155,11 @@ export default async function TirinhaPage({ params }: { params: Promise<{ slug: 
                 <Eye className="h-4 w-4" />
                 <span>{tirinha.views || 0} acessos</span>
             </div>
+            <span>&bull;</span>
+            <a href="#comentarios" className="flex items-center gap-1.5 hover:text-[#FF073A] transition-colors">
+                <MessageSquare className="h-4 w-4" />
+                <span>{tirinha.commentsCount || 0} {(tirinha.commentsCount || 0) === 1 ? 'comentário' : 'comentários'}</span>
+            </a>
           </div>
           <div className="flex justify-center">
              <ArticleShareButton title={tirinha.title} slug={tirinha.slug} type="tirinhas" />

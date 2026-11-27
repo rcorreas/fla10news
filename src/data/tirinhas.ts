@@ -13,6 +13,7 @@ export type TirinhaItem = {
     description?: string;
     publishedAt: Date;
     views: number;
+    commentsCount?: number;
     dataAiHint?: string;
     videoUrl?: string;
 };
@@ -31,6 +32,7 @@ const fromFirestore = (doc: any): TirinhaItem => {
         description: data.description || '',
         publishedAt: data.publishedAt instanceof Timestamp ? data.publishedAt.toDate() : new Date(),
         views: data.views || 0,
+        commentsCount: typeof data.commentsCount === 'number' ? data.commentsCount : 0,
         dataAiHint: data.dataAiHint || 'cartoon',
         videoUrl: data.videoUrl || '',
     };
